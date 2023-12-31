@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.dish.perfect.image.domain.UploadFile;
 
+import lombok.Data;
+
+@Data
 public class Member {
     
     private Long id;
