@@ -63,7 +63,7 @@ public class MemberRepository {
     }
 
     /**
-     * findAll에서 이름이 같은 member 추출하기
+     * memberList에서 이름이 같은 member 추출하기
      * 
      * @param members
      * @param name
