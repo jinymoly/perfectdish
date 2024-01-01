@@ -1,7 +1,6 @@
 package com.dish.perfect.member.domain;
 
 import java.time.LocalDateTime;
-
 import lombok.Data;
 
 @Data
@@ -14,8 +13,7 @@ public class Member {
 
     private LocalDateTime createAt;
 
-    public Member(Long id, String name, String phoneNumber, LocalDateTime createAt) {
-        this.id = id;
+    public Member(String name, String phoneNumber) {
         this.userName = name;
         this.phoneNumber = phoneNumber;
         this.createAt = LocalDateTime.now();

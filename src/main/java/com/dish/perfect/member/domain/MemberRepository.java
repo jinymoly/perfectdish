@@ -1,4 +1,4 @@
-package com.dish.perfect.member.domain.repository;
+package com.dish.perfect.member.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,24 +8,25 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.dish.perfect.member.domain.Member;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
 public class MemberRepository {
 
-    private final Map<Long, Member> account = new HashMap<>();
-    private long idNum = 0L;
+    private static Map<Long, Member> accountMap = new HashMap<>();
+    private static long idSequence = 0L;
 
     public Member save(Member member) {
-        member.setId(++idNum);
-        log.info("save:user={}", member);
-        account.put(member.getId(), member);
+        member.setId(++idSequence);
+        log.info("save : member={}", member);
+        accountMap.put(member.getId(), member);
         return member;
     }
 
+    public Member findById(Long id){
+        return accountMap.get(id);
+    }
     /**
      * 폰번호 4자리로 찾은 member(중복 가능성)
      * 
@@ -33,21 +34,22 @@ public class MemberRepository {
      * @return
      */
     public List<Member> findByphoneNum(String phoneNumber) {
-        List<Member> resultList = new ArrayList<>();
+        List<Member> usersWithDuplicateNumber = new ArrayList<>();
 
         String digits = extractLastFourDigits(phoneNumber);
 
         for (Member member : findAll()) {
             if (extractLastFourDigits(member.getPhoneNumber()).equals(digits)) {
-                resultList.add(member);
+                usersWithDuplicateNumber.add(member);
             }
         }
-        return resultList;
+        log.info("findByphoneNum : result={}", usersWithDuplicateNumber.toString());
+        return usersWithDuplicateNumber;
 
     }
 
     public List<Member> findAll() {
-        return new ArrayList<>(account.values()); // account 객체 조작 방지
+        return new ArrayList<>(accountMap.values()); // account 객체 조작 방지
     }
 
     /**
@@ -56,7 +58,7 @@ public class MemberRepository {
      * @param phoneNumber
      * @return
      */
-    private String extractLastFourDigits(String phoneNumber) {
+    public String extractLastFourDigits(String phoneNumber) {
         return phoneNumber.substring(4, 8);
     }
 
@@ -67,10 +69,14 @@ public class MemberRepository {
      * @param name
      * @return
      */
-    public Optional<Member> findByName(String name) {
-        return findAll().stream()
+    public Optional<Member> findByName(List<Member> members, String name) {
+        return members.stream()
                 .filter(m -> m.getUserName().equals(name))
                 .findFirst();
+    }
+
+    public void clear() {
+        accountMap.clear();
     }
 
 }
