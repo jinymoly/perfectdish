@@ -1,32 +1,32 @@
 package com.dish.perfect.member.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import com.dish.perfect.image.domain.UploadFile;
 
 import lombok.Data;
 
 @Data
 public class Member {
-    
+
     private Long id;
 
-    private String nickname;
-    private String password;
+    private String userName;
+    private String phoneNumber; // 8자리
 
     private LocalDateTime createAt;
 
-    private List<UploadFile> imageFiles;
-
-    public Member(Long id, String nickname, String password, LocalDateTime createAt, List<UploadFile> imageFiles) {
+    public Member(Long id, String name, String phoneNumber, LocalDateTime createAt) {
         this.id = id;
-        this.nickname = nickname;
-        this.password = password;
+        this.userName = name;
+        this.phoneNumber = phoneNumber;
         this.createAt = LocalDateTime.now();
-        this.imageFiles = imageFiles;
     }
 
-    
+    /*
+     * TO-DO 
+     * add field list
+     *  birth 쿠폰
+     *  포인트 적립 
+     *  방문 횟수 
+     */
     
 }
