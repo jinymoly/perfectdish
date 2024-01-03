@@ -7,12 +7,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import com.dish.perfect.member.domain.Member;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Repository
+@Service
+@RequiredArgsConstructor
 @Slf4j
-public class MemberRepository {
+public class MemberService {
+
+    private final MemberService memberRepository;
 
     private static Map<Long, Member> accountMap = new HashMap<>();
     private static long idSequence = 0L;
