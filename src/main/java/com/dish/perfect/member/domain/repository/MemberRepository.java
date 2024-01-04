@@ -3,14 +3,12 @@ package com.dish.perfect.member.domain.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
-
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.dto.request.MemberRequestDto;
 
-@Repository
 public interface MemberRepository {
 
-    Member save(Member member);
+    Member save(MemberRequestDto memberRequestDto);
 
     Member findById(Long id);
 
@@ -22,6 +20,9 @@ public interface MemberRepository {
 
     String extractLastFourDigits(String phoneNumber);
 
+    Long getNextId();
+    
     void clear();
+
 
 }

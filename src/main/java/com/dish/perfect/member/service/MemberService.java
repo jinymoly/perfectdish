@@ -1,39 +1,41 @@
-package com.dish.perfect.member.domain;
+package com.dish.perfect.member.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.repository.MemberRepository;
+import com.dish.perfect.member.dto.request.MemberRequestDto;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class MemberService {
 
-    private final MemberService memberRepository;
+    private final MemberRepository memberRepository;
 
-    private static Map<Long, Member> accountMap = new HashMap<>();
-    private static long idSequence = 0L;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
-    public Member save(Member member) {
-        member.setId(++idSequence);
+    public Long getNextId() {
+        return memberRepository.getNextId();
+    }
+
+    public Member save(MemberRequestDto memberDto) {
+        Member member = memberRepository.save(memberDto);
         log.info("save : member={}", member);
-        accountMap.put(member.getId(), member);
         return member;
     }
 
-    public Member findById(Long id){
-        return accountMap.get(id);
+    public Member findById(Long id) {
+        return memberRepository.findById(id);
     }
+
     /**
      * 폰번호 4자리로 찾은 member(중복 가능성)
      * 
@@ -56,7 +58,7 @@ public class MemberService {
     }
 
     public List<Member> findAll() {
-        return new ArrayList<>(accountMap.values()); // account 객체 조작 방지
+        return memberRepository.findAll();
     }
 
     /**
@@ -66,7 +68,7 @@ public class MemberService {
      * @return
      */
     public String extractLastFourDigits(String phoneNumber) {
-        return phoneNumber.substring(4, 8);
+        return memberRepository.extractLastFourDigits(phoneNumber);
     }
 
     /**
@@ -83,7 +85,7 @@ public class MemberService {
     }
 
     public void clear() {
-        accountMap.clear();
+        memberRepository.clear();
     }
 
 }
