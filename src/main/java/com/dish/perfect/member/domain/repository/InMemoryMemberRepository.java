@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 
 import com.dish.perfect.member.domain.Member;
-import com.dish.perfect.member.dto.request.MemberRequestDto;
+import com.dish.perfect.member.dto.request.MemberRequest;
 
 @Repository
 public class InMemoryMemberRepository implements MemberRepository {
@@ -20,12 +20,13 @@ public class InMemoryMemberRepository implements MemberRepository {
     private final AtomicLong idSequence = new AtomicLong(0);
 
     @Override
-    public Member save(MemberRequestDto memberRequestDto) {
-        Member member = new Member();
-        member.setId(getNextId());
-        member.setUserName(memberRequestDto.getUserName());
-        member.setPhoneNumber(memberRequestDto.getPhoneNumber());
-        member.setCreateAt(LocalDateTime.now());
+    public Member save(MemberRequest memberRequestDto) {
+        Member member = Member.builder()
+                .id(getNextId())
+                .userName(memberRequestDto.getUserName())
+                .phoneNumber(memberRequestDto.getPhoneNumber())
+                .createAt(LocalDateTime.now())
+                .build();
         memberMap.put(member.getId(), member);
         return member;
     }
@@ -36,14 +37,14 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findByphoneNum(String phoneNumber) {
-        List<Member> result = new ArrayList<>();
+    public List<Member> findMembersBySameLastFourDigits(String phoneNumber) {
+        List<Member> fourdigitsDuplicatedMember = new ArrayList<>();
         for (Member member : memberMap.values()) {
-            if (member.getPhoneNumber().equals(phoneNumber)) {
-                result.add(member);
+              if(extractLastFourDigits(member.getPhoneNumber()).equals(extractLastFourDigits(phoneNumber))){
+                fourdigitsDuplicatedMember.add(member);
             }
         }
-        return result;
+        return fourdigitsDuplicatedMember;
     }
 
     @Override
@@ -72,6 +73,12 @@ public class InMemoryMemberRepository implements MemberRepository {
     public String extractLastFourDigits(String phoneNumber) {
         return phoneNumber.substring(4, 8);
 
+    }
+
+    @Override
+    public List<Member> findByphoneNum(String phoneNumber) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByphoneNum'");
     }
 
 }

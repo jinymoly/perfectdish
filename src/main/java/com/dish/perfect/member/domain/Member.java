@@ -3,11 +3,11 @@ package com.dish.perfect.member.domain;
 import java.time.LocalDateTime;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Data
+@Getter
 public class Member {
 
     private Long id;
@@ -19,10 +19,20 @@ public class Member {
     private LocalDateTime createAt;
 
     @Builder
-    private Member(String name, String phoneNumber) {
-        this.userName = name;
+    private Member(Long id, String userName, String phoneNumber, LocalDateTime createAt) {
+        this.id = id;
+        this.userName = userName;
         this.phoneNumber = phoneNumber;
-        this.createAt = LocalDateTime.now();
+        this.createAt = createAt;
+    }
+
+    @Override
+    public String toString() {
+        return "{id='" + id + '\'' +
+                "  userName='" + userName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", createAt=" + createAt +
+                '}';
     }
 
 }

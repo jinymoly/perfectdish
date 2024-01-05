@@ -4,15 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dish.perfect.member.domain.Member;
-import com.dish.perfect.member.dto.request.MemberRequestDto;
+import com.dish.perfect.member.dto.request.MemberRequest;
 
 public interface MemberRepository {
 
-    Member save(MemberRequestDto memberRequestDto);
+    Member save(MemberRequest memberRequestDto);
 
     Member findById(Long id);
 
     List<Member> findByphoneNum(String phoneNumber);
+
+    List<Member> findMembersBySameLastFourDigits(String phoneNumber);
 
     List<Member> findAll();
 
@@ -23,6 +25,5 @@ public interface MemberRepository {
     Long getNextId();
     
     void clear();
-
 
 }

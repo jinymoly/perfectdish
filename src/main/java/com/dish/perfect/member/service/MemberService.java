@@ -8,25 +8,23 @@ import org.springframework.stereotype.Service;
 
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
-import com.dish.perfect.member.dto.request.MemberRequestDto;
+import com.dish.perfect.member.dto.request.MemberRequest;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     public Long getNextId() {
         return memberRepository.getNextId();
     }
 
-    public Member save(MemberRequestDto memberDto) {
+    public Member save(MemberRequest memberDto) {
         Member member = memberRepository.save(memberDto);
         log.info("save : member={}", member);
         return member;
@@ -37,24 +35,15 @@ public class MemberService {
     }
 
     /**
-     * 폰번호 4자리로 찾은 member(중복 가능성)
+     * 폰번호 뒤 4자리로 찾은 member(중복 가능성)
      * 
      * @param phoneNumber
      * @return
      */
     public List<Member> findByphoneNum(String phoneNumber) {
-        List<Member> usersWithDuplicateNumber = new ArrayList<>();
-
-        String digits = extractLastFourDigits(phoneNumber);
-
-        for (Member member : findAll()) {
-            if (extractLastFourDigits(member.getPhoneNumber()).equals(digits)) {
-                usersWithDuplicateNumber.add(member);
-            }
-        }
-        log.info("findByphoneNum : result={}", usersWithDuplicateNumber.toString());
-        return usersWithDuplicateNumber;
-
+        List<Member> membersWithDuplicateNumber = memberRepository.findMembersBySameLastFourDigits(phoneNumber);
+        log.info("findByphoneNum : result={}", membersWithDuplicateNumber.toString());
+        return membersWithDuplicateNumber;
     }
 
     public List<Member> findAll() {
@@ -79,9 +68,7 @@ public class MemberService {
      * @return
      */
     public Optional<Member> findByName(List<Member> members, String name) {
-        return members.stream()
-                .filter(m -> m.getUserName().equals(name))
-                .findFirst();
+        return memberRepository.findByName(members, name);
     }
 
     public void clear() {
