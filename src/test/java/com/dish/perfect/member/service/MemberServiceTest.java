@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.dish.perfect.member.domain.Member;
-import com.dish.perfect.member.dto.request.MemberRequestDto;
+import com.dish.perfect.member.dto.request.MemberRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +33,7 @@ public class MemberServiceTest {
     void createAccount() {
         Member saveMember = fixtureA();
         Member findMember = memberService.findById(saveMember.getId());
+        log.info("createdMember={}", findMember);
         assertThat(findMember).isEqualTo(saveMember);
     }
 
@@ -40,9 +41,10 @@ public class MemberServiceTest {
     @DisplayName("휴대폰 번호 뒷자리 4개 출력 확인")
     void extractFourDigits() {
         Member saveMember = fixtureA();
+        log.info("userName={}, phoneNumber={}", saveMember.getUserName(),saveMember.getPhoneNumber());
         String fourDigits = memberService.extractLastFourDigits(saveMember.getPhoneNumber());
 
-        log.info("digits={}", fourDigits);
+        log.info("4digits={}", fourDigits);
 
         assertThat(fourDigits).isEqualTo("3333");
 
@@ -55,7 +57,7 @@ public class MemberServiceTest {
         Member saveMemberB = fixtureB();
 
         List<Member> findByphoneNum = memberService.findByphoneNum(saveMemberA.getPhoneNumber());
-        log.info("findMember={}", findByphoneNum.toString());
+        log.info("findMembers={}", findByphoneNum.toString());
 
         assertThat(findByphoneNum).contains(saveMemberA, saveMemberB);
     }
@@ -74,7 +76,7 @@ public class MemberServiceTest {
     }
 
     private Member fixtureA() {
-        MemberRequestDto memberDto = MemberRequestDto.builder()
+        MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("이나나")
                                                     .phoneNumber("22223333")
                                                     .build();
@@ -83,7 +85,7 @@ public class MemberServiceTest {
     }
 
     private Member fixtureB() {
-        MemberRequestDto memberDto = MemberRequestDto.builder()
+        MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("김가가")
                                                     .phoneNumber("22223333")
                                                     .build();
