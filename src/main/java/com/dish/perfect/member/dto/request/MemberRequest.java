@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberRequestDto {
+public class MemberRequest {
 
     @NotBlank(message = "휴대폰 번호는 필수입니다.")
     @Size(max = 8, message = "010을 제외한 나머지 8자리만 입력할 수 있습니다.")
@@ -16,7 +16,7 @@ public class MemberRequestDto {
     private final String userName;
 
     @Builder
-    private MemberRequestDto(String phoneNumber, String userName) {
+    private MemberRequest(String phoneNumber, String userName) {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
     }
