@@ -12,8 +12,6 @@ public interface MemberRepository {
 
     Member findById(Long id);
 
-    List<Member> findByphoneNum(String phoneNumber);
-
     List<Member> findMembersBySameLastFourDigits(String phoneNumber);
 
     List<Member> findAll();
@@ -23,7 +21,7 @@ public interface MemberRepository {
     String extractLastFourDigits(String phoneNumber);
 
     Long getNextId();
-    
+
     void clear();
 
 }

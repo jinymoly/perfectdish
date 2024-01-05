@@ -40,7 +40,7 @@ public class InMemoryMemberRepository implements MemberRepository {
     public List<Member> findMembersBySameLastFourDigits(String phoneNumber) {
         List<Member> fourdigitsDuplicatedMember = new ArrayList<>();
         for (Member member : memberMap.values()) {
-              if(extractLastFourDigits(member.getPhoneNumber()).equals(extractLastFourDigits(phoneNumber))){
+            if (extractLastFourDigits(member.getPhoneNumber()).equals(extractLastFourDigits(phoneNumber))) {
                 fourdigitsDuplicatedMember.add(member);
             }
         }
@@ -74,11 +74,4 @@ public class InMemoryMemberRepository implements MemberRepository {
         return phoneNumber.substring(4, 8);
 
     }
-
-    @Override
-    public List<Member> findByphoneNum(String phoneNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByphoneNum'");
-    }
-
 }
