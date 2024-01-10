@@ -16,7 +16,8 @@ public class MenuRequest {
     
     private final Integer price;
     private final String description;
-    private final String menuImgUrl;
+
+    private final String menuImgUrl; // uuid 전 
 
     @Builder
     private MenuRequest(String title, CourseType courseType, Integer price, String description, String menuImgUrl)  {
