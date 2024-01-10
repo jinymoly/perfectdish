@@ -75,6 +75,8 @@ public class MemberServiceTest {
         assertThat(expectMember).contains(saveMemberB);
     }
 
+    //TODO 동시 가입시 순서대로 저장되는지 확인 
+
     private Member fixtureA() {
         MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("이나나")
