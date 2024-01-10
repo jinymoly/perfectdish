@@ -17,7 +17,7 @@ public class MenuResponse {
     private final String description;
     private final Integer price;
 
-    private final String menuImgUrl; // TODO : uuid -> 메뉴 이름으로 변환 
+    private final String menuImgUrl;
 
     public static MenuResponse toMenuResponse(final Menu menu){
         return MenuResponse.builder()
@@ -25,7 +25,7 @@ public class MenuResponse {
                     .courseType(menu.getCourseType())
                     .price(menu.getPrice())
                     .description(menu.getDescription())
-                    .menuImgUrl(menu.getMenuImg().getStoredUrl())
+                    .menuImgUrl(menu.getMenuImg().getUploadUrl())
                     .build();
     }
 }
