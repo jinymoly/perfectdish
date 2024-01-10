@@ -25,4 +25,15 @@ public class Menu {
         this.description = description;
         this.menuImg = menuImg;
     }
+
+    
+    @Override
+    public String toString() {
+        return "[" + typeConverter(courseType) + "] " + "Menu : " + menuName + " || " + description + " (" + price + ")";
+    }
+
+
+    private String typeConverter(CourseType type){
+        return type.toString().replace("T_", "");
+    }
 }
