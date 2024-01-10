@@ -1,28 +1,28 @@
 package com.dish.perfect.menu.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "menuName")
 public class Menu {
 
-    private CourseType type;
-    private String title;
+    private CourseType courseType;
+    private String menuName;
+    private Integer price;
     private String description;
 
-    private MultipartFile menuImg; 
+    private MenuImg menuImg;
 
     @Builder
-    public Menu(CourseType type, String title, String description, MultipartFile menuImg) {
-        this.type = type;
-        this.title = title;
+    public Menu(CourseType courseType, String menuName, Integer price, String description, MenuImg menuImg) {
+        this.courseType = courseType;
+        this.menuName = menuName;
+        this.price = price;
         this.description = description;
         this.menuImg = menuImg;
     }
-
-    
 }

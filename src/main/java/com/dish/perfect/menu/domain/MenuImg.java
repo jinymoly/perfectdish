@@ -7,14 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MenuImg {
 
-    private String uploadName;
-    private String storedName;
+    private String uploadUrl;
+    private String storedUrl;
 
     @Override
     public String toString() {
-        return "MenuImg [uploadName=" + uploadName + ", storedName=" + storedName + "]";
+        return "MenuImg [uploadUrl=" + uploadUrl + ", storedUrl=" + storedUrl + "]";
     }
-
-    
-
 }
