@@ -1,5 +1,7 @@
 package com.dish.perfect.menu.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dish.perfect.menu.domain.CourseType;
 
 import jakarta.validation.constraints.NotBlank;
@@ -19,12 +21,15 @@ public class MenuRequest {
 
     private final String menuImgUrl; // uuid 전 
 
+    private final MultipartFile menuImgFile;
+
     @Builder
-    private MenuRequest(String title, CourseType courseType, Integer price, String description, String menuImgUrl)  {
+    private MenuRequest(String title, CourseType courseType, Integer price, String description, String menuImgUrl, MultipartFile menuImgFile)  {
         this.title = title;
         this.courseType = courseType;
         this.price = price;
         this.description = description;
         this.menuImgUrl = menuImgUrl;
+        this.menuImgFile = menuImgFile;
     }
 }

@@ -21,7 +21,7 @@ public class MenuImgStore {
     }
 
     /**
-     * 실제 파일을 정보와 함께 저장
+     * 실제 파일을 정보와 함께 저장(파일)
      * @param multipartFile
      * @return
      * @throws IllegalStateException
