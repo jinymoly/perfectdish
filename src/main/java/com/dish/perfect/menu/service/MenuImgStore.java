@@ -2,6 +2,9 @@ package com.dish.perfect.menu.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +62,21 @@ public class MenuImgStore {
     private String extractExtension(String originalFilename) {
         int position = originalFilename.lastIndexOf(".");
         return originalFilename.substring(position + 1);
+    }
+
+    /**
+     * 파일 삭제
+     * @param storedFilename
+     */
+    public void deleteImgFile(String storedFilename){
+        String filename = getFullpath(storedFilename);
+        Path filePath = Paths.get(filename);
+        
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("파일이 삭제되지 않았습니다.", e);
+        }
     }
 
 }
