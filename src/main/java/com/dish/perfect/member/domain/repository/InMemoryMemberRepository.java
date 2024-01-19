@@ -2,10 +2,10 @@ package com.dish.perfect.member.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import com.dish.perfect.member.dto.request.MemberRequest;
 @Repository
 public class InMemoryMemberRepository implements MemberRepository {
 
-    private final Map<Long, Member> memberMap = new HashMap<>();
+    private final Map<Long, Member> memberMap = new ConcurrentHashMap<>();
     private final AtomicLong idSequence = new AtomicLong(0);
 
     @Override
