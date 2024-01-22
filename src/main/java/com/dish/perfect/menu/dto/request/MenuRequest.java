@@ -21,7 +21,7 @@ public class MenuRequest {
 
     private final String menuImgUrl; // uuid 전 
 
-    private final MultipartFile menuImgFile;
+    private MultipartFile menuImgFile;
 
     @Builder
     private MenuRequest(String title, CourseType courseType, Integer price, String description, String menuImgUrl, MultipartFile menuImgFile)  {
