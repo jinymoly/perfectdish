@@ -26,7 +26,7 @@ public class MenuImgStoreTest {
     @Autowired
     private MenuImgStore imgStore;
 
-    private String fixtureFileName = "testImg.png";
+    private final String fixtureFileName = "TESTONLYtestImg.png";
 
     @Test
     @DisplayName("이미지 파일 최종 경로 반환")
@@ -53,8 +53,9 @@ public class MenuImgStoreTest {
     void createStoreFilename(){
         //String uuid = UUID.randomUUID().toString();
         String fakeUUID = "5a854912f8c8";
-        String ext = extensionFixture(fixtureFileName);
+        String ext = imgStore.extractExtension(fixtureFileName);
         String expectedResult = fakeUUID + "." + ext;
+        log.info("originalFilename={}", fixtureFileName);
         log.info("expectedResult={}", expectedResult);
         assertEquals(expectedResult,"5a854912f8c8.png");
         
@@ -64,22 +65,17 @@ public class MenuImgStoreTest {
     @Test
     @DisplayName("파일 저장시 정보(uploadUrl, storedUrl)가 포함")
     void saveFileWithInfo() throws IllegalStateException, IOException{
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("menuImg","testImg.png", MediaType.IMAGE_PNG_VALUE, "testImg".getBytes());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("오늘의메뉴00","fixture00.png", MediaType.IMAGE_PNG_VALUE, "fixture00".getBytes());
         
         String originalFilename = mockMultipartFile.getOriginalFilename();
-        String storedFilename = createStoreFilename(fixtureFileName);
-        
-        mockMultipartFile.transferTo(new File(getFullpath(storedFilename)));
+        String storedFilename = createStoreFilename(originalFilename);
+        mockMultipartFile.transferTo(new File(imgStore.getFullpath(storedFilename)));
+        log.info("getFullpath={}", imgStore.getFullpath(storedFilename));
         MenuImg menuImg = new MenuImg(originalFilename, storedFilename);
-        log.info("menuImg={}", menuImg);
-        String expected = "MenuImg [uploadUrl=testImg.png, storedUrl=5a854912f8c8.png]";
+        log.info("파일 저장 완료 : {}", menuImg);
+        String expected = "MenuImg [uploadUrl=fixture00.png, storedUrl=5a854912f8c8.png]";
         assertEquals(expected, menuImg.toString());
         
-    }
-    
-    private String getFullpath(String storedFilename) {
-        return imgStore.getFullpath(fixtureFileName);
-
     }
 
     private static String createStoreFilename(String fixtureFileName) {
@@ -91,5 +87,15 @@ public class MenuImgStoreTest {
     private static String extensionFixture(String fixtureFileName) {
         int position = fixtureFileName.lastIndexOf(".");
         return fixtureFileName.substring(position + 1);
+    }
+
+    // 파일을 삭제 ? 필요한가? 
+    // 파일이름에서 확장자 빼고 추출 
+    // Full path에 더한다 
+    // 위치에 해당 파일이 존재하면 삭제 
+    private void deleteImg(String storedFilename){
+        if(storedFilename.equals(imgStore.extractFilename(storedFilename))){
+
+        }
     }
 }
