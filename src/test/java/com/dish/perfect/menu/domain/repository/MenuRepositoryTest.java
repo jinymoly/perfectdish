@@ -27,10 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootTest
 @TestPropertySource(properties = {"file.dir=src/test/resources/img/"})
-public class InMemoryMenuRepositoryTest {
+public class MenuRepositoryTest {
     
     @Autowired
     private InMemoryMenuRepository menuRepository;
+
 
     @AfterEach
     void clearMenuImgInTest(){
@@ -60,6 +61,23 @@ public class InMemoryMenuRepositoryTest {
     
         log.info("mapSearchPerformance={}", mapPerformance+"ms");
         log.info("setSearchPerformance={}", setPerformance+"ms");
+    }
+
+    @Test
+    @DisplayName("메뉴 저장 확인")
+    void savethemenu() throws IOException{
+        MockMultipartFile mockMFile = new MockMultipartFile("fixtureMap2","map02Test.png", MediaType.IMAGE_PNG_VALUE, "map02Test".getBytes());
+        
+        MenuRequest menuDto = MenuRequest.builder()
+        .title("아그작사과구름스테이크")
+        .description("특제 소스에 4시간 졸인 후 48시간 1도에서 숙성")
+        .courseType(CourseType.T_MAIN)
+        .price(52000)
+        .menuImgFile(mockMFile)
+        .build();
+        Menu saveMenu = menuRepository.save(menuDto);
+        log.info("saveMenu={}", saveMenu);
+        
     }
 
     /**
@@ -176,6 +194,11 @@ public class InMemoryMenuRepositoryTest {
                                         
     }
 
+    /**
+     * key가 Long(id)인 HashMap
+     * @return
+     * @throws IOException
+     */
     private final Map<Long, Menu> fixtureMap() throws IOException {
         Map<Long, Menu> menuMap = new HashMap<>();
         AtomicLong idCount = new AtomicLong(0);
