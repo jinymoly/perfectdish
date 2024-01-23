@@ -39,15 +39,27 @@ public class InMemoryMenuRepositoryTest {
     }
 
     @Test
-    @DisplayName("hashMap과 hashSet의 속도 비교")
-    void which_collection_is_better() throws IOException {
+    @DisplayName("map vs set 생성 - 어떤 컬렉션에 메뉴를 넣을까")
+    void which_collection_is_better1() throws IOException {
         int virtualMenus = 1000;
-
-        long mapPerformance = hashMapPerformance(virtualMenus);
-        long setPerformance = hashSetPerformance(virtualMenus);
-
-        log.info("mapPerformance={}", mapPerformance+"ms");
-        log.info("setPerformance={}", setPerformance+"ms");
+        
+        long mapPerformance = hashMapCreation(virtualMenus);
+        long setPerformance = hashSetCreation(virtualMenus);
+        
+        log.info("mapCreatePerformance={}", mapPerformance+"ms");
+        log.info("setCreatePerformance={}", setPerformance+"ms");
+    }
+    
+    @Test
+    @DisplayName("map vs set 조회 - 어떤 컬렉션에 메뉴를 넣을까")
+    void which_collection_is_better2() throws IOException {
+        int virtualMenus = 1000;
+        
+        long mapPerformance = hashMapLookup(virtualMenus);
+        long setPerformance = hashSetLookup(virtualMenus);
+    
+        log.info("mapSearchPerformance={}", mapPerformance+"ms");
+        log.info("setSearchPerformance={}", setPerformance+"ms");
     }
 
     /**
@@ -61,15 +73,15 @@ public class InMemoryMenuRepositoryTest {
                 file.delete();
             }
         }
-
     }
+
     /**
-     * hashMap의 성능을 확인
+     * hashMap 생성 성능 확인
      * @param virtualMenus
      * @return
      * @throws IOException
      */
-    private long hashMapPerformance(int virtualMenus) throws IOException{
+    private long hashMapCreation(int virtualMenus) throws IOException{
         long startTime = System.currentTimeMillis();
 
         Map<Long, Menu> menuMap = new HashMap<>();
@@ -84,12 +96,38 @@ public class InMemoryMenuRepositoryTest {
     }
 
     /**
-     * hashSet의 성능 확인
+     * hashMap 조회 성능 확인
      * @param virtualMenus
      * @return
      * @throws IOException
      */
-    private long hashSetPerformance(int virtualMenus) throws IOException{
+    private long hashMapLookup(int virtualMenus) throws IOException{
+        long startTime = System.currentTimeMillis();
+
+        Map<Long, Menu> menuMap = new HashMap<>();
+        for(int i = 0; i< virtualMenus; i++){
+            Map<Long, Menu> fixtureMenu = fixtureMap();
+            long idCount = fixtureMenu.keySet().iterator().next();
+            menuMap.put(idCount, fixtureMenu.get(idCount));
+        }
+        for(Map.Entry<Long, Menu> entry : menuMap.entrySet()){
+            if(entry.getValue().getMenuName().equals("도미 카르파치오")){
+                Menu value = entry.getValue();
+                log.info("current menu searched by hashMap={}", value.toString());
+            };
+        }
+        long endTime = System.currentTimeMillis();
+
+        return endTime - startTime;
+    }
+
+    /**
+     * hashSet 생성 성능 확인
+     * @param virtualMenus
+     * @return
+     * @throws IOException
+     */
+    private long hashSetCreation(int virtualMenus) throws IOException{
         long startTime = System.currentTimeMillis();
 
         Set<Menu> menuSet = new HashSet<>();
@@ -100,10 +138,30 @@ public class InMemoryMenuRepositoryTest {
         return endTime - startTime;
     }
 
-    private Menu fixtureSet() throws IOException {
-        //String imgPath = "src/test/resources/img/testImg.png";
-        MockMultipartFile mockMFile = new MockMultipartFile("menuImg","testImg.png", MediaType.IMAGE_PNG_VALUE, "testImg".getBytes());
+    /**
+     * hashSet 조회 성능 확인
+     * @param virtualMenus
+     * @return
+     * @throws IOException
+     */
+    private long hashSetLookup(int virtualMenus) throws IOException{
+        long startTime = System.currentTimeMillis();
 
+        Set<Menu> menuSet = new HashSet<>();
+        for(int i = 0; i < virtualMenus; i++){
+            menuSet.add(fixtureSet());
+        }
+        for(Menu menu : menuSet){
+            if(menu.getMenuName().equals("도미 카르파치오")){
+                log.info("current menu searched by hashSet={}", menu.toString());
+            }
+        }
+        long endTime = System.currentTimeMillis();
+        return endTime - startTime;
+    }
+
+    private final Menu fixtureSet() throws IOException {
+        MockMultipartFile mockMFile = new MockMultipartFile("menuImg","testImg.png", MediaType.IMAGE_PNG_VALUE, "testImg".getBytes());
 
         MenuRequest menuDto = MenuRequest.builder()
                                         .title("도미 카르파치오")
@@ -113,12 +171,12 @@ public class InMemoryMenuRepositoryTest {
                                         .menuImgFile(mockMFile)
                                         .build();
             Menu saveMenu = menuRepository.save(menuDto);
-            log.info("saveMenu={}", saveMenu.toString());
+            log.info("savedMenuSet={}", saveMenu.toString());
             return saveMenu;
                                         
     }
 
-    private Map<Long, Menu> fixtureMap() throws IOException {
+    private final Map<Long, Menu> fixtureMap() throws IOException {
         Map<Long, Menu> menuMap = new HashMap<>();
         AtomicLong idCount = new AtomicLong(0);
         long incrementAndGet = idCount.incrementAndGet();
@@ -140,10 +198,7 @@ public class InMemoryMenuRepositoryTest {
                         .menuImg(new MenuImg(menuDto.getMenuImgUrl(), "서버 저장 이미지"))
                         .build();
         menuMap.put(incrementAndGet, menu);
+        log.info("savedMenuMap={}", menuMap.toString());
         return menuMap;
-        
-                                        
     }
-
-    
 }
