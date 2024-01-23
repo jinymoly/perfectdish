@@ -2,9 +2,6 @@ package com.dish.perfect.menu.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +21,8 @@ public class MenuImgStore {
     }
 
     /**
-     * 실제 파일을 정보와 함께 저장(파일)
+     * 실제 파일을 정보와 함께 저장
+     * 
      * @param multipartFile
      * @return
      * @throws IllegalStateException
@@ -37,7 +35,7 @@ public class MenuImgStore {
         String originalFilename = menuImgFile.getOriginalFilename();
         String storedFilename = createStoreFilename(originalFilename);
         menuImgFile.transferTo(new File(getFullpath(storedFilename)));
-        
+
         return new MenuImg(originalFilename, storedFilename);
     }
 
@@ -59,24 +57,20 @@ public class MenuImgStore {
      * @param originalFilename
      * @return
      */
-    private String extractExtension(String originalFilename) {
+    public String extractExtension(String originalFilename) {
         int position = originalFilename.lastIndexOf(".");
         return originalFilename.substring(position + 1);
     }
 
     /**
-     * 파일 삭제
-     * @param storedFilename
+     * 확장자를 제외한 파일 이름만 추출
+     * 
+     * @param originalFilename
+     * @return
      */
-    public void deleteImgFile(String storedFilename){
-        String filename = getFullpath(storedFilename);
-        Path filePath = Paths.get(filename);
-        
-        try {
-            Files.delete(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException("파일이 삭제되지 않았습니다.", e);
-        }
-    }
+    public String extractFilename(String originalFilename) {
+        int position = originalFilename.indexOf(".");
+        return originalFilename.substring(0, position);
 
+    }
 }
