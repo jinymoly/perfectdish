@@ -60,7 +60,7 @@ public class MemberService {
     }
 
     /**
-     * memberList에서 이름이 같은 member 추출하기
+     * 번호 같은 memberList에서 이름으로 member 추출하기
      * 
      * @param members
      * @param name
