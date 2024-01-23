@@ -1,9 +1,13 @@
 package com.dish.perfect.menu.domain.repository;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,7 +21,7 @@ import com.dish.perfect.menu.service.MenuImgStore;
 @Repository
 public class InMemoryMenuRepository implements MenuRepository{
     
-    private final Set<Menu> menus = new HashSet<>();
+    private final Map<String, Menu> menus = new HashMap<>();
 
     @Autowired
     private MenuImgStore imgStore;
@@ -34,29 +38,32 @@ public class InMemoryMenuRepository implements MenuRepository{
                         .price(menuRequestDto.getPrice())
                         .menuImg(menuImg)
                         .build();
-        menus.add(menu);
+        menus.put(menu.getMenuName(), menu);
 
         return menu;
     }
     
     @Override
     public Menu findByName(String menuName) {
-        return menus.stream()
-                    .filter(menu -> menu.getMenuName().equals(menuName))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("일치하는 메뉴가 없습니다."));
+        Stream<Entry<String, Menu>> menuStream = menus.entrySet().stream();
+        return menuStream.filter(entry -> entry.getValue().getMenuName().equals(menuName))
+                        .map(Map.Entry::getValue)
+                        .findFirst()
+                        .orElseThrow(() -> new NoSuchElementException("일치하는 메뉴가 없습니다."));
     }
 
     @Override
-    public Set<Menu> findByCourseType(CourseType type) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByCourseType'");
+    public List<String> findByCourseType(CourseType type) {
+        return menus.entrySet().stream()
+                    .filter(entry -> entry.getValue().getCourseType().equals(type))
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+        menus.clear();
     }
+    
     
 }
