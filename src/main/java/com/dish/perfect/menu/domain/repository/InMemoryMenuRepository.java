@@ -27,7 +27,7 @@ public class InMemoryMenuRepository implements MenuRepository{
     private MenuImgStore imgStore;
     
     @Override
-    public Menu create(MenuRequest menuRequestDto) throws IOException{
+    public Menu save(MenuRequest menuRequestDto) throws IOException{
 
         MenuImg menuImg = imgStore.storeFile(menuRequestDto.getMenuImgFile());
 

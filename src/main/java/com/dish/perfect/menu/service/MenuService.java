@@ -23,7 +23,7 @@ public class MenuService {
 
     public Menu save(MenuRequest menuDto) throws IOException{
         try {
-            Menu menu = menuRepository.create(menuDto);
+            Menu menu = menuRepository.save(menuDto);
             log.info("save : menu={}", menu);
             return menu;
             

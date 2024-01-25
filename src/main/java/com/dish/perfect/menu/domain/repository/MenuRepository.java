@@ -9,7 +9,7 @@ import com.dish.perfect.menu.dto.request.MenuRequest;
 
 public interface MenuRepository {
     
-    Menu create(MenuRequest menuRequestDto) throws IOException;
+    Menu save(MenuRequest menuRequestDto) throws IOException;
 
     //Menu modify(MenuRequest menurequestDto);
 
