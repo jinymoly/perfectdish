@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.dto.request.MemberRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +82,7 @@ public class MemberServiceTest {
         MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("이나나")
                                                     .phoneNumber("22223333")
+                                                    .status(MemberStatus.ACTIVE)
                                                     .build();
         Member saveMember = memberService.save(memberDto);
         return saveMember;
@@ -90,6 +92,7 @@ public class MemberServiceTest {
         MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("김가가")
                                                     .phoneNumber("22223333")
+                                                    .status(MemberStatus.ACTIVE)
                                                     .build();
         Member saveMember = memberService.save(memberDto);
         return saveMember;
