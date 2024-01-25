@@ -17,6 +17,7 @@ import com.dish.perfect.member.dto.request.MemberRequest;
 public class InMemoryMemberRepository implements MemberRepository {
 
     private final Map<Long, Member> memberMap = new ConcurrentHashMap<>();
+
     private final AtomicLong idSequence = new AtomicLong(0);
 
     @Override
@@ -25,6 +26,7 @@ public class InMemoryMemberRepository implements MemberRepository {
                 .id(getNextId())
                 .userName(memberRequestDto.getUserName())
                 .phoneNumber(memberRequestDto.getPhoneNumber())
+                .status(memberRequestDto.getStatus())
                 .createAt(LocalDateTime.now())
                 .build();
         memberMap.put(member.getId(), member);
@@ -59,19 +61,19 @@ public class InMemoryMemberRepository implements MemberRepository {
                 .findFirst();
     }
 
-    @Override
-    public void clear() {
-        memberMap.clear();
-    }
-
+    
     @Override
     public Long getNextId() {
         return idSequence.incrementAndGet();
     }
-
+    
     @Override
     public String extractLastFourDigits(String phoneNumber) {
         return phoneNumber.substring(4, 8);
-
+    }
+    
+    @Override
+    public void clear() {
+        memberMap.clear();
     }
 }
