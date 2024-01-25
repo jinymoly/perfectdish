@@ -27,7 +27,7 @@ public class InMemoryMenuRepository implements MenuRepository{
     private MenuImgStore imgStore;
     
     @Override
-    public Menu save(MenuRequest menuRequestDto) throws IOException{
+    public Menu create(MenuRequest menuRequestDto) throws IOException{
 
         MenuImg menuImg = imgStore.storeFile(menuRequestDto.getMenuImgFile());
 
@@ -53,17 +53,26 @@ public class InMemoryMenuRepository implements MenuRepository{
     }
 
     @Override
-    public List<String> findByCourseType(CourseType type) {
+    public List<Menu> findByCourseType(CourseType type) {
         return menus.entrySet().stream()
                     .filter(entry -> entry.getValue().getCourseType().equals(type))
-                    .map(Map.Entry::getKey)
+                    .map(Map.Entry::getValue)
                     .collect(Collectors.toList());
     }
-
+    
+    
+    
     @Override
     public void clear() {
         menus.clear();
     }
+
+    // TODO - 메뉴 수정 (soft delete)
+    // @Override
+    // public Menu modify(MenuRequest menurequestDto) {
+    //     Menu menu = Menu.builder().
+    //     throw new UnsupportedOperationException("Unimplemented method 'modify'");
+    // }
     
     
 }

@@ -75,7 +75,7 @@ public class MenuRepositoryTest {
         .price(52000)
         .menuImgFile(mockMFile)
         .build();
-        Menu saveMenu = menuRepository.save(menuDto);
+        Menu saveMenu = menuRepository.create(menuDto);
         log.info("saveMenu={}", saveMenu);
         
     }
