@@ -1,12 +1,13 @@
 package com.dish.perfect.menu.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @EqualsAndHashCode(of = "menuName")
 public class Menu {
 
@@ -16,6 +17,16 @@ public class Menu {
     private String description;
 
     private MenuImg menuImg;
+
+    private List<Menu> menus;
+
+    public Menu(){
+        this.menus = new ArrayList<>();
+    }
+
+    public void createMenuList(Menu menu){
+        menus.add(menu);
+    }
 
     @Builder
     public Menu(CourseType courseType, String menuName, Integer price, String description, MenuImg menuImg) {
