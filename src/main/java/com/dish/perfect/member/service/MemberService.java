@@ -25,7 +25,7 @@ public class MemberService {
 
     public Member save(MemberRequest memberDto) {
         Member member = memberRepository.save(memberDto);
-        log.info("save : member={}", member);
+        log.info("save : {}", member);
         return member;
     }
 
