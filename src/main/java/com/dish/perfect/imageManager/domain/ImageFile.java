@@ -1,11 +1,11 @@
-package com.dish.perfect.menu.domain;
+package com.dish.perfect.imageManager.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MenuImg {
+public class ImageFile {
 
     private String uploadUrl;
     private String storedUrl;

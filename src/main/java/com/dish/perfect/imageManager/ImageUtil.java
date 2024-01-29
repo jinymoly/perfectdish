@@ -1,4 +1,4 @@
-package com.dish.perfect.menu.service;
+package com.dish.perfect.imageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.dish.perfect.menu.domain.MenuImg;
+import com.dish.perfect.imageManager.domain.ImageFile;
 
 @Component
-public class MenuImgStore {
+public class ImageUtil {
 
     @Value("${file.dir}")
     private String fileDir;
@@ -28,7 +28,7 @@ public class MenuImgStore {
      * @throws IllegalStateException
      * @throws IOException
      */
-    public MenuImg storeFile(MultipartFile menuImgFile) throws IllegalStateException, IOException {
+    public ImageFile storeFile(MultipartFile menuImgFile) throws IllegalStateException, IOException {
         if (menuImgFile.isEmpty()) {
             return null;
         }
@@ -36,7 +36,7 @@ public class MenuImgStore {
         String storedFilename = createStoreFilename(originalFilename);
         menuImgFile.transferTo(new File(getFullpath(storedFilename)));
 
-        return new MenuImg(originalFilename, storedFilename);
+        return new ImageFile(originalFilename, storedFilename);
     }
 
     /**
