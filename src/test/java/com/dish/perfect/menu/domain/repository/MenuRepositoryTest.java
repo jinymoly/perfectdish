@@ -1,9 +1,12 @@
 package com.dish.perfect.menu.domain.repository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,9 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
+import com.dish.perfect.imageManager.domain.ImageFile;
+import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.menu.domain.MenuImg;
 import com.dish.perfect.menu.dto.request.MenuRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,10 +78,94 @@ public class MenuRepositoryTest {
         .courseType(CourseType.T_MAIN)
         .price(52000)
         .menuImgFile(mockMFile)
+        .availability(Availability.AVAILABLE)
         .build();
         Menu saveMenu = menuRepository.save(menuDto);
         log.info("saveMenu={}", saveMenu);
         
+    }
+    
+    @Test
+    @DisplayName("코스타입별 메뉴 반환")
+    void findByCourseType() throws IOException{
+        MockMultipartFile mockMFile = new MockMultipartFile("Test","TestMock.jpeg", MediaType.IMAGE_JPEG_VALUE, "TestMock".getBytes());
+                                    
+        MenuRequest dtoA = MenuRequest.builder()
+                                    .title("이것은 A메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_MAIN)
+                                    .price(500000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.AVAILABLE)
+                                    .build();
+
+        MenuRequest dtoB = MenuRequest.builder()
+                                    .title("이것은 B메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_DESSERT)
+                                    .price(24000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.UNAVAILABLE)
+                                    .build();
+        
+        MenuRequest dtoC = MenuRequest.builder()
+                                    .title("이것은 C메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_MAIN)
+                                    .price(60000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.AVAILABLE)
+                                    .build();
+
+        menuRepository.save(dtoA);
+        menuRepository.save(dtoB);
+        menuRepository.save(dtoC);
+
+        List<Menu> findByCourseType = menuRepository.findByCourseType(CourseType.T_MAIN);
+        log.info("{}", findByCourseType.toString());
+        assertTrue(findByCourseType.stream().allMatch(menu -> menu.getCourseType().equals(CourseType.T_MAIN)));
+
+    }
+
+    @Test
+    @DisplayName("isAvailable? 메뉴 반환")
+    void findByAvailability() throws IOException{
+        MockMultipartFile mockMFile = new MockMultipartFile("Test","TestMock.jpeg", MediaType.IMAGE_JPEG_VALUE, "TestMock".getBytes());
+
+        MenuRequest dtoA = MenuRequest.builder()
+                                    .title("이것은 A메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_MAIN)
+                                    .price(500000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.UNAVAILABLE)
+                                    .build();
+                                    
+        MenuRequest dtoB = MenuRequest.builder()
+                                    .title("이것은 B메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_DESSERT)
+                                    .price(24000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.UNAVAILABLE)
+                                    .build();
+        
+        MenuRequest dtoC = MenuRequest.builder()
+                                    .title("이것은 C메뉴다")
+                                    .description("이것은 메뉴 설명")
+                                    .courseType(CourseType.T_MAIN)
+                                    .price(60000)
+                                    .menuImgFile(mockMFile)
+                                    .availability(Availability.AVAILABLE)
+                                    .build();
+
+        menuRepository.save(dtoA);
+        menuRepository.save(dtoB);
+        menuRepository.save(dtoC);
+
+        List<Menu> availableMenus = menuRepository.findByAvaility(Availability.AVAILABLE);
+        log.info("{}", availableMenus.toString());
+        assertTrue(availableMenus.stream().allMatch(menu -> menu.getAvailability().equals(Availability.AVAILABLE)));
     }
 
     /**
@@ -187,6 +275,7 @@ public class MenuRepositoryTest {
                                         .courseType(CourseType.T_EPPETIZER)
                                         .price(23000)
                                         .menuImgFile(mockMFile)
+                                        .availability(Availability.AVAILABLE)
                                         .build();
             Menu saveMenu = menuRepository.save(menuDto);
             log.info("savedMenuSet={}", saveMenu.toString());
@@ -212,13 +301,15 @@ public class MenuRepositoryTest {
                                         .courseType(CourseType.T_EPPETIZER)
                                         .price(23000)
                                         .menuImgFile(mockMFile)
+                                        .availability(Availability.AVAILABLE)
                                         .build();
         Menu menu = Menu.builder()
                         .courseType(menuDto.getCourseType())
                         .menuName(menuDto.getTitle())
                         .description(menuDto.getDescription())
                         .price(menuDto.getPrice())
-                        .menuImg(new MenuImg(menuDto.getMenuImgUrl(), "서버 저장 이미지"))
+                        .menuImg(new ImageFile(menuDto.getMenuImgUrl(), "서버 저장 이미지"))
+                        .availability(menuDto.getAvailability())
                         .build();
         menuMap.put(incrementAndGet, menu);
         log.info("savedMenuMap={}", menuMap.toString());

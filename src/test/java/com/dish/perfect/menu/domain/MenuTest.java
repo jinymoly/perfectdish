@@ -17,12 +17,13 @@ public class MenuTest {
                                 .menuName("어니언 수프")
                                 .description("최고급 버터로 4시간 정성스레 카라멜라이징한 양파로 만든 수프")
                                 .price(13000)
+                                .availability(Availability.AVAILABLE)
                                 .build();
         
         String savedText = menu1.toString();
 
         log.info("{}", savedText.toString());
-        String expected = "[EPPETIZER] Menu : 어니언 수프 || 최고급 버터로 4시간 정성스레 카라멜라이징한 양파로 만든 수프 (13000)";
+        String expected = "[EPPETIZER] 어니언 수프 || 최고급 버터로 4시간 정성스레 카라멜라이징한 양파로 만든 수프 (13000) AVAILABLE";
         
         assertEquals(expected, savedText);
     }

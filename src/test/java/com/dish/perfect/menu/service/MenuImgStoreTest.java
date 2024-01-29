@@ -14,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
-import com.dish.perfect.menu.domain.MenuImg;
+import com.dish.perfect.imageManager.ImageUtil;
+import com.dish.perfect.imageManager.domain.ImageFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MenuImgStoreTest {
     
     @Autowired
-    private MenuImgStore imgStore;
+    private ImageUtil imgStore;
 
     private final String fixtureFileName = "TESTONLYtestImg.png";
 
@@ -71,7 +72,7 @@ public class MenuImgStoreTest {
         String storedFilename = createStoreFilename(originalFilename);
         mockMultipartFile.transferTo(new File(imgStore.getFullpath(storedFilename)));
         log.info("getFullpath={}", imgStore.getFullpath(storedFilename));
-        MenuImg menuImg = new MenuImg(originalFilename, storedFilename);
+        ImageFile menuImg = new ImageFile(originalFilename, storedFilename);
         log.info("파일 저장 완료 : {}", menuImg);
         String expected = "MenuImg [uploadUrl=fixture00.png, storedUrl=5a854912f8c8.png]";
         assertEquals(expected, menuImg.toString());
