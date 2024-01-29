@@ -1,13 +1,14 @@
 package com.dish.perfect.menu.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.dish.perfect.imageManager.domain.ImageFile;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @EqualsAndHashCode(of = "menuName")
 public class Menu {
 
@@ -16,33 +17,25 @@ public class Menu {
     private Integer price;
     private String description;
 
-    private MenuImg menuImg;
+    private ImageFile menuImg;
 
-    private List<Menu> menus;
-
-    public Menu(){
-        this.menus = new ArrayList<>();
-    }
-
-    public void createMenuList(Menu menu){
-        menus.add(menu);
-    }
+    private Availability availability;
 
     @Builder
-    public Menu(CourseType courseType, String menuName, Integer price, String description, MenuImg menuImg) {
+    public Menu(CourseType courseType, String menuName, Integer price, String description, ImageFile menuImg, Availability availability) {
         this.courseType = courseType;
         this.menuName = menuName;
         this.price = price;
         this.description = description;
         this.menuImg = menuImg;
+        this.availability = availability;
     }
 
-    
     @Override
     public String toString() {
-        return "[" + typeConverter(courseType) + "] " + "Menu : " + menuName + " || " + description + " (" + price + ")";
+        return "[" + typeConverter(courseType) + "] "
+                + menuName + " || " + description + " (" + price + ") "+ availability;
     }
-
 
     private String typeConverter(CourseType type){
         return type.toString().replace("T_", "");

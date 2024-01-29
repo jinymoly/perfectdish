@@ -1,5 +1,6 @@
 package com.dish.perfect.menu.dto.response;
 
+import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
 
@@ -18,6 +19,7 @@ public class MenuResponse {
     private final Integer price;
 
     private final String menuImgUrl;
+    private final Availability availability;
 
     public static MenuResponse toMenuResponse(final Menu menu){
         return MenuResponse.builder()
@@ -26,6 +28,7 @@ public class MenuResponse {
                     .price(menu.getPrice())
                     .description(menu.getDescription())
                     .menuImgUrl(menu.getMenuImg().getUploadUrl())
+                    .availability(menu.getAvailability())
                     .build();
     }
 }

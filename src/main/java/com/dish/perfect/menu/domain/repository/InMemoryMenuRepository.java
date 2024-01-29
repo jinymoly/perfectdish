@@ -12,11 +12,12 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dish.perfect.imageManager.ImageUtil;
+import com.dish.perfect.imageManager.domain.ImageFile;
+import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.menu.domain.MenuImg;
 import com.dish.perfect.menu.dto.request.MenuRequest;
-import com.dish.perfect.menu.service.MenuImgStore;
 
 @Repository
 public class InMemoryMenuRepository implements MenuRepository{
@@ -24,12 +25,12 @@ public class InMemoryMenuRepository implements MenuRepository{
     private final Map<String, Menu> menus = new HashMap<>();
 
     @Autowired
-    private MenuImgStore imgStore;
+    private ImageUtil imgStore;
     
     @Override
     public Menu save(MenuRequest menuRequestDto) throws IOException{
 
-        MenuImg menuImg = imgStore.storeFile(menuRequestDto.getMenuImgFile());
+        ImageFile menuImg = imgStore.storeFile(menuRequestDto.getMenuImgFile());
 
         Menu menu = Menu.builder()
                         .menuName(menuRequestDto.getTitle())
@@ -37,6 +38,7 @@ public class InMemoryMenuRepository implements MenuRepository{
                         .courseType(menuRequestDto.getCourseType())
                         .price(menuRequestDto.getPrice())
                         .menuImg(menuImg)
+                        .availability(menuRequestDto.getAvailability())
                         .build();
         menus.put(menu.getMenuName(), menu);
 
@@ -65,6 +67,14 @@ public class InMemoryMenuRepository implements MenuRepository{
     @Override
     public void clear() {
         menus.clear();
+    }
+
+    @Override
+    public List<Menu> findByAvaility(Availability availability) {
+        return menus.entrySet().stream()
+                    .filter(entry -> entry.getValue().getAvailability().equals(availability))
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
     }
 
     // TODO - 메뉴 수정 (soft delete)
