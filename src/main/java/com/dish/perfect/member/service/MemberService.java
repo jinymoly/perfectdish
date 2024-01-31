@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.dish.perfect.global.log.logTrace.LogManager;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
 import com.dish.perfect.member.dto.request.MemberRequest;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final LogManager logManager; // TODO
 
     public Long getNextId() {
         return memberRepository.getNextId();
@@ -28,10 +30,23 @@ public class MemberService {
         log.info("save : {}", member);
         return member;
     }
+    
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
 
     public Member findById(Long id) {
         return memberRepository.findById(id);
     }
+
+    public Member deleteMember(MemberRequest request, String name){
+        List<Member> memberList = memberRepository.findAll();
+        memberRepository.findByName(memberList, name);
+        Member member = memberRepository.deleteMember(request);
+        log.info("delete : {}", member);
+        return member;
+    }
+    
 
     /**
      * 폰번호 뒤 4자리로 찾은 member(중복 가능성)
@@ -45,9 +60,6 @@ public class MemberService {
         return membersWithDuplicateNumber;
     }
 
-    public List<Member> findAll() {
-        return memberRepository.findAll();
-    }
 
     /**
      * 폰 번호 마지막 4자리 반환
