@@ -1,7 +1,8 @@
 package com.dish.perfect.menuBoard.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import com.dish.perfect.menu.domain.Menu;
 
@@ -13,13 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuBoard {
     
-    private Long id;
+    private List<Menu> commonMenuList;
 
-    private Set<Menu> menuSet = new HashSet<>();
+    private Optional<List<Menu>> discountMenuList;
+
+    private List<Menu> allMenuList;
+    
+    private LocalDateTime createAt;
 
     @Builder
-    private MenuBoard(Long id, Set<Menu> menuSet){
-        this.id = id;
-        this.menuSet = menuSet;
+    private MenuBoard(List<Menu> commonMenuList, Optional<List<Menu>> discountMenuList, List<Menu> allMenuList, LocalDateTime createAt){
+        this.commonMenuList = commonMenuList;
+        this.discountMenuList = discountMenuList;
+        this.allMenuList = allMenuList;
+        this.createAt = createAt;
     }
 }
