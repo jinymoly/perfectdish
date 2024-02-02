@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
+import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.menu.domain.repository.MenuRepository;
@@ -48,6 +49,10 @@ public class MenuService {
             throw new IllegalArgumentException("courseType을 입력하세요.");
         }
         return menuRepository.findByCourseType(courseType);
+    }
+
+    public List<Menu> findByAvailability(Availability availability){
+        return menuRepository.findByAvaility(availability);
     }
 
     // TODO 01 
