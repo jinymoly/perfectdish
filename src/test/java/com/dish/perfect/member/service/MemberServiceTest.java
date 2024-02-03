@@ -56,8 +56,8 @@ public class MemberServiceTest {
     void findByPhoneNumber() {
         Member saveMemberA = fixtureA();
         Member saveMemberB = fixtureB();
-
-        List<Member> findByphoneNum = memberService.findByphoneNum(saveMemberA.getPhoneNumber());
+        String FourDigitsByA = memberService.extractLastFourDigits(saveMemberA.getPhoneNumber());
+        List<Member> findByphoneNum = memberService.findByphoneNum(FourDigitsByA);
         log.info("findMembers={}", findByphoneNum.toString());
 
         assertThat(findByphoneNum).contains(saveMemberA, saveMemberB);
@@ -69,7 +69,7 @@ public class MemberServiceTest {
         Member saveMemberA = fixtureA();
         Member saveMemberB = fixtureB();
 
-        List<Member> findByphoneNum = memberService.findByphoneNum(saveMemberA.getPhoneNumber());
+        List<Member> findByphoneNum = memberService.findByphoneNum(memberService.extractLastFourDigits(saveMemberA.getPhoneNumber()));
         Optional<Member> expectMember = memberService.findByName(findByphoneNum, "김가가");
         log.info("expectMember={}", expectMember.toString());
         
