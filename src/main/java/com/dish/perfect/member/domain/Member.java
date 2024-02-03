@@ -40,7 +40,7 @@ public class Member {
     }
 
     private String timeFomatter(LocalDateTime time){
-        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-ss/hh:MM:ss"));
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/hh:MM:ss"));
     }
 
 }
