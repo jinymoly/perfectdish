@@ -12,8 +12,8 @@ import com.dish.perfect.menuBoard.dto.request.MenuBoardRequest;
 @Repository
 public class InMemoryMenuBoardRepository implements MenuBoardRepository{
 
-    List<Menu> commonMenus;
-    Optional<List<Menu>> discountMenus;
+    private List<Menu> commonMenus;
+    private Optional<List<Menu>> discountMenus;
     
     List<Menu> allMenuList;
 
