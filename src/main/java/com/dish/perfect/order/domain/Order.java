@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Order {
 
-    private Long id;
-
     private int tableNo;
 
     private String menuName;
@@ -26,16 +24,21 @@ public class Order {
     // price의 기준 - 1메뉴? 갯수에 따른 price ?
 
     @Builder
-    public Order(Long id, int tableNo,
+    public Order(int tableNo,
             String menuName, int count, Integer price,
             BigDecimal totalPrice, OrderStatus status) {
-        this.id = id;
         this.tableNo = tableNo;
         this.menuName = menuName;
         this.count = count;
         this.price = price;
         this.totalPrice = totalPrice;
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return tableNo + "번 테이블 : " + menuName + ", " + price + "원, " + count + ", 총 금액 " + totalPrice
+                + "원, [" + status + "]";
     }
 
 }
