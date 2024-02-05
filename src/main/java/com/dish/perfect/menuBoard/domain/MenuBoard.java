@@ -1,6 +1,7 @@
 package com.dish.perfect.menuBoard.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,14 @@ public class MenuBoard {
         this.discountMenuList = discountMenuList;
         this.allMenuList = allMenuList;
         this.createAt = createAt;
+    }
+
+    @Override
+    public String toString(){
+        return "🥗" + currentDateFommater(createAt) + "의 메뉴 리스트 " + commonMenuList + " ✨오늘의 할인 메뉴✨ " + discountMenuList + "입니다.";
+    }
+
+    private String currentDateFommater(LocalDateTime today){
+        return today.format(DateTimeFormatter.ofPattern("MM월dd일"));
     }
 }
