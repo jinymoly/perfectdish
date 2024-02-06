@@ -1,6 +1,7 @@
 package com.dish.perfect.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class MemberServiceTest {
         Optional<Member> expectMember = memberService.findByName(findByphoneNum, "김가가");
         log.info("expectMember={}", expectMember.toString());
         
-        assertThat(expectMember).contains(saveMemberB);
+        assertEquals(expectMember.get().getUserName(), saveMemberB.getUserName());
     }
 
     //TODO 동시 가입시 순서대로 저장되는지 확인 
