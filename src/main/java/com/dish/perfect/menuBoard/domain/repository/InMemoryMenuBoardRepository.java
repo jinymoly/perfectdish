@@ -12,22 +12,23 @@ import com.dish.perfect.menuBoard.dto.request.MenuBoardRequest;
 @Repository
 public class InMemoryMenuBoardRepository implements MenuBoardRepository{
 
-    private List<Menu> commonMenus;
-    private Optional<List<Menu>> discountMenus;
+    private List<Menu> commonMenus = new ArrayList<>();
+    private Optional<List<Menu>> discountMenus = Optional.empty();
     
-    List<Menu> allMenuList;
+    List<Menu> allMenuList = new ArrayList<>();
 
     @Override
-    public void addCommonMenu(MenuBoardRequest menuBoardRequest) {
+    public List<Menu> addCommonMenu(MenuBoardRequest menuBoardRequest) {
         Menu menu = menuBoardRequest.getMenu();
         if(commonMenus.isEmpty()){
             commonMenus = new ArrayList<>();
         }
         commonMenus.add(menu);
+        return commonMenus;
     }
 
     @Override
-    public void addDiscountMenu(MenuBoardRequest menuBoardRequest) {
+    public Optional<List<Menu>> addDiscountMenu(MenuBoardRequest menuBoardRequest) {
         Menu menu = menuBoardRequest.getMenu();
         if(discountMenus.isEmpty()){
             List<Menu> newList = new ArrayList<>();
@@ -36,6 +37,7 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
         } else {
             discountMenus.ifPresent(menus -> menus.add(menu));
         }
+        return discountMenus;
     }
 
     @Override
@@ -50,12 +52,10 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
 
     @Override
     public List<Menu> findAllMenus() {
-        if(allMenuList.isEmpty()){
-            allMenuList = new ArrayList<>();
-        } else{
+        if(!commonMenus.isEmpty()){
             allMenuList.addAll(commonMenus);
-            discountMenus.ifPresent(allMenuList::addAll);
         }
+        discountMenus.ifPresent(allMenuList::addAll);
         return allMenuList;
     }
 }

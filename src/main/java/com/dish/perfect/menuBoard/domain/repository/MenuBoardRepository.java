@@ -8,8 +8,8 @@ import com.dish.perfect.menuBoard.dto.request.MenuBoardRequest;
 
 public interface MenuBoardRepository {
     
-    void addCommonMenu(MenuBoardRequest menuBoardRequest);
-    void addDiscountMenu(MenuBoardRequest menuBoardRequest);
+    List<Menu> addCommonMenu(MenuBoardRequest menuBoardRequest);
+    Optional<List<Menu>> addDiscountMenu(MenuBoardRequest menuBoardRequest);
 
     List<Menu> findCommonMenus();
     Optional<List<Menu>> findDiscountMenus();
