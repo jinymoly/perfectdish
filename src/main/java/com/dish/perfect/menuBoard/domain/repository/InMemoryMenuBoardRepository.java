@@ -58,4 +58,9 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
         discountMenus.ifPresent(allMenuList::addAll);
         return allMenuList;
     }
+
+    public void clear() {
+        this.commonMenus.clear();
+        Optional.empty();
+    }
 }

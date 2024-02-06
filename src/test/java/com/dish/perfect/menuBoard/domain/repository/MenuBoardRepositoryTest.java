@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,12 @@ public class MenuBoardRepositoryTest {
     @Autowired
     private static MenuBoardFixture fixture = new MenuBoardFixture();
 
-    public static MenuBoardRequest requestCommonsA() {
+    @AfterEach
+    void clear(){
+        menuBoardRepository.clear();
+    }
+    
+    private static MenuBoardRequest requestCommonsA() {
         MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
                                                             .menu(fixture.menuA())
                                                             .commonMenus(fixture.commonMenus())
@@ -34,7 +40,7 @@ public class MenuBoardRepositoryTest {
         return menuBoardRequest;
     }
 
-    public static MenuBoardRequest requestCommonsB() {
+    private static MenuBoardRequest requestCommonsB() {
         MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
                                                             .menu(fixture.menuB())
                                                             .commonMenus(fixture.commonMenus())
@@ -42,7 +48,7 @@ public class MenuBoardRepositoryTest {
         return menuBoardRequest;
     }
 
-    public static MenuBoardRequest requestDiscountsA() {
+    private static MenuBoardRequest requestDiscountsA() {
         MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
                                                             .menu(fixture.menuC())
                                                             .discountMenus(fixture.discountMenus())
@@ -50,7 +56,7 @@ public class MenuBoardRepositoryTest {
         return menuBoardRequest;
     }
 
-    public static MenuBoardRequest requestDiscountsB() {
+    private static MenuBoardRequest requestDiscountsB() {
         MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
                                                             .menu(fixture.menuD())
                                                             .discountMenus(fixture.discountMenus())
