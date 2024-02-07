@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
+import com.dish.perfect.global.error.GlobalException;
+import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
@@ -25,33 +27,37 @@ public class MenuService {
     public Menu save(MenuRequest menuDto) throws IOException{
         try {
             Menu menu = menuRepository.save(menuDto);
-            log.info("save : menu={}", menu);
+            log.info("save menu={}", menu);
             return menu;
             
         } catch (IOException e) {
-            log.error("IO 예외 발생: {}", e.getMessage());
-            throw new RuntimeException("메뉴를 저장하는 동안 예외 발생!");
+            log.error("🚨 {}", e.getMessage());
+            throw new GlobalException(ErrorCode.FAIL_CREATE_MENU);
         }
     }
     
     public Menu findByMenuName(String menuName){
         try {
-            log.info("menu={}", menuName);
             return menuRepository.findByName(menuName);
         } catch (NoSuchElementException | NullPointerException e){
-            log.error("메뉴를 찾는 동안 예외 발생: {}", e.getMessage());
-            throw new RuntimeException("해당 메뉴를 찾을 수 없음!", e);
+            log.error("🚨 {}", e.getMessage());
+            throw new GlobalException(ErrorCode.NOT_FOUND_MENU);
         }
     }
     
     public List<Menu> findByCourseType(CourseType courseType){
         if(courseType == null){
-            throw new IllegalArgumentException("courseType을 입력하세요.");
+            log.error("🚨 {}", "courseType이 올바르지 않습니다.");
+            throw new GlobalException(ErrorCode.INVALID_INPUT_ERROR);
         }
         return menuRepository.findByCourseType(courseType);
     }
 
     public List<Menu> findByAvailability(Availability availability){
+        if(availability == null){
+            log.error("🚨 {}", "availability가 올바르지 않습니다.");
+            throw new GlobalException(ErrorCode.INVALID_INPUT_ERROR);
+        }
         return menuRepository.findByAvaility(availability);
     }
 
