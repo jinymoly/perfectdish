@@ -24,7 +24,6 @@ public class MenuBoardRepositoryTest {
     @Autowired
     private InMemoryMenuBoardRepository menuBoardRepository;
 
-    @Autowired
     private static MenuBoardFixture fixture = new MenuBoardFixture();
 
     @AfterEach
@@ -32,6 +31,36 @@ public class MenuBoardRepositoryTest {
         menuBoardRepository.clear();
     }
     
+    @Test
+    @DisplayName("common 메뉴 리스트 생성 및 조회")
+    void createCommonMenus() {
+        List<Menu> commons = menuBoardRepository.addCommonMenu(requestCommonsA());
+        List<Menu> result = menuBoardRepository.findCommonMenus();
+        
+        assertEquals(commons, result);
+    }
+
+    @Test
+    @DisplayName("discount 메뉴 리스트 생성 및 조회")
+    void createDiscountMenus() {
+        Optional<List<Menu>> discounts = menuBoardRepository.addDiscountMenu(requestDiscountsA());
+        Optional<List<Menu>> result = menuBoardRepository.findDiscountMenus();
+        
+        assertEquals(discounts, result);
+    }
+
+    @Test
+    @DisplayName("모든 메뉴 조회")
+    void getAllMenuList() {
+        menuBoardRepository.addCommonMenu(requestCommonsA());
+        menuBoardRepository.addCommonMenu(requestCommonsB());
+        menuBoardRepository.addDiscountMenu(requestDiscountsA());
+        menuBoardRepository.addDiscountMenu(requestDiscountsB());
+        
+        List<Menu> findAllMenus = menuBoardRepository.findAllMenus();
+        log.info("{}", findAllMenus);
+    }
+
     private static MenuBoardRequest requestCommonsA() {
         MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
                                                             .menu(fixture.menuA())
@@ -62,35 +91,5 @@ public class MenuBoardRepositoryTest {
                                                             .discountMenus(fixture.discountMenus())
                                                             .build();
         return menuBoardRequest;
-    }
-
-    @Test
-    @DisplayName("common 메뉴 리스트 생성 및 조회")
-    void createCommonMenus() {
-        List<Menu> commons = menuBoardRepository.addCommonMenu(requestCommonsA());
-        List<Menu> result = menuBoardRepository.findCommonMenus();
-
-        assertEquals(commons, result);
-    }
-
-    @Test
-    @DisplayName("discount 메뉴 리스트 생성 및 조회")
-    void createDiscountMenus() {
-        Optional<List<Menu>> discounts = menuBoardRepository.addDiscountMenu(requestDiscountsA());
-        Optional<List<Menu>> result = menuBoardRepository.findDiscountMenus();
-        
-        assertEquals(discounts, result);
-    }
-
-    @Test
-    @DisplayName("모든 메뉴 조회")
-    void getAllMenuList() {
-        menuBoardRepository.addCommonMenu(requestCommonsA());
-        menuBoardRepository.addCommonMenu(requestCommonsB());
-        menuBoardRepository.addDiscountMenu(requestDiscountsA());
-        menuBoardRepository.addDiscountMenu(requestDiscountsB());
-
-        List<Menu> findAllMenus = menuBoardRepository.findAllMenus();
-        log.info("{}", findAllMenus);
     }
 }
