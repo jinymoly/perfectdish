@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.dish.perfect.global.error.GlobalException;
+import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.dto.request.MemberRequest;
@@ -82,7 +84,7 @@ public class MemberRepositoryTest {
 
         assertThrows(NoSuchElementException.class,
                         ()-> {memberRepository.findByName("잘못된 이름")
-                                .orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않음!"));
+                                .orElseThrow(()-> new GlobalException(ErrorCode.NOT_FOUND_MEMBER));
                             }
                     ); 
     }

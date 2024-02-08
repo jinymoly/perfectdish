@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ErrorCodeTest {
 
-
     @Test
     @DisplayName("member error 발생")
     void duplicatedMemberErrorCode(){
