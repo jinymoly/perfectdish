@@ -171,7 +171,7 @@ public class MenuRepositoryTest {
     /**
      * 테스트 종료 후 생성된 이미지 파일을 삭제
      */
-    private void deleteFileAfterTest(String dirPath){
+    public static void deleteFileAfterTest(String dirPath){
         File dirFile = new File(dirPath);
         File[] savedTestFiles = dirFile.listFiles();
         if(savedTestFiles != null){
