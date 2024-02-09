@@ -23,35 +23,36 @@ public class MenuBoardService {
     
     private final MenuBoardRepository menuBoardRepository;
 
-    public void saveCommonMenus(MenuBoardRequest mBoardRequest){
+    public List<Menu> saveCommonMenus(MenuBoardRequest mBoardRequest){
         if(mBoardRequest.getCommonMenus() == null){
             log.error("🚨 {}", "commMenu 생성 불가.");
             throw new GlobalException(ErrorCode.FAIL_CREATE_MENU_BOARD);
         }
-        menuBoardRepository.addCommonMenu(mBoardRequest);
+        return menuBoardRepository.addCommonMenu(mBoardRequest);
     }        
 
-    public void saveDiscountMenus(MenuBoardRequest mBoardRequest){
-        menuBoardRepository.addDiscountMenu(mBoardRequest);
+    public Optional<List<Menu>> saveDiscountMenus(MenuBoardRequest mBoardRequest){
+        return menuBoardRepository.addDiscountMenu(mBoardRequest);
     }
 
 
-    public List<Menu> commonMenus(){
-        if(commonMenus() == null){
+    public List<Menu> findCommonMenus(){
+        List<Menu> commonMenus = menuBoardRepository.getCommonMenus();
+        if(commonMenus == null){
             log.error("🚨 {}", "commonMenu를 찾을 수 없습니다.");
             throw new  GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD_COMMONS);
         }
-        return menuBoardRepository.findCommonMenus();
+        return commonMenus;
     }
 
-    public List<Menu> discountMenus(){
-        Optional<List<Menu>> optionalMenus = menuBoardRepository.findDiscountMenus();
+    public List<Menu> findDiscountMenus(){
+        Optional<List<Menu>> optionalMenus = menuBoardRepository.getDiscountMenus();
         return optionalMenus.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD_DISCOUNTS));
     }
 
     public List<Menu> getAllMenus(){
         try {
-            return menuBoardRepository.findAllMenus();
+            return menuBoardRepository.getAllMenus();
         } catch (NoSuchElementException e) {
             log.error("🚨 {}", "menuBoard가 존재하지 않습니다.");
             throw new GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD);
