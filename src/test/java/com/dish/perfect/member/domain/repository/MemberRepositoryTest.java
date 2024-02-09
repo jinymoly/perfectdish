@@ -82,7 +82,7 @@ public class MemberRepositoryTest {
         MemberRequest newMem = fixtureC();
         memberRepository.save(newMem);
 
-        assertThrows(NoSuchElementException.class,
+        assertThrows(GlobalException.class,
                         ()-> {memberRepository.findByName("잘못된 이름")
                                 .orElseThrow(()-> new GlobalException(ErrorCode.NOT_FOUND_MEMBER));
                             }
