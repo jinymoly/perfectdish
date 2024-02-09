@@ -8,6 +8,7 @@ import com.dish.perfect.imageManager.domain.ImageFile;
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
+import com.dish.perfect.menuBoard.dto.request.MenuBoardRequest;
 
 public class MenuBoardFixture {
 
@@ -28,19 +29,19 @@ public class MenuBoardFixture {
     }
 
     public Menu menuB() {
-        return fixtureMenu("메뉴B", 25000, "설명BB", Availability.AVAILABLE, CourseType.T_MAIN, "menu.B", "메뉴B 서버 저장");
+        return fixtureMenu("메뉴B", 25000, "설명BB", Availability.UNAVAILABLE, CourseType.T_EPPETIZER, "menu.B", "메뉴B 서버 저장");
     }
 
     public Menu menuC() {
-        return fixtureMenu("메뉴C", 20000, "설명CC", Availability.AVAILABLE, CourseType.T_MAIN, "menu.C", "메뉴C 서버 저장");
+        return fixtureMenu("메뉴C", 20000, "설명CC", Availability.AVAILABLE, CourseType.T_DESSERT, "menu.C", "메뉴C 서버 저장");
     }
 
     public Menu menuD() {
-        return fixtureMenu("메뉴D", 28000, "설명DD", Availability.AVAILABLE, CourseType.T_MAIN, "menu.D", "메뉴D 서버 저장");
+        return fixtureMenu("메뉴D", 28000, "설명DD", Availability.UNAVAILABLE, CourseType.T_MAIN, "menu.D", "메뉴D 서버 저장");
     }
 
     public Menu menuE() {
-        return fixtureMenu("메뉴E", 30000, "설명EE", Availability.AVAILABLE, CourseType.T_MAIN, "menu.E", "메뉴E 서버 저장");
+        return fixtureMenu("메뉴E", 30000, "설명EE", Availability.UNAVAILABLE, CourseType.T_DESSERT, "menu.E", "메뉴E 서버 저장");
     }
 
     public Menu menuF() {
@@ -48,11 +49,11 @@ public class MenuBoardFixture {
     }
 
     public Menu menuG() {
-        return fixtureMenu("메뉴G", 32000, "설명GG", Availability.AVAILABLE, CourseType.T_MAIN, "menu.G", "메뉴G 서버 저장");
+        return fixtureMenu("메뉴G", 32000, "설명GG", Availability.UNAVAILABLE, CourseType.T_EPPETIZER, "menu.G", "메뉴G 서버 저장");
     }
 
     public Menu menuH() {
-        return fixtureMenu("메뉴H", 35000, "설명HH", Availability.AVAILABLE, CourseType.T_MAIN, "menu.H", "메뉴H 서버 저장");
+        return fixtureMenu("메뉴H", 35000, "설명HH", Availability.AVAILABLE, CourseType.T_DESSERT, "menu.H", "메뉴H 서버 저장");
     }
 
     public List<Menu> commonMenus() {
@@ -71,5 +72,69 @@ public class MenuBoardFixture {
         discountMenus.add(menuG());
         discountMenus.add(menuH());
         return Optional.of(discountMenus);
+    }
+
+    public MenuBoardRequest requestCommonsA() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuA())
+                                                            .commonMenus(commonMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestCommonsB() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuB())
+                                                            .commonMenus(commonMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestCommonsC() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuC())
+                                                            .commonMenus(commonMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestCommonsD() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuD())
+                                                            .commonMenus(commonMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestDiscountsA() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuE())
+                                                            .discountMenus(discountMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestDiscountsB() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuF())
+                                                            .discountMenus(discountMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestDiscountsC() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuG())
+                                                            .discountMenus(discountMenus())
+                                                            .build();
+        return menuBoardRequest;
+    }
+
+    public MenuBoardRequest requestDiscountsD() {
+        MenuBoardRequest menuBoardRequest = MenuBoardRequest.builder()
+                                                            .menu(menuH())
+                                                            .discountMenus(discountMenus())
+                                                            .build();
+        return menuBoardRequest;
     }
 }
