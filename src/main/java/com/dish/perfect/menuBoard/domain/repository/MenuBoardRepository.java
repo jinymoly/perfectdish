@@ -11,10 +11,10 @@ public interface MenuBoardRepository {
     List<Menu> addCommonMenu(MenuBoardRequest menuBoardRequest);
     Optional<List<Menu>> addDiscountMenu(MenuBoardRequest menuBoardRequest);
 
-    List<Menu> findCommonMenus();
-    Optional<List<Menu>> findDiscountMenus();
+    List<Menu> getCommonMenus();
+    Optional<List<Menu>> getDiscountMenus();
 
-    List<Menu> findAllMenus();
+    List<Menu> getAllMenus();
 
 
     

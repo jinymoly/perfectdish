@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.menuBoard.dto.request.MenuBoardRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Repository
 public class InMemoryMenuBoardRepository implements MenuBoardRepository{
 
@@ -24,6 +27,7 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
             commonMenus = new ArrayList<>();
         }
         commonMenus.add(menu);
+        log.info("{}", commonMenus);
         return commonMenus;
     }
 
@@ -37,25 +41,29 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
         } else {
             discountMenus.ifPresent(menus -> menus.add(menu));
         }
+        log.info("{}", discountMenus);
         return discountMenus;
     }
 
     @Override
-    public List<Menu> findCommonMenus() {
+    public List<Menu> getCommonMenus() {
+        log.info("{}", commonMenus);
         return commonMenus;
     }
 
     @Override
-    public Optional<List<Menu>> findDiscountMenus() {
+    public Optional<List<Menu>> getDiscountMenus() {
+        log.info("{}", commonMenus);
         return discountMenus;
     }
 
     @Override
-    public List<Menu> findAllMenus() {
+    public List<Menu> getAllMenus() {
         if(!commonMenus.isEmpty()){
             allMenuList.addAll(commonMenus);
         }
         discountMenus.ifPresent(allMenuList::addAll);
+        log.info("{}", allMenuList);
         return allMenuList;
     }
 
