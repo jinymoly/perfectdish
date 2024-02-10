@@ -28,7 +28,7 @@ public class MenuServiceTest {
     @Autowired
     private MenuService menuService;
 
-    private static MenuFixture fixture = new MenuFixture();
+    private MenuFixture fixture = new MenuFixture();
 
     @AfterEach
     void clear(){
