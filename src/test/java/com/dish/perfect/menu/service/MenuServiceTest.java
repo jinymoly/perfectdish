@@ -65,4 +65,15 @@ public class MenuServiceTest {
         assertEquals(menuA.getAvailability(), Availability.UNAVAILABLE);
         assertEquals(menuC.getAvailability(), Availability.AVAILABLE);
     }
+
+    @Test
+    @DisplayName("discount 플래그 적용")
+    void addDiscount() throws IOException{
+        Menu menuA = menuService.save(fixture.fixReqeustA());
+        Menu menuC = menuService.save(fixture.fixReqeustC());
+        menuService.changeDiscount(menuC.getMenuName(), true);
+        
+        assertEquals(menuA.isDiscounted(), false);
+        assertEquals(menuC.isDiscounted(), true);
+    }
 }

@@ -308,6 +308,7 @@ public class MenuRepositoryTest {
                         .menuName(menuDto.getTitle())
                         .description(menuDto.getDescription())
                         .price(menuDto.getPrice())
+                        .isDiscounted(false)
                         .menuImg(new ImageFile(menuDto.getMenuImgUrl(), "서버 저장 이미지"))
                         .availability(menuDto.getAvailability())
                         .build();
