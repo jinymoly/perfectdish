@@ -36,6 +36,7 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
         Menu menu = menuBoardRequest.getMenu();
         if(discountMenus.isEmpty()){
             List<Menu> newList = new ArrayList<>();
+            menu.addDiscount(true);
             newList.add(menu);
             discountMenus = Optional.of(newList);
         } else {

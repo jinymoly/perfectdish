@@ -61,6 +61,11 @@ public class MenuService {
         return menuRepository.findByAvaility(availability);
     }
 
+    public void changeDiscount(String menuName, boolean isDiscount){
+        Menu menu = menuRepository.findByName(menuName);
+        menu.addDiscount(isDiscount);
+        log.info("[{}] is discount menu.", menu.getMenuName());
+    }
     // TODO 01 
     // 메뉴 삭제 - isVisible 옵션으로 수정? soft delete 
 

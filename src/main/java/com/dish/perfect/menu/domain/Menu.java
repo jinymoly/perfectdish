@@ -21,11 +21,14 @@ public class Menu {
 
     private Availability availability;
 
+    private boolean isDiscounted;
+
     @Builder
-    public Menu(CourseType courseType, String menuName, Integer price, String description, ImageFile menuImg, Availability availability) {
+    public Menu(CourseType courseType, String menuName, Integer price, boolean isDiscounted, String description, ImageFile menuImg, Availability availability) {
         this.courseType = courseType;
         this.menuName = menuName;
         this.price = price;
+        this.isDiscounted = false;
         this.description = description;
         this.menuImg = menuImg;
         this.availability = availability;
@@ -34,10 +37,14 @@ public class Menu {
     @Override
     public String toString() {
         return "[" + typeConverter(courseType) + "] "
-                + menuName + " || " + description + " (" + price + ") "+ availability;
+                + menuName + " || " + description + " (" + price + ") "+ availability +", D: "+ isDiscounted;
     }
 
     private String typeConverter(CourseType type){
         return type.toString().replace("T_", "");
+    }
+
+    public void addDiscount(boolean discount){
+        this.isDiscounted = true;
     }
 }
