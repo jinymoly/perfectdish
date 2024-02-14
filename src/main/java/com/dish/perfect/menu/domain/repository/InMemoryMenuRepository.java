@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dish.perfect.global.error.GlobalException;
+import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.imageManager.ImageUtil;
 import com.dish.perfect.imageManager.domain.ImageFile;
 import com.dish.perfect.menu.domain.Availability;
@@ -51,7 +52,7 @@ public class InMemoryMenuRepository implements MenuRepository{
         return menuStream.filter(entry -> entry.getValue().getMenuName().equals(menuName))
                         .map(Map.Entry::getValue)
                         .findFirst()
-                        .orElseThrow(() -> new NoSuchElementException("일치하는 메뉴가 없습니다."));
+                        .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MENU, "일치하는 메뉴가 없습니다."));
     }
 
     @Override
