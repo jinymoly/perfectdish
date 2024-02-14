@@ -18,7 +18,11 @@ import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.menu.domain.repository.MenuRepositoryTest;
 import com.dish.perfect.menuBoard.MenuBoardFixture;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 @SpringBootTest
+@Slf4j
 @TestPropertySource(properties = { "file.dir=src/test/resources/img/" })
 public class MenuBoardServiceTest {
 
@@ -37,23 +41,40 @@ public class MenuBoardServiceTest {
     @DisplayName("메뉴 보드 commonMenus 생성과 조회")
     void saveCommonMenus() throws IOException {
         List<Menu> commonMenuA = service.saveCommonMenus(fixture.requestCommonsA());
-        service.saveCommonMenus(fixture.requestCommonsB());
+        List<Menu> commonMenuB = service.saveCommonMenus(fixture.requestCommonsB());
+        List<Menu> commonMenuC = service.saveCommonMenus(fixture.requestCommonsC());
 
         List<Menu> expect = service.findCommonMenus();
 
         assertTrue(expect.containsAll(commonMenuA));
+        assertTrue(expect.containsAll(commonMenuB));
+        assertTrue(expect.containsAll(commonMenuC));
     }
 
     @Test
     @DisplayName("메뉴 보드 discountMenus 생성과 조회")
     void saveDiscountMenus() throws IOException {
-        Optional<List<Menu>> discountMenus = service.saveDiscountMenus(fixture.requestDiscountsA());
+        Optional<List<Menu>> discountMenusA = service.saveDiscountMenus(fixture.requestDiscountsA());
+        Optional<List<Menu>> discountMenusB = service.saveDiscountMenus(fixture.requestDiscountsB());
+        Optional<List<Menu>> discountMenusC = service.saveDiscountMenus(fixture.requestDiscountsC());
+        
+        List<Menu> expect = service.findDiscountMenus().orElse(Collections.emptyList());
+
+        assertTrue(expect.containsAll(discountMenusA.orElse(Collections.emptyList())));
+        assertTrue(expect.containsAll(discountMenusB.orElse(Collections.emptyList())));
+        assertTrue(expect.containsAll(discountMenusC.orElse(Collections.emptyList())));
+    }
+
+    @Test
+    @DisplayName("메뉴 보드 discountMenus의 discount flag 동작 여부")
+    void discountFlag() throws IOException {
+        service.saveDiscountMenus(fixture.requestDiscountsA());
         service.saveDiscountMenus(fixture.requestDiscountsB());
         service.saveDiscountMenus(fixture.requestDiscountsC());
 
         List<Menu> expect = service.findDiscountMenus().orElse(Collections.emptyList());
 
-        assertTrue(expect.containsAll(discountMenus.orElse(Collections.emptyList())));
+        assertTrue(expect.stream().allMatch(Menu::isDiscounted));
     }
 
     @Test
