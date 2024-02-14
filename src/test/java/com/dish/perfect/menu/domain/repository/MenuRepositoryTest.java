@@ -72,7 +72,7 @@ public class MenuRepositoryTest {
     void savethemenu() throws IOException{
         MockMultipartFile mockMFile = new MockMultipartFile("fixtureMap2","map02Test.png", MediaType.IMAGE_PNG_VALUE, "map02Test".getBytes());
         
-        MenuRequest menuDto = MenuRequest.builder()
+        MenuRequest menuDtoA = MenuRequest.builder()
         .title("아그작사과구름스테이크")
         .description("특제 소스에 4시간 졸인 후 48시간 1도에서 숙성")
         .courseType(CourseType.T_MAIN)
@@ -80,8 +80,19 @@ public class MenuRepositoryTest {
         .menuImgFile(mockMFile)
         .availability(Availability.AVAILABLE)
         .build();
-        Menu saveMenu = menuRepository.save(menuDto);
-        log.info("saveMenu={}", saveMenu);
+
+        MenuRequest menuDtoB = MenuRequest.builder()
+        .title("로맨틱 허니 갈릭 쉬림프")
+        .description("신선한 새우에 특제 허니 갈릭 소스가 어우러진 로맨틱한 디너")
+        .courseType(CourseType.T_MAIN)
+        .price(45000)
+        .menuImgFile(mockMFile)
+        .availability(Availability.AVAILABLE)
+        .build();
+        
+        Menu saveMenuA = menuRepository.save(menuDtoA);
+        Menu saveMenuB = menuRepository.save(menuDtoB);
+        log.info("saveMenu={}, {}", saveMenuA, saveMenuB);
         
     }
     
