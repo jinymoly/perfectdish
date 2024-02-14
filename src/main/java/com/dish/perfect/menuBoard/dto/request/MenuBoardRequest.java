@@ -16,10 +16,8 @@ public class MenuBoardRequest {
     private Optional<List<Menu>> discountMenus;
 
     @Builder
-    private MenuBoardRequest(Menu menu, List<Menu> commonMenus, Optional<List<Menu>> discountMenus){
+    private MenuBoardRequest(Menu menu){
         this.menu = menu;
-        this.commonMenus = commonMenus;
-        this.discountMenus = discountMenus;
     }
 
 }

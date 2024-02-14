@@ -23,38 +23,33 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
     @Override
     public List<Menu> addCommonMenu(MenuBoardRequest menuBoardRequest) {
         Menu menu = menuBoardRequest.getMenu();
-        if(commonMenus.isEmpty()){
-            commonMenus = new ArrayList<>();
-        }
         commonMenus.add(menu);
-        log.info("{}", commonMenus);
+        log.info("addCommonMenu() {}", commonMenus);
         return commonMenus;
     }
 
     @Override
     public Optional<List<Menu>> addDiscountMenu(MenuBoardRequest menuBoardRequest) {
         Menu menu = menuBoardRequest.getMenu();
-        if(discountMenus.isEmpty()){
-            List<Menu> newList = new ArrayList<>();
             menu.addDiscount(true);
-            newList.add(menu);
-            discountMenus = Optional.of(newList);
-        } else {
-            discountMenus.ifPresent(menus -> menus.add(menu));
-        }
-        log.info("{}", discountMenus);
+            discountMenus.ifPresentOrElse(discountMenus -> discountMenus.add(menu), 
+                                            () -> { List<Menu> newDiscountMenu = new ArrayList<>();
+                                                    newDiscountMenu.add(menu);
+                                                    discountMenus = Optional.of(newDiscountMenu);
+                                                });
+        log.info("addDiscountMenu() {}", discountMenus);
         return discountMenus;
     }
 
     @Override
     public List<Menu> getCommonMenus() {
-        log.info("{}", commonMenus);
+        log.info("getCommonMenus() {}", commonMenus);
         return commonMenus;
     }
 
     @Override
     public Optional<List<Menu>> getDiscountMenus() {
-        log.info("{}", commonMenus);
+        log.info("getDiscountMenus() {}", discountMenus);
         return discountMenus;
     }
 
@@ -64,7 +59,7 @@ public class InMemoryMenuBoardRepository implements MenuBoardRepository{
             allMenuList.addAll(commonMenus);
         }
         discountMenus.ifPresent(allMenuList::addAll);
-        log.info("{}", allMenuList);
+        log.info("getAllMenus() {}", allMenuList);
         return allMenuList;
     }
 

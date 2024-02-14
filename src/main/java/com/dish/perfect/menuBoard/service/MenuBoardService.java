@@ -24,15 +24,21 @@ public class MenuBoardService {
     private final MenuBoardRepository menuBoardRepository;
 
     public List<Menu> saveCommonMenus(MenuBoardRequest mBoardRequest){
-        if(mBoardRequest.getCommonMenus() == null){
+        if(mBoardRequest.getMenu() == null){
             log.error("🚨 {}", "commMenu 생성 불가.");
             throw new GlobalException(ErrorCode.FAIL_CREATE_MENU_BOARD);
         }
-        return menuBoardRepository.addCommonMenu(mBoardRequest);
+        List<Menu> newCommonMenu = menuBoardRepository.addCommonMenu(mBoardRequest);
+        log.info("saveCommonMenus() {}", newCommonMenu);
+
+        return newCommonMenu;
     }        
 
     public Optional<List<Menu>> saveDiscountMenus(MenuBoardRequest mBoardRequest){
-        return menuBoardRepository.addDiscountMenu(mBoardRequest);
+        Optional<List<Menu>> newDiscountMenu = menuBoardRepository.addDiscountMenu(mBoardRequest);
+        log.info("saveDiscountMenus() {}", newDiscountMenu);
+
+        return newDiscountMenu;
     }
 
 
@@ -42,21 +48,28 @@ public class MenuBoardService {
             log.error("🚨 {}", "commonMenu를 찾을 수 없습니다.");
             throw new  GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD_COMMONS);
         }
+        log.info("saveDiscountMenus() {}", commonMenus);
         return commonMenus;
     }
 
-    public List<Menu> findDiscountMenus(){
+    public Optional<List<Menu>> findDiscountMenus(){
         Optional<List<Menu>> optionalMenus = menuBoardRepository.getDiscountMenus();
-        return optionalMenus.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD_DISCOUNTS));
+        log.info("findDiscountMenus() {}", optionalMenus);
+        return optionalMenus;
     }
 
     public List<Menu> getAllMenus(){
         try {
-            return menuBoardRepository.getAllMenus();
+            List<Menu> allMenus = menuBoardRepository.getAllMenus();
+            log.info("getAllMenus() {}", allMenus);
+            return allMenus;
         } catch (NoSuchElementException e) {
             log.error("🚨 {}", "menuBoard가 존재하지 않습니다.");
             throw new GlobalException(ErrorCode.NOT_FOUND_MENU_BOARD);
         }
     }
+
+    
+    // 메뉴의 상태를 변경한다
 
 }
