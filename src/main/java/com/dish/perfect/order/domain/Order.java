@@ -32,7 +32,7 @@ public class Order {
         this.menuName = menuName;
         this.count = count;
         this.price = price;
-        this.totalPrice = totalPrice;
+        this.totalPrice = null;
         this.status = status;
         this.isDiscount = isDiscount;
     }
@@ -43,6 +43,21 @@ public class Order {
                 + "원, [" + status + "]";
     }
 
-    
+    public void addTotalPrice(Integer price, int count){
+        int intPrice = price.intValue();
+        int total = intPrice * count;
+        double vat = total * 0.1;
+        int result = (int) Math.round(total + vat);
+        
+        this.totalPrice = convertToBigDecimal(result);
+    }
+
+    public BigDecimal convertToBigDecimal(int totalPrice){
+        return new BigDecimal(totalPrice);
+    }
+
+    public int applyDiscount(Integer price){
+        return (int) (price * 0.95);
+    }
 
 }
