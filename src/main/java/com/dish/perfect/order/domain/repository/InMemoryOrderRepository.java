@@ -23,17 +23,18 @@ public class InMemoryOrderRepository implements OrderRepository {
 
     @Override
     public Order createOrder(OrderRequest orderDto) {
-        List<Menu> menus = menuRepository.findAllMenus();
+        List<Menu> allMenuList = menuRepository.getAllMenus();
 
-        for(Menu menu : menus){
-            if(menu.getMenuName() == orderDto.getMenuName()){
+        for(Menu menu : allMenuList){
+            if(menu.getMenuName() == orderDto.getMenu().getMenuName()){
                 Order order = Order.builder()
                 .tableNo(orderDto.getTableNo())
-                .menuName(orderDto.getMenuName())
-                .price(orderDto.getPrice())
+                .menuName(orderDto.getMenu().getMenuName())
+                .price(applyDiscount(orderDto.getPrice()))
                 .count(orderDto.getCount())
                 .totalPrice(convertToBigDecimal(getTotalPrice(orderDto.getPrice(), orderDto.getCount())))
                 .status(orderDto.getStatus())
+                .isDiscount(menu.isDiscounted())
                 .build();
                 orders.add(order);
                 return order;
@@ -70,7 +71,7 @@ public class InMemoryOrderRepository implements OrderRepository {
             if(order.getTableNo() == tableNo){
                 Order newOrder = Order.builder()
                                         .tableNo(order.getTableNo())
-                                        .menuName(orderDto.getMenuName())
+                                        .menuName(orderDto.getMenu().getMenuName())
                                         .price(orderDto.getPrice())
                                         .count(orderDto.getCount())
                                         .totalPrice(convertToBigDecimal(getTotalPrice(orderDto.getPrice(), orderDto.getCount())))
@@ -91,4 +92,10 @@ public class InMemoryOrderRepository implements OrderRepository {
     private BigDecimal convertToBigDecimal(int totalPrice){
         return new BigDecimal(totalPrice);
     }
+
+    private int applyDiscount(Integer price){
+        return (int) (price * 0.95);
+    }
+
+    
 }

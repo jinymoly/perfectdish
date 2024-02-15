@@ -13,6 +13,7 @@ public class Order {
     private int tableNo;
 
     private String menuName;
+    private boolean isDiscount;
     private int count;
     private Integer price;
 
@@ -26,13 +27,14 @@ public class Order {
     @Builder
     public Order(int tableNo,
             String menuName, int count, Integer price,
-            BigDecimal totalPrice, OrderStatus status) {
+            BigDecimal totalPrice, OrderStatus status, boolean isDiscount) {
         this.tableNo = tableNo;
         this.menuName = menuName;
         this.count = count;
         this.price = price;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.isDiscount = isDiscount;
     }
 
     @Override
@@ -40,5 +42,7 @@ public class Order {
         return tableNo + "번 테이블 : " + menuName + ", " + price + "원, " + count + ", 총 금액 " + totalPrice
                 + "원, [" + status + "]";
     }
+
+    
 
 }
