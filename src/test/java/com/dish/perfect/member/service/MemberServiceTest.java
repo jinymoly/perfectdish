@@ -1,6 +1,7 @@
 package com.dish.perfect.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.dto.request.MemberRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +57,8 @@ public class MemberServiceTest {
     void findByPhoneNumber() {
         Member saveMemberA = fixtureA();
         Member saveMemberB = fixtureB();
-
-        List<Member> findByphoneNum = memberService.findByphoneNum(saveMemberA.getPhoneNumber());
+        String FourDigitsByA = memberService.extractLastFourDigits(saveMemberA.getPhoneNumber());
+        List<Member> findByphoneNum = memberService.findByphoneNum(FourDigitsByA);
         log.info("findMembers={}", findByphoneNum.toString());
 
         assertThat(findByphoneNum).contains(saveMemberA, saveMemberB);
@@ -68,17 +70,20 @@ public class MemberServiceTest {
         Member saveMemberA = fixtureA();
         Member saveMemberB = fixtureB();
 
-        List<Member> findByphoneNum = memberService.findByphoneNum(saveMemberA.getPhoneNumber());
+        List<Member> findByphoneNum = memberService.findByphoneNum(memberService.extractLastFourDigits(saveMemberA.getPhoneNumber()));
         Optional<Member> expectMember = memberService.findByName(findByphoneNum, "김가가");
         log.info("expectMember={}", expectMember.toString());
         
-        assertThat(expectMember).contains(saveMemberB);
+        assertEquals(expectMember.get().getUserName(), saveMemberB.getUserName());
     }
+
+    //TODO 동시 가입시 순서대로 저장되는지 확인 
 
     private Member fixtureA() {
         MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("이나나")
                                                     .phoneNumber("22223333")
+                                                    .status(MemberStatus.ACTIVE)
                                                     .build();
         Member saveMember = memberService.save(memberDto);
         return saveMember;
@@ -88,6 +93,7 @@ public class MemberServiceTest {
         MemberRequest memberDto = MemberRequest.builder()
                                                     .userName("김가가")
                                                     .phoneNumber("22223333")
+                                                    .status(MemberStatus.ACTIVE)
                                                     .build();
         Member saveMember = memberService.save(memberDto);
         return saveMember;

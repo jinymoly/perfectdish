@@ -1,6 +1,7 @@
 package com.dish.perfect.member.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,21 +19,28 @@ public class Member {
 
     private LocalDateTime createAt;
 
+    private MemberStatus status;
+
     @Builder
-    private Member(Long id, String userName, String phoneNumber, LocalDateTime createAt) {
+    private Member(Long id, String userName, String phoneNumber, LocalDateTime createAt, MemberStatus status) {
         this.id = id;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
+        this.status = status;
         this.createAt = createAt;
     }
 
     @Override
     public String toString() {
-        return "{id='" + id + '\'' +
+        return "id='" + id + '\'' +
                 "  userName='" + userName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", createAt=" + createAt +
-                '}';
+                ", status='" + status + '\'' +
+                ", createAt=" + timeFomatter(createAt);
+    }
+
+    private String timeFomatter(LocalDateTime time){
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/hh:MM:ss"));
     }
 
 }

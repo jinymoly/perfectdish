@@ -1,6 +1,7 @@
 package com.dish.perfect.member.dto.response;
 
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class MemberResponse {
     private final Long id;
     private final String phoneNumber;
     private final String userName;
+    private final MemberStatus status;
 
     // TODO : private final Integer visitCount;
 
@@ -24,7 +26,7 @@ public class MemberResponse {
                 .id(member.getId())
                 .phoneNumber(member.getPhoneNumber())
                 .userName(member.getUserName())
+                .status(member.getStatus())
                 .build();
     }
-
 }

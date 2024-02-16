@@ -1,6 +1,5 @@
 package com.dish.perfect.member.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +25,24 @@ public class MemberService {
 
     public Member save(MemberRequest memberDto) {
         Member member = memberRepository.save(memberDto);
-        log.info("save : member={}", member);
+        log.info("save : {}", member);
         return member;
+    }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 
     public Member findById(Long id) {
         return memberRepository.findById(id);
+    }
+
+    public Member deleteMember(MemberRequest request, String name) {
+        List<Member> memberList = memberRepository.findAll();
+        memberRepository.findByName(memberList, name);
+        Member member = memberRepository.deleteMember(request);
+        log.info("delete : {}", member);
+        return member;
     }
 
     /**
@@ -46,10 +57,6 @@ public class MemberService {
         return membersWithDuplicateNumber;
     }
 
-    public List<Member> findAll() {
-        return memberRepository.findAll();
-    }
-
     /**
      * 폰 번호 마지막 4자리 반환
      * 
@@ -61,7 +68,7 @@ public class MemberService {
     }
 
     /**
-     * memberList에서 이름이 같은 member 추출하기
+     * 번호 같은 memberList에서 이름으로 member 추출하기
      * 
      * @param members
      * @param name

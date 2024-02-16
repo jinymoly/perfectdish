@@ -1,28 +1,50 @@
 package com.dish.perfect.menu.domain;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.dish.perfect.imageManager.domain.ImageFile;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "menuName")
 public class Menu {
 
-    private CourseType type;
-    private String title;
+    private CourseType courseType;
+    private String menuName;
+    private Integer price;
     private String description;
 
-    private MultipartFile menuImg; 
+    private ImageFile menuImg;
+
+    private Availability availability;
+
+    private boolean isDiscounted;
 
     @Builder
-    public Menu(CourseType type, String title, String description, MultipartFile menuImg) {
-        this.type = type;
-        this.title = title;
+    public Menu(CourseType courseType, String menuName, Integer price, boolean isDiscounted, String description, ImageFile menuImg, Availability availability) {
+        this.courseType = courseType;
+        this.menuName = menuName;
+        this.price = price;
+        this.isDiscounted = false;
         this.description = description;
         this.menuImg = menuImg;
+        this.availability = availability;
     }
 
-    
+    @Override
+    public String toString() {
+        return "[" + typeConverter(courseType) + "] "
+                + menuName + " || " + description + " (" + price + ") "+ availability +", D: "+ isDiscounted;
+    }
+
+    private String typeConverter(CourseType type){
+        return type.toString().replace("T_", "");
+    }
+
+    public void addDiscount(boolean discount){
+        this.isDiscounted = true;
+    }
 }
