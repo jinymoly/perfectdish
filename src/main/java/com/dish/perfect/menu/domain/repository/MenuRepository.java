@@ -20,7 +20,7 @@ public interface MenuRepository {
 
     //TODO 주문 가능한 메뉴만 찾기 
     List<Menu> findByAvaility(Availability availability);
-    
+
     void clear();
     
 }
