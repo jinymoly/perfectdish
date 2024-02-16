@@ -16,6 +16,9 @@ public interface MenuBoardRepository {
 
     List<Menu> getAllMenus();
 
+    Menu getMenuByName(String menuName);
+
+    void clear();
 
     
 }

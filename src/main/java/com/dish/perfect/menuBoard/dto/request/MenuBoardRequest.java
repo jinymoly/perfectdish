@@ -12,8 +12,8 @@ import lombok.Getter;
 public class MenuBoardRequest {
     
     private final Menu menu;
-    private List<Menu> commonMenus;
-    private Optional<List<Menu>> discountMenus;
+    //private List<Menu> commonMenus;
+    //private Optional<List<Menu>> discountMenus;
 
     @Builder
     private MenuBoardRequest(Menu menu){
