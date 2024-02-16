@@ -18,11 +18,7 @@ import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.menu.domain.repository.MenuRepositoryTest;
 import com.dish.perfect.menuBoard.MenuBoardFixture;
 
-import lombok.extern.slf4j.Slf4j;
-
-
 @SpringBootTest
-@Slf4j
 @TestPropertySource(properties = { "file.dir=src/test/resources/img/" })
 public class MenuBoardServiceTest {
 
@@ -35,6 +31,7 @@ public class MenuBoardServiceTest {
     void clear() {
         String dirPath = "src/test/resources/img/";
         MenuRepositoryTest.deleteFileAfterTest(dirPath);
+        service.clear();
     }
 
     @Test
@@ -57,7 +54,7 @@ public class MenuBoardServiceTest {
         Optional<List<Menu>> discountMenusA = service.saveDiscountMenus(fixture.requestDiscountsA());
         Optional<List<Menu>> discountMenusB = service.saveDiscountMenus(fixture.requestDiscountsB());
         Optional<List<Menu>> discountMenusC = service.saveDiscountMenus(fixture.requestDiscountsC());
-        
+
         List<Menu> expect = service.findDiscountMenus().orElse(Collections.emptyList());
 
         assertTrue(expect.containsAll(discountMenusA.orElse(Collections.emptyList())));
@@ -79,7 +76,7 @@ public class MenuBoardServiceTest {
 
     @Test
     @DisplayName("메뉴 보드의 모든 메뉴 조회")
-    void getAllMenus(){
+    void getAllMenus() {
         List<Menu> commonMenuA = service.saveCommonMenus(fixture.requestCommonsA());
         service.saveCommonMenus(fixture.requestCommonsB());
         Optional<List<Menu>> discountMenus = service.saveDiscountMenus(fixture.requestDiscountsA());
@@ -92,6 +89,5 @@ public class MenuBoardServiceTest {
         assertTrue(all.containsAll(discountMenus.orElseThrow()));
 
     }
-
 
 }

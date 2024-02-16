@@ -24,7 +24,7 @@ public class MenuBoardRepositoryTest {
     private MenuBoardFixture fixture = new MenuBoardFixture();
 
     @AfterEach
-    void clear(){
+    void clearTest(){
         menuBoardRepository.clear();
     }
     
@@ -65,6 +65,5 @@ public class MenuBoardRepositoryTest {
         assertTrue(findAllMenus.containsAll(discountsA.orElse(Collections.emptyList())));
         assertTrue(findAllMenus.containsAll(commonsB));
     }
-
     
 }
