@@ -9,11 +9,10 @@ import com.dish.perfect.order.dto.request.OrderRequest;
 public interface OrderRepository {
 
     Order createOrder(OrderRequest orderDto);
+
+    List<Order> getAllOrders();
+    
     List<Order> getOrders(int tableNo);
     List<Order> getOrderByStatus(OrderStatus status);
-    List<Order> addOrderByTableNo(int tableNo, OrderRequest orderDto);
-
-    // 할인메뉴인지 ? 
-    // 할인 메뉴라면 5프로 할인 정책 
     
 }

@@ -1,6 +1,8 @@
 package com.dish.perfect.order.domain;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +23,10 @@ public class Order {
 
     private OrderStatus status;
 
-    // 메뉴리스트에서 메뉴의 이름과 가격만 들고 올 것
-    // price의 기준 - 1메뉴? 갯수에 따른 price ?
+    private List<Order> orderList;
+    private BigDecimal finalPrice;
+
+    private Map<Integer, List<Order>> orderMap;
 
     @Builder
     public Order(int tableNo,
@@ -32,32 +36,35 @@ public class Order {
         this.menuName = menuName;
         this.count = count;
         this.price = price;
-        this.totalPrice = null;
+        this.totalPrice = addTotalPrice();
         this.status = status;
         this.isDiscount = isDiscount;
     }
 
     @Override
     public String toString() {
-        return tableNo + "번 테이블 : " + menuName + ", " + price + "원, " + count + ", 총 금액 " + totalPrice
-                + "원, [" + status + "]";
+        return "tableNo." + tableNo + " : " + menuName + ", " + price + "원, " + count + ", 총 금액 " + totalPrice
+                + "원, [" + status + "], D: " + isDiscount;
     }
 
-    public void addTotalPrice(Integer price, int count){
-        int intPrice = price.intValue();
-        int total = intPrice * count;
-        double vat = total * 0.1;
-        int result = (int) Math.round(total + vat);
-        
-        this.totalPrice = convertToBigDecimal(result);
-    }
-
-    public BigDecimal convertToBigDecimal(int totalPrice){
-        return new BigDecimal(totalPrice);
+    public BigDecimal addTotalPrice(){
+        if(isDiscount){
+           price = applyDiscount(price);
+        }
+        int total = price * count;
+        return new BigDecimal(total);
     }
 
     public int applyDiscount(Integer price){
         return (int) (price * 0.95);
+    }
+
+    public BigDecimal calculateFinalPrice(){
+        BigDecimal finalPrice = BigDecimal.ZERO;
+        for(Order order : orderList){
+            finalPrice = finalPrice.add(order.getTotalPrice());
+        }
+        return finalPrice;
     }
 
 }
