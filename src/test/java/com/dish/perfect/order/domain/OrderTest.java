@@ -7,11 +7,8 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class OrderTest {
-    
+
     @Test
     @DisplayName("toString 확인")
     void testToString(){
@@ -20,26 +17,23 @@ public class OrderTest {
                             .menuName("시간 파스타")
                             .price(99000)
                             .count(2)
-                            .totalPrice(convertToBigDecimal(getTotalPrice(99000, 2)))
-                            .status(OrderStatus.RECEIVED)
+                            .isDiscount(true)
+                            .status(OrderStatus.CREATED)
                             .build();
-
+        order.addTotalPrice();
         String savedText = order.toString();
 
-        log.info("{}", savedText.toString());
-        String expected = "3번 테이블 : 시간 파스타, 99000원, 2, 총 금액 217800원, [RECEIVED]";
+        String expected = "tableNo.3 : 시간 파스타, 94050원, 2, 총 금액 198000원, [CREATED], D: true";
 
         assertEquals(savedText, expected);
     }
 
-    private int getTotalPrice(Integer price, int count){
-        int intValue = price.intValue();
-        int total = intValue * count;
-        double vat = total * 0.1;
-        return (int) Math.round(total + vat);
-    }
+    @Test
+    void calculateTotal(){
+        Order order = Order.builder().isDiscount(true).price(3000).count(2).build();
 
-    private BigDecimal convertToBigDecimal(int totalPrice){
-        return new BigDecimal(totalPrice);
+        BigDecimal totalPrice = order.addTotalPrice();
+
+        assertEquals(totalPrice, new BigDecimal(5700));
     }
 }
