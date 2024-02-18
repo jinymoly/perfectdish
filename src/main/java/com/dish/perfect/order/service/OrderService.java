@@ -25,15 +25,15 @@ public class OrderService {
     public void conFirmOrderwithTotalPrice(OrderRequest request){
         List<Order> orders = orderRepository.getAllOrders();
         BigDecimal totalPrice = BigDecimal.ZERO;
-        List<Order> finalOrder = new ArrayList<>();
+        List<Order> finalOrders = new ArrayList<>();
 
         for(Order order : orders){
                 totalPrice = totalPrice.add(order.getTotalPrice());
             order.calculateFinalPrice();
             order.addStatus();
 
-            Order finalOrder = new Order(order.getTableNo(), order.getMenuName(), order.getPrice(), order.getCount(), order.getStatus(), order.isDiscount());
-            finalOrder.add(finalOrder);
+            Order finalOrder = new Order(order.getTableNo(), order.getMenuName(), order.getPrice(), order.getCount(), totalPrice, order.getStatus(), order.isDiscount());
+            finalOrders.add(finalOrder);
         }
     }
 
