@@ -1,8 +1,11 @@
 package com.dish.perfect.order.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.dish.perfect.orderItem.domain.OrderItem;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,57 +17,35 @@ public class Order {
 
     private int tableNo;
 
-    private String menuName;
-    private boolean isDiscount;
-    private int count;
-    private Integer price;
-
-    private BigDecimal totalPrice;
+    private List<OrderItem> orderList = new ArrayList<>();
+    private BigDecimal finalPrice;
 
     private OrderStatus status;
 
-    private List<Order> orderList;
-    private BigDecimal finalPrice;
-
-    private Map<Integer, List<Order>> orderMap;
-
     @Builder
-    public Order(int tableNo,
-            String menuName, int count, Integer price,
-            BigDecimal totalPrice, OrderStatus status, boolean isDiscount) {
+    public Order(int tableNo, List<OrderItem> orderList, BigDecimal finalPrice, OrderStatus status) {
         this.tableNo = tableNo;
-        this.menuName = menuName;
-        this.count = count;
-        this.price = price;
-        this.totalPrice = addTotalPrice();
-        this.status = status;
-        this.isDiscount = isDiscount;
+        this.orderList = orderList;
+        this.finalPrice = calculateFinalPrice();
+        this.status = OrderStatus.NOTSERVED;
     }
 
     @Override
     public String toString() {
-        return "tableNo." + tableNo + " : " + menuName + ", " + price + "원, " + count + ", 총 금액 " + totalPrice
-                + "원, [" + status + "], D: " + isDiscount;
+        return tableNo + "번 테이블" + orderList + "/ 합계: " + finalPrice + "원[" + status + "]";
     }
 
-    public BigDecimal addTotalPrice(){
-        if(isDiscount){
-           price = applyDiscount(price);
-        }
-        int total = price * count;
-        return new BigDecimal(total);
-    }
-
-    public int applyDiscount(Integer price){
-        return (int) (price * 0.95);
-    }
-
-    public BigDecimal calculateFinalPrice(){
-        BigDecimal finalPrice = BigDecimal.ZERO;
-        for(Order order : orderList){
-            finalPrice = finalPrice.add(order.getTotalPrice());
+    public BigDecimal calculateFinalPrice() {
+        for (OrderItem order : orderList) {
+            if (order.getTableNo() == this.tableNo) {
+                finalPrice = finalPrice.add(order.getTotalPrice());
+            }
         }
         return finalPrice;
+    }
+
+    public void updateStatus() {
+        this.status = OrderStatus.COMPLETED;
     }
 
 }
