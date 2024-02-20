@@ -26,7 +26,7 @@ public class Order {
     public Order(int tableNo, List<OrderItem> orderList, BigDecimal finalPrice, OrderStatus status) {
         this.tableNo = tableNo;
         this.orderList = orderList;
-        this.finalPrice = calculateFinalPrice();
+        this.finalPrice = BigDecimal.ZERO;
         this.status = OrderStatus.NOTSERVED;
     }
 
