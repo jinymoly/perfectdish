@@ -74,6 +74,17 @@ public class OrderFixture {
                         .build();
     }
 
+    public OrderItem orderItemF(){
+        return OrderItem.builder()
+                        .tableNo(3)
+                        .menuName("뵈프 부르기뇽")
+                        .count(2)
+                        .price(37000)
+                        .isDiscount(true)
+                        .totalPrice(new BigDecimal(64000))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
+    }
     public List<OrderItem> orderItemsFixture1(){
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItemA());
@@ -91,6 +102,14 @@ public class OrderFixture {
     public List<OrderItem> orderItemsFixture3(){
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItemB());
+        return orderItems;
+    }
+
+    public List<OrderItem> orderItemsFixture3D(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItemB());
+        orderItems.add(orderItemB());
+        orderItems.add(orderItemF());
         return orderItems;
     }
 
