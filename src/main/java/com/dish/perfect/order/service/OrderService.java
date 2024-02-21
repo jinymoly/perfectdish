@@ -1,62 +1,60 @@
 package com.dish.perfect.order.service;
 
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.hibernate.validator.internal.util.logging.Log_.logger;
 import org.springframework.stereotype.Service;
 
-import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.order.domain.repository.OrderRepository;
 import com.dish.perfect.order.dto.request.OrderRequest;
+import com.dish.perfect.orderItem.domain.OrderItem;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    
+
     private final OrderRepository orderRepository;
 
-    // 모든 주문을 마쳤을 때 - status를 complete로 변경 후 합계
-    public void conFirmOrderwithTotalPrice(OrderRequest request){
-        List<Order> orders = orderRepository.getAllOrders();
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        List<Order> finalOrders = new ArrayList<>();
+    // TODO
+    // 메뉴의 갯수를 반환
+    // 주문서들 중 이름이 같은 메뉴를 카운트 
+    // 새 주문서 작성
+    // 새 주문맵에 finalPrice와 함께 추가 
+    public Map<Integer, List<OrderItem>> createOrderMap(OrderRequest orderRequest) {
+        Map<Integer, List<OrderItem>> orderByTableNo = orderRepository.getOrderByTableNo(orderRequest.getTableNo());
+        Map<Integer, List<OrderItem>> finalOrderMap = new ConcurrentHashMap<>();
 
-        for(Order order : orders){
-                totalPrice = totalPrice.add(order.getTotalPrice());
-            order.calculateFinalPrice();
-            order.addStatus();
-
-            Order finalOrder = new Order(order.getTableNo(), order.getMenuName(), order.getPrice(), order.getCount(), totalPrice, order.getStatus(), order.isDiscount());
-            finalOrders.add(finalOrder);
-        }
-    }
-
-    // 테이블 별 주문을 반환
-    public List<Order> getOrderListByTableNu(int tableNo){
-        List<Order> orders = orderRepository.getAllOrders();
-        for(Order order : orders){
-            if(order.getTableNo() == tableNo){
-                List<Order> returnList = new ArrayList<>();
-                returnList.add(order);
+        for (Map.Entry<Integer, List<OrderItem>> entry : orderByTableNo.entrySet()) {
+            List<OrderItem> orders = entry.getValue();
+            for (OrderItem order : orders) {
+                int countByDuplicatedMenuName = countByDuplicatedMenuName(orders, order.getMenuName());
+                order.updateCount(countByDuplicatedMenuName);
+                orders.add(order);
+                finalOrderMap.put(order.getTableNo(), orders);
             }
         }
-        return orders;
+        return finalOrderMap;
     }
 
-    // 서빙했으면 status를 COMPLETED로 변경 
-    public void updateOrderStatus(String menuName){
-        List<Order> orders = orderRepository.getAllOrders();
-        for(Order order : orders){
-            if(order.getMenuName() == menuName){
-                order.addStatus();
+    /**
+     * 메뉴 갯수 취합
+     * 
+     * @param orders
+     * @param menuName
+     * @return
+     */
+    public int countByDuplicatedMenuName(List<OrderItem> orders, String menuName) {
+        int duplicatedCount = 0;
+        for (OrderItem order : orders) {
+            if (order.getMenuName() == menuName) {
+                duplicatedCount += order.getCount();
             }
         }
+        return duplicatedCount;
     }
 
 }
