@@ -23,7 +23,7 @@ public class OrderItemTest {
         order.addTotalPrice();
         String savedText = order.toString();
 
-        String expected = "tableNo.3 : 시간 파스타, 94050원, 2, 금액: 198000원, [CREATED], D: true";
+        String expected = "시간 파스타, 94050원, 2개, total: 198000원, [CREATED], D: true";
 
         assertEquals(savedText, expected);
     }

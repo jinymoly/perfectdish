@@ -36,7 +36,7 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "tableNo." + tableNo + " : " + menuName + ", " + price + "원, " + count + ", 금액: " + totalPrice
+        return menuName + ", " + price + "원, " + count + "개, total: " + totalPrice
                 + "원, [" + itemstatus + "], D: " + isDiscount;
     }
 
@@ -54,6 +54,10 @@ public class OrderItem {
 
     public void updateStatus(){
         this.itemstatus = OrderItemStatus.COMPLETED;
+    }
+
+    public void updateCount(int count){
+        this.count = count;
     }
 
 }

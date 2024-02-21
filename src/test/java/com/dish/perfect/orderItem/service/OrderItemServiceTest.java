@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderItemServiceTest {
 
     @Autowired
-    private OrderItemService orderService;
+    private OrderItemService orderItemService;
 
     @Autowired
     private InMemoryOrderItemRepository orderRepository;
@@ -48,6 +49,10 @@ public class OrderItemServiceTest {
         menuBoardRepository.getAllMenus();
 
     }
+    @AfterEach
+    void clear(){
+        orderItemService.clear();
+    }
 
     @Test
     @DisplayName("서브 미완료 주문 조회")
@@ -57,7 +62,7 @@ public class OrderItemServiceTest {
         orderRepository.createOrder(fixtureO.orderItemRequestC);
         log.info("all:{}", orderRepository.getAllOrders());
 
-        Optional<List<OrderItem>> notServedOrders = orderService.getNotServedOrders(3);
+        Optional<List<OrderItem>> notServedOrders = orderItemService.getNotServedOrders(3);
         log.info("notServedOrdersT={}", notServedOrders);
     }
 
@@ -65,11 +70,11 @@ public class OrderItemServiceTest {
     @DisplayName("서브가 모두 완료되어 미완료 서브 반환시 - 모든 음식이 나왔습니다.")
     void getOrderWithCompleteServed() {
         OrderItem orderTest = orderRepository.createOrder(fixtureO.orderItemRequestC);
-        OrderItem completeServed = orderService.completeServed(orderTest);
+        OrderItem completeServed = orderItemService.completeServed(orderTest);
         log.info("status={}", completeServed.getItemstatus());
 
-        Optional<List<OrderItem>> notServedOrders = orderService.getNotServedOrders(3);
-        
+        Optional<List<OrderItem>> notServedOrders = orderItemService.getNotServedOrders(3);
+
         assertTrue(notServedOrders.isEmpty());
     }
 }
