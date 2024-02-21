@@ -25,24 +25,15 @@ public class Order {
     public Order(int tableNo, List<OrderItem> orderList, BigDecimal finalPrice, OrderStatus status) {
         this.tableNo = tableNo;
         this.orderList = orderList;
-        this.finalPrice = BigDecimal.ZERO;
+        this.finalPrice = finalPrice;
         this.status = OrderStatus.NOTSERVED;
     }
 
     @Override
     public String toString() {
-        return tableNo + "번 테이블" + orderList + "/ 합계: " + finalPrice + "원[" + status + "]";
+        return "tableNo."+ tableNo +" "+ orderList + "/ 최종 합계: " + finalPrice + "원[" + status + "]";
     }
-
-    public BigDecimal calculateFinalPrice() {
-        for (OrderItem order : orderList) {
-            if (order.getTableNo() == this.tableNo) {
-                finalPrice = finalPrice.add(order.getTotalPrice());
-            }
-        }
-        return finalPrice;
-    }
-
+    
     public void updateStatus() {
         this.status = OrderStatus.COMPLETED;
     }
