@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.validator.internal.util.logging.Log_.logger;
 import org.springframework.stereotype.Service;
 
 import com.dish.perfect.global.error.GlobalException;
@@ -21,11 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderItemService {
     
-    private final OrderItemRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     // 테이블 별 주문을 반환
     public List<OrderItem> getOrderListByTableNo(int tableNo){
-        List<OrderItem> orders = orderRepository.getAllOrders();
+        List<OrderItem> orders = orderItemRepository.getAllOrders();
         List<OrderItem> returnList = new ArrayList<>();
         for(OrderItem order : orders){
             if(order.getTableNo() == tableNo){
@@ -38,7 +37,7 @@ public class OrderItemService {
 
     // tableNo completed 되지 않은 목록 반환 
     public Optional<List<OrderItem>> getNotServedOrders(int tableNo){
-        List<OrderItem> allOrders = orderRepository.getAllOrders();
+        List<OrderItem> allOrders = orderItemRepository.getAllOrders();
         List<OrderItem> notServedOrders = new ArrayList<>();
         
         for(OrderItem item : allOrders){
@@ -59,6 +58,10 @@ public class OrderItemService {
         orderItem.updateStatus();
         return orderItem;
 
+    }
+
+    public void clear(){
+        orderItemRepository.clear();
     }
 
 }

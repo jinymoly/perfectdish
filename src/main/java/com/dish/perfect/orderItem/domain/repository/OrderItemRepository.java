@@ -15,4 +15,5 @@ public interface OrderItemRepository {
     List<OrderItem> getOrders(int tableNo);
     List<OrderItem> getOrderByStatus(OrderItemStatus status);
     
+    void clear();
 }
