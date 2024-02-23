@@ -26,7 +26,7 @@ public class Order {
         this.tableNo = tableNo;
         this.orderList = orderList;
         this.finalPrice = finalPrice;
-        this.status = OrderStatus.NOTSERVED;
+        this.status = status;
     }
 
     @Override
