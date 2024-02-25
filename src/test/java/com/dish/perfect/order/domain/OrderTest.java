@@ -22,11 +22,10 @@ public class OrderTest {
         .finalPrice(BigDecimal.ZERO)
         .status(OrderStatus.NOTSERVED)
         .build();
-        //order.calculateFinalPrice();
         
         String savedText = order.toString();
 
-        String expected = "tableNo.2 [그라탕, 15000원, 2개, total: 30000원, [CREATED], D: true, 크림 소스 파스타, 18000원, 2개, total: 36000원, [CREATED], D: true]/ 최종 합계: 0원[NOTSERVED]";
+        String expected = "[그라탕, 15000원, 2개, total: 30000원, [CREATED], D: true, 크림 소스 파스타, 18000원, 2개, total: 36000원, [CREATED], D: true]/ 최종 합계: 0원[NOTSERVED]";
 
         assertEquals(savedText, expected);
     }

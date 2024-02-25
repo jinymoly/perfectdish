@@ -14,6 +14,7 @@ public class OrderFixture {
     public OrderRequest orderRequest1 = OrderRequest.builder().tableNo(1).orderItems(orderItemsFixture1()).build();
     public OrderRequest orderRequest2 = OrderRequest.builder().tableNo(2).orderItems(orderItemsFixture2()).build();
     public OrderRequest orderRequest3 = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3()).build();
+    public OrderRequest orderRequest3D = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3D()).build();
 
     public OrderItem orderItemA(){
         return OrderItem.builder()
@@ -21,7 +22,7 @@ public class OrderFixture {
                         .menuName("프랑스식 양 샴꼬")
                         .count(2)
                         .price(13000)
-                        .isDiscount(false)
+                        .isDiscounted(false)
                         .totalPrice(new BigDecimal(26000))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();
@@ -32,7 +33,7 @@ public class OrderFixture {
                         .menuName("로스트 치킨")
                         .count(1)
                         .price(28000)
-                        .isDiscount(false)
+                        .isDiscounted(false)
                         .totalPrice(new BigDecimal(28000))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();
@@ -44,7 +45,7 @@ public class OrderFixture {
                         .menuName("그라탕")
                         .count(2)
                         .price(15000)
-                        .isDiscount(true)
+                        .isDiscounted(true)
                         .totalPrice(new BigDecimal(28500))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();
@@ -56,7 +57,7 @@ public class OrderFixture {
                         .menuName("크림 소스 파스타")
                         .count(2)
                         .price(18000)
-                        .isDiscount(true)
+                        .isDiscounted(true)
                         .totalPrice(new BigDecimal(34200))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();
@@ -68,7 +69,7 @@ public class OrderFixture {
                         .menuName("스테이크")
                         .count(1)
                         .price(35000)
-                        .isDiscount(true)
+                        .isDiscounted(true)
                         .totalPrice(new BigDecimal(33250))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();
@@ -80,7 +81,7 @@ public class OrderFixture {
                         .menuName("뵈프 부르기뇽")
                         .count(2)
                         .price(37000)
-                        .isDiscount(true)
+                        .isDiscounted(true)
                         .totalPrice(new BigDecimal(64000))
                         .itemstatus(OrderItemStatus.CREATED)
                         .build();

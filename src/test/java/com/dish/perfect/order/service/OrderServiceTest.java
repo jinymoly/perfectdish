@@ -37,8 +37,7 @@ public class OrderServiceTest {
     void saveFixture() {
         Map<Integer, List<OrderItem>> table1 = orderRepository.saveOrderMap(fixtureO.orderRequest1);
         Map<Integer, List<OrderItem>> table2 = orderRepository.saveOrderMap(fixtureO.orderRequest2);
-        Map<Integer, List<OrderItem>> table3 = orderRepository.saveOrderMap(fixtureO.orderRequest3);
-        Map<Integer, List<OrderItem>> table4 = orderRepository.saveOrderMap(fixtureO.orderRequest3);
+        Map<Integer, List<OrderItem>> table3 = orderRepository.saveOrderMap(fixtureO.orderRequest3D);
     }   
 
     @AfterEach
@@ -49,10 +48,10 @@ public class OrderServiceTest {
     @DisplayName("최종 주문서 생성")
     void applyFinalOrderByOrders(){
         Map<Integer, Order> finalOrder2 = orderService.createOrderMap(fixtureO.orderRequest2);
-        Map<Integer, Order> finalOrder3 = orderService.createOrderMap(fixtureO.orderRequest3);
+        Map<Integer, Order> finalOrder3 = orderService.createOrderMap(fixtureO.orderRequest3D);
         
         Map<Integer, Order> allOrders = orderService.allOrders();
-        
+        log.info("Test.All={}", allOrders);
         assertThat(allOrders.containsKey(2)).isTrue();
         assertThat(allOrders.containsKey(3)).isTrue();
 
@@ -74,7 +73,7 @@ public class OrderServiceTest {
     @DisplayName("주문서 취합 시 finalPrice 계산")
     void calculateFinalPrice(){
         Map<Integer, Order> order1 = orderService.createOrderMap(fixtureO.orderRequest1);
-
+        log.info("order1Test={}", order1);
         BigDecimal finalPrice = BigDecimal.ZERO;
         for(Map.Entry<Integer, Order> entry : order1.entrySet()){
             finalPrice = entry.getValue().getFinalPrice();
