@@ -16,32 +16,31 @@ public class OrderItem {
     private int count;
     private Integer price;
     
-    private boolean isDiscount;
+    private boolean isDiscounted;
     private BigDecimal totalPrice;
     
     private OrderItemStatus itemstatus;
 
     @Builder
-    public OrderItem(int tableNo,
-            String menuName, int count, Integer price,
-            BigDecimal totalPrice, OrderItemStatus itemstatus, boolean isDiscount) {
+    public OrderItem(int tableNo, String menuName, int count, Integer price,
+            BigDecimal totalPrice, OrderItemStatus itemstatus, boolean isDiscounted) {
         this.tableNo = tableNo;
         this.menuName = menuName;
         this.count = count;
         this.price = price;
         this.totalPrice = addTotalPrice();
         this.itemstatus = itemstatus;
-        this.isDiscount = isDiscount;
+        this.isDiscounted = isDiscounted;
     }
 
     @Override
     public String toString() {
         return menuName + ", " + price + "원, " + count + "개, total: " + totalPrice
-                + "원, [" + itemstatus + "], D: " + isDiscount;
+                + "원, [" + itemstatus + "], D: " + isDiscounted;
     }
 
     public BigDecimal addTotalPrice(){
-        if(isDiscount){
+        if(isDiscounted){
            price = applyDiscount(price);
         }
         int total = price * count;
@@ -58,6 +57,14 @@ public class OrderItem {
 
     public void updateCount(int count){
         this.count = count;
+    }
+
+    public void applyCount(int addCount){
+        this.count += addCount;
+    }
+
+    public void applyTotalPrice(BigDecimal addTotalPrice){
+        this.totalPrice = this.totalPrice.add(addTotalPrice);
     }
 
 }

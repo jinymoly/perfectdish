@@ -36,7 +36,7 @@ public class InMemoryOrderItemRepository implements OrderItemRepository {
                     .price(orderDto.getMenu().getPrice())
                     .count(orderDto.getCount())
                     .itemstatus(orderDto.getStatus())
-                    .isDiscount(orderDto.getMenu().isDiscounted())
+                    .isDiscounted(orderDto.getMenu().isDiscounted())
                     .build();
             orders.add(order);
             log.info("createOrder() {}", order);
