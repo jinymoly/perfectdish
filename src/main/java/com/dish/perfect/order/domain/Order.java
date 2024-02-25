@@ -31,7 +31,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "tableNo."+ tableNo +" "+ orderList + "/ 최종 합계: " + finalPrice + "원[" + status + "]";
+        return orderList + "/ 최종 합계: " + finalPrice + "원[" + status + "]";
     }
     
     public void updateStatus() {

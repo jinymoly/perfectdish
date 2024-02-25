@@ -26,11 +26,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    // TODO
-    // 메뉴의 갯수를 반환
-    // 주문서들 중 이름이 같은 메뉴를 카운트
-    // 새 주문서 작성
-    // 새 주문맵에 finalPrice와 함께 추가
     public Map<Integer, Order> createOrderMap(OrderRequest orderRequest) {
         int tableNo = orderRequest.getTableNo();
         Map<Integer, List<OrderItem>> orderByTableNo = orderRepository.getOrderByTableNo(tableNo);
@@ -48,7 +43,7 @@ public class OrderService {
                                                 .price(order.getPrice())
                                                 .count(countByDuplicatedMenuName)
                                                 .totalPrice(order.addTotalPrice())
-                                                .isDiscount(order.isDiscount())
+                                                .isDiscounted(order.isDiscounted())
                                                 .itemstatus(OrderItemStatus.COMPLETED)
                                                 .build();
                 finalOrderItems.add(newOrder);
@@ -67,7 +62,6 @@ public class OrderService {
         newOrderMapWithFinalPrice.put(tableNo, finalOrder);
         return newOrderMapWithFinalPrice;
     }
-
 
     public Map<Integer, Order> allOrders() {
         Map<Integer, List<OrderItem>> allOrdersFromRepo = orderRepository.getAllOrders();
