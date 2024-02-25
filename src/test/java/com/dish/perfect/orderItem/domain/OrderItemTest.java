@@ -17,7 +17,7 @@ public class OrderItemTest {
                             .menuName("시간 파스타")
                             .price(99000)
                             .count(2)
-                            .isDiscount(true)
+                            .isDiscounted(true)
                             .itemstatus(OrderItemStatus.CREATED)
                             .build();
         order.addTotalPrice();
@@ -30,7 +30,7 @@ public class OrderItemTest {
 
     @Test
     void calculateTotal(){
-        OrderItem order = OrderItem.builder().isDiscount(true).price(3000).count(2).build();
+        OrderItem order = OrderItem.builder().isDiscounted(true).price(3000).count(2).build();
 
         BigDecimal totalPrice = order.addTotalPrice();
 
