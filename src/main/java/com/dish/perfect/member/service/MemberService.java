@@ -1,13 +1,15 @@
 package com.dish.perfect.member.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.dish.perfect.global.error.GlobalException;
+import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
 import com.dish.perfect.member.dto.request.MemberRequest;
+import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,52 +32,36 @@ public class MemberService {
     }
 
     public List<Member> findAll() {
-        return memberRepository.findAll();
+        if(memberRepository.findAll().isEmpty()){
+            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "회원 목록이 비어있습니다.");
+        } else {
+            return memberRepository.findAll();
+        }
     }
 
     public Member findById(Long id) {
         return memberRepository.findById(id);
     }
 
-    public Member deleteMember(MemberRequest request, String name) {
-        List<Member> memberList = memberRepository.findAll();
-        memberRepository.findByName(memberList, name);
-        Member member = memberRepository.deleteMember(request);
-        log.info("delete : {}", member);
-        return member;
+    public void deleteMember(Long id) {
+        if(id != null){
+            Member member = memberRepository.findById(id);
+            memberRepository.deleteMember(member);
+            Member result = memberRepository.findById(member.getId());
+            log.info("deleted complete:{}[{}]", result.getUserName(), result.getStatus());
+        } else {
+            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원을 찾을 수 없습니다.");
+        }
     }
 
-    /**
-     * 폰번호 뒤 4자리로 찾은 member(중복 가능성)
-     * 
-     * @param phoneNumber
-     * @return
-     */
-    public List<Member> findByphoneNum(String phoneNumber) {
-        List<Member> membersWithDuplicateNumber = memberRepository.findMembersBySameLastFourDigits(phoneNumber);
-        log.info("findByphoneNum : result={}", membersWithDuplicateNumber.toString());
-        return membersWithDuplicateNumber;
-    }
-
-    /**
-     * 폰 번호 마지막 4자리 반환
-     * 
-     * @param phoneNumber
-     * @return
-     */
-    public String extractLastFourDigits(String phoneNumber) {
-        return memberRepository.extractLastFourDigits(phoneNumber);
-    }
-
-    /**
-     * 번호 같은 memberList에서 이름으로 member 추출하기
-     * 
-     * @param members
-     * @param name
-     * @return
-     */
-    public Optional<Member> findByName(List<Member> members, String name) {
-        return memberRepository.findByName(members, name);
+    public void updateMemberInfo(Long id, MemberUpdateRequest memberRequest){
+            memberRepository.findById(id);
+        if(memberRequest.getId().equals(id)){
+            memberRepository.update(id, memberRequest);
+            log.info("update complete:{}/{}", memberRequest.getUserName(), memberRequest.getPhoneNumber());
+        } else {
+            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원을 찾을 수 없습니다.");
+        }
     }
 
     public void clear() {

@@ -10,7 +10,7 @@ import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 public interface MemberRepository {
 
     Member save(MemberRequest memberRequestDto);
-    Member update(Long id, MemberUpdateRequest memberRequestDto);
+    void update(Long id, MemberUpdateRequest memberRequestDto);
 
     List<Member> findAll();
     Member findById(Long id);
@@ -26,7 +26,7 @@ public interface MemberRepository {
     Long getNextId();
 
     // soft delete
-    Member deleteMember(Member member);
+    void deleteMember(Member member);
     
     void clear();
 }

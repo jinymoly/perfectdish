@@ -120,7 +120,7 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member update(Long id, MemberUpdateRequest memberRequestDto) {
+    public void update(Long id, MemberUpdateRequest memberRequestDto) {
         Member findById = findById(id);
         if(memberMap.containsValue(findById)){
 
@@ -131,14 +131,13 @@ public class InMemoryMemberRepository implements MemberRepository {
             .status(MemberStatus.ACTIVE)
             .build();
             memberMap.put(findById.getId(), member);
-            return member;
         } else {
             throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다.");
         }
     }
 
     @Override
-    public Member deleteMember(Member member) {
+    public void deleteMember(Member member) {
         Long id = member.getId();
         Member findById = findById(id);
         if(memberMap.containsValue(findById)){
@@ -150,7 +149,6 @@ public class InMemoryMemberRepository implements MemberRepository {
                                         .status(MemberStatus.DELETED).build();
                                         
             memberMap.put(id, deleteMember);
-            return deleteMember;
         } else {
             throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "삭제할 회원이 존재하지 않습니다.");
         }
