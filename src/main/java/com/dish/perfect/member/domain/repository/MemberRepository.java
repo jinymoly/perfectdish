@@ -20,7 +20,7 @@ public interface MemberRepository {
 
     Optional<Member> findByPhoneNumberOp(List<Member> members, String phoneNumber);
     Member findByPhoneNumberWithList(List<Member> members, String phoneNumber);
-    //List<Member> findByPhoneNumberByList(String phoneNumber);
+    Optional<Member> findMemberByPhoneNumber(String phoneNumber);
 
     String extractLastFourDigits(String phoneNumber);
     Long getNextId();
