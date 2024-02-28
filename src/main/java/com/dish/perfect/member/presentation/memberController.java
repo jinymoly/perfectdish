@@ -3,6 +3,7 @@ package com.dish.perfect.member.presentation;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 import com.dish.perfect.member.service.MemberService;
@@ -49,7 +51,8 @@ public class memberController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Member> findMemberByPhoneNumber(@PathVariable("id") Long id, @RequestParam("phoneNumber")String phoneNumber) {
+    public ResponseEntity<Member> findMemberByPhoneNumber(@PathVariable("id") Long id,
+            @RequestParam("phoneNumber") String phoneNumber) {
         Optional<Member> findMember = memberService.findMemberByOnlyPhoneNumber(phoneNumber);
         return findMember.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
@@ -72,12 +75,27 @@ public class memberController {
     @PatchMapping("/{id}/edit")
     public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id,
             @RequestBody @Valid MemberUpdateRequest memberUrequest) {
-                Member member = memberService.findById(id);
+        Member member = memberService.findById(id);
         if (member.getId().equals(id)) {
             memberService.updateMemberInfo(id, memberUrequest);
             log.info("update member:{}님/{}", memberUrequest.getUserName(), memberUrequest.getPhoneNumber());
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("{id}/delete")
+    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id) {
+        Member member = memberService.findById(id);
+        if (member == null) {
+            return ResponseEntity.noContent().build();
+        }
+        if (member.getStatus().equals(MemberStatus.DELETED)) {
+            log.warn("already deleted:{}[{}]", member.getUserName(), member.getStatus());
+            return ResponseEntity.noContent().build();
+        } else {
+            memberService.deleteMember(id);
+        }
+        return ResponseEntity.noContent().build();
     }
 }
