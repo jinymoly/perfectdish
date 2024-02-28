@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MemberRequest {
+public class MemberUpdateRequest {
 
     @NotBlank(message = "휴대폰 번호는 필수입니다.")
     @Pattern(regexp = "^[0-9]{8}$", message = "010을 제외한 나머지 8자리만 입력할 수 있습니다.")
@@ -21,8 +21,9 @@ public class MemberRequest {
 
     private MemberStatus status;
 
+
     @Builder
-    private MemberRequest(String phoneNumber, String userName, MemberStatus status) {
+    private MemberUpdateRequest(String phoneNumber, String userName, MemberStatus status) {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.status = status;

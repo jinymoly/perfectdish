@@ -1,7 +1,8 @@
 package com.dish.perfect.order.dto.request;
 
-import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.order.domain.OrderStatus;
+import java.util.List;
+
+import com.dish.perfect.orderItem.domain.OrderItem;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,17 +12,12 @@ public class OrderRequest {
     
     private final int tableNo;
 
-    private final Menu menu;
-    private final int count;
-    
-    private final OrderStatus status;
+    private final List<OrderItem> orderItems;
 
 
     @Builder
-    private OrderRequest(int tableNo, Menu menu, int count, OrderStatus status){
+    private OrderRequest(int tableNo, List<OrderItem> orderItems){
         this.tableNo = tableNo;
-        this.menu = menu;
-        this.count = count;
-        this.status = status;
+        this.orderItems = orderItems;
     }
 }

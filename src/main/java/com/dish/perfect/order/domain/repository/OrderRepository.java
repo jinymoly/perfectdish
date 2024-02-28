@@ -1,18 +1,19 @@
 package com.dish.perfect.order.domain.repository;
 
 import java.util.List;
+import java.util.Map;
 
-import com.dish.perfect.order.domain.Order;
-import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.dto.request.OrderRequest;
+import com.dish.perfect.orderItem.domain.OrderItem;
 
 public interface OrderRepository {
 
-    Order createOrder(OrderRequest orderDto);
+    Map<Integer, List<OrderItem>> saveOrderMap(OrderRequest orderRequest);
 
-    List<Order> getAllOrders();
-    
-    List<Order> getOrders(int tableNo);
-    List<Order> getOrderByStatus(OrderStatus status);
-    
+    Map<Integer, List<OrderItem>> getOrderByTableNo(int tableNo);
+
+    Map<Integer, List<OrderItem>> getAllOrders();
+
+    void clear();
+
 }

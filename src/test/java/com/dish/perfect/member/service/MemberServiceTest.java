@@ -2,9 +2,11 @@ package com.dish.perfect.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.dish.perfect.member.MemberFixture;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
-import com.dish.perfect.member.dto.request.MemberRequest;
+import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +28,9 @@ public class MemberServiceTest {
     @Autowired
     private MemberService memberService;
 
+    private MemberFixture fixtureM = new MemberFixture();
+
+    
     @AfterEach
     void clearServiceTest() {
         memberService.clear();
@@ -33,69 +39,63 @@ public class MemberServiceTest {
     @Test
     @DisplayName("유저 생성")
     void createAccount() {
-        Member saveMember = fixtureA();
+        Member saveMember = memberService.save(fixtureM.fixtureA());
         Member findMember = memberService.findById(saveMember.getId());
         log.info("createdMember={}", findMember);
         assertThat(findMember).isEqualTo(saveMember);
     }
 
+
     @Test
-    @DisplayName("휴대폰 번호 뒷자리 4개 출력 확인")
-    void extractFourDigits() {
-        Member saveMember = fixtureA();
-        log.info("userName={}, phoneNumber={}", saveMember.getUserName(),saveMember.getPhoneNumber());
-        String fourDigits = memberService.extractLastFourDigits(saveMember.getPhoneNumber());
+    @DisplayName("이름으로 회원 리스트 조회")
+    void findMemberA(){
+        Member saveMemberA = memberService.save(fixtureM.fixtureA());
+        Member saveMemberAD = memberService.save(fixtureM.fixtureAD());
 
-        log.info("4digits={}", fourDigits);
-
-        assertThat(fourDigits).isEqualTo("3333");
-
+        List<Member> names = memberService.findMemberWithName(saveMemberA.getUserName());
+        assertSame(saveMemberA.getUserName(), saveMemberAD.getUserName());
+        assertEquals(names.size(), 2);
     }
 
     @Test
-    @DisplayName("뒷번호 4자리로 중복 유저")
-    void findByPhoneNumber() {
-        Member saveMemberA = fixtureA();
-        Member saveMemberB = fixtureB();
-        String FourDigitsByA = memberService.extractLastFourDigits(saveMemberA.getPhoneNumber());
-        List<Member> findByphoneNum = memberService.findByphoneNum(FourDigitsByA);
-        log.info("findMembers={}", findByphoneNum.toString());
+    @DisplayName("findByName 중 번호로 회원 조회")
+    void findMemberB(){
+        Member saveMemberA = memberService.save(fixtureM.fixtureA());
+        Member saveMemberAD = memberService.save(fixtureM.fixtureAD());
 
-        assertThat(findByphoneNum).contains(saveMemberA, saveMemberB);
-    }
-
-    @Test
-    @DisplayName("폰 번호로 확인된 유저들 중 이름이 같은 한 유저")
-    void findByNameInList() {
-        Member saveMemberA = fixtureA();
-        Member saveMemberB = fixtureB();
-
-        List<Member> findByphoneNum = memberService.findByphoneNum(memberService.extractLastFourDigits(saveMemberA.getPhoneNumber()));
-        Optional<Member> expectMember = memberService.findByName(findByphoneNum, "김가가");
-        log.info("expectMember={}", expectMember.toString());
+        List<Member> names = memberService.findMemberWithName(saveMemberA.getUserName());
+        Member result = memberService.findMemberWithPhoneNumber(names, saveMemberAD.getPhoneNumber());
         
-        assertEquals(expectMember.get().getUserName(), saveMemberB.getUserName());
+        assertSame(saveMemberA.getUserName(), saveMemberAD.getUserName());
+        assertNotEquals(saveMemberA.getPhoneNumber(), saveMemberAD.getPhoneNumber());
+
+    }
+    
+    
+    @Test
+    @DisplayName("회원 삭제(soft delete) 플로우")
+    void deleteMemberWithFindAll(){
+        Member saveMemberA = memberService.save(fixtureM.fixtureA());
+
+        memberService.deleteMember(saveMemberA.getId());
+        MemberStatus status = memberService.findById(saveMemberA.getId()).getStatus();
+        assertEquals(status, MemberStatus.DELETED);
     }
 
-    //TODO 동시 가입시 순서대로 저장되는지 확인 
+    @Test
+    @DisplayName("회원 정보 변경")
+    void updateMemberInfo(){
+        Member saveMemberB = memberService.save(fixtureM.fixtureB());
 
-    private Member fixtureA() {
-        MemberRequest memberDto = MemberRequest.builder()
-                                                    .userName("이나나")
-                                                    .phoneNumber("22223333")
-                                                    .status(MemberStatus.ACTIVE)
-                                                    .build();
-        Member saveMember = memberService.save(memberDto);
-        return saveMember;
-    }
+        MemberUpdateRequest update = MemberUpdateRequest.builder()
+                                            .userName("new_name")
+                                            .phoneNumber("56785678")
+                                            .status(MemberStatus.ACTIVE)
+                                            .build();
 
-    private Member fixtureB() {
-        MemberRequest memberDto = MemberRequest.builder()
-                                                    .userName("김가가")
-                                                    .phoneNumber("22223333")
-                                                    .status(MemberStatus.ACTIVE)
-                                                    .build();
-        Member saveMember = memberService.save(memberDto);
-        return saveMember;
+        memberService.updateMemberInfo(saveMemberB.getId(),update);
+
+        assertNotEquals(saveMemberB.getUserName(), "new_name");
     }
+    
 }

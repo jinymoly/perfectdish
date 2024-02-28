@@ -1,126 +1,118 @@
 package com.dish.perfect.order;
 
+import java.math.BigDecimal;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.dish.perfect.menu.domain.Availability;
-import com.dish.perfect.menu.domain.CourseType;
-import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.menuBoard.MenuBoardFixture;
-import com.dish.perfect.menuBoard.service.MenuBoardService;
-import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.dto.request.OrderRequest;
+import com.dish.perfect.orderItem.domain.OrderItem;
+import com.dish.perfect.orderItem.domain.OrderItemStatus;
 
 public class OrderFixture {
 
-    @Autowired
-    private MenuBoardService mBoardService;
+    public OrderRequest orderRequest1 = OrderRequest.builder().tableNo(1).orderItems(orderItemsFixture1()).build();
+    public OrderRequest orderRequest2 = OrderRequest.builder().tableNo(2).orderItems(orderItemsFixture2()).build();
+    public OrderRequest orderRequest3 = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3()).build();
+    public OrderRequest orderRequest3D = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3D()).build();
 
-    private MenuBoardFixture mBoardFixture = new MenuBoardFixture();
-
-    public List<Menu> fixtureCommonMenus() {
-        mBoardService.saveCommonMenus(mBoardFixture.requestCommonsA());
-        mBoardService.saveCommonMenus(mBoardFixture.requestCommonsB());
-        mBoardService.saveCommonMenus(mBoardFixture.requestCommonsC());
-        mBoardService.saveCommonMenus(mBoardFixture.requestCommonsD());
-
-        List<Menu> fixC = mBoardService.findCommonMenus();
-        return fixC;
+    public OrderItem orderItemA(){
+        return OrderItem.builder()
+                        .tableNo(1)
+                        .menuName("프랑스식 양 샴꼬")
+                        .count(2)
+                        .price(13000)
+                        .isDiscounted(false)
+                        .totalPrice(new BigDecimal(26000))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
+    }
+    public OrderItem orderItemB(){
+        return OrderItem.builder()
+                        .tableNo(3)
+                        .menuName("로스트 치킨")
+                        .count(1)
+                        .price(28000)
+                        .isDiscounted(false)
+                        .totalPrice(new BigDecimal(28000))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
     }
 
-    public Optional<List<Menu>> fixtureDisMenus() {
-        mBoardService.saveDiscountMenus(mBoardFixture.requestDiscountsA());
-        mBoardService.saveDiscountMenus(mBoardFixture.requestDiscountsB());
-        mBoardService.saveDiscountMenus(mBoardFixture.requestDiscountsC());
-        mBoardService.saveDiscountMenus(mBoardFixture.requestDiscountsD());
-
-        Optional<List<Menu>> fixD = mBoardService.findDiscountMenus();
-        return fixD;
+    public OrderItem orderItemC() {
+        return OrderItem.builder()
+                        .tableNo(2)
+                        .menuName("그라탕")
+                        .count(2)
+                        .price(15000)
+                        .isDiscounted(true)
+                        .totalPrice(new BigDecimal(28500))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
+    }
+    
+    public OrderItem orderItemD() {
+        return OrderItem.builder()
+                        .tableNo(2)
+                        .menuName("크림 소스 파스타")
+                        .count(2)
+                        .price(18000)
+                        .isDiscounted(true)
+                        .totalPrice(new BigDecimal(34200))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
     }
 
-    public List<Menu> fixtureAllMenu() {
-        fixtureCommonMenus();
-        fixtureDisMenus();
-        List<Menu> allMenus = mBoardService.getAllMenus();
-        return allMenus;
+    public OrderItem orderItemE() {
+        return OrderItem.builder()
+                        .tableNo(1)
+                        .menuName("스테이크")
+                        .count(1)
+                        .price(35000)
+                        .isDiscounted(true)
+                        .totalPrice(new BigDecimal(33250))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
     }
 
-    public OrderRequest orderRequestA = OrderRequest.builder().tableNo(2).menu(menu1()).count(2).status(OrderStatus.CREATED).build();
-    public OrderRequest orderRequestB = OrderRequest.builder().tableNo(3).menu(menu2()).count(1).status(OrderStatus.CREATED).build();
-    public OrderRequest orderRequestC = OrderRequest.builder().tableNo(3).menu(menu3()).count(3).status(OrderStatus.CREATED).build();
-    public OrderRequest orderRequestD = OrderRequest.builder().tableNo(3).menu(menu1()).count(5).status(OrderStatus.CREATED).build();
-    public OrderRequest orderRequestE = OrderRequest.builder().tableNo(3).menu(menu2()).count(2).status(OrderStatus.CREATED).build();
-    public OrderRequest orderRequestF = OrderRequest.builder().tableNo(7).menu(menu3()).count(4).status(OrderStatus.CREATED).build();
-
-
-
-    public Menu menu1() {
-        return Menu.builder()
-        .courseType(CourseType.T_EPPETIZER)
-        .menuName("메뉴A")
-        .description("최고급 버터로 4시간 정성스레 카라멜라이징한 양파로 만든 수프")
-        .price(13000)
-        .isDiscounted(false)
-        .availability(Availability.AVAILABLE)
-        .build();
+    public OrderItem orderItemF(){
+        return OrderItem.builder()
+                        .tableNo(3)
+                        .menuName("뵈프 부르기뇽")
+                        .count(2)
+                        .price(37000)
+                        .isDiscounted(true)
+                        .totalPrice(new BigDecimal(64000))
+                        .itemstatus(OrderItemStatus.CREATED)
+                        .build();
     }
-        
-
-    public Menu menu2() {
-        return Menu.builder()
-            .courseType(CourseType.T_MAIN)
-            .menuName("메뉴B")
-            .description("고기에 소스 부어서 구우면 됨")
-            .price(30000)
-            .isDiscounted(false)
-            .availability(Availability.AVAILABLE)
-            .build();
+    public List<OrderItem> orderItemsFixture1(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItemA());
+        orderItems.add(orderItemE());
+        return orderItems;
     }
 
-    public Menu menu3() {
-        return Menu.builder()
-        .courseType(CourseType.T_DESSERT)
-        .menuName("메뉴C")
-        .description("달지 않아 맛있는 치즈 케이크")
-        .price(15000)
-        .isDiscounted(true)
-        .availability(Availability.AVAILABLE)
-        .build();
+    public List<OrderItem> orderItemsFixture2(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItemC());
+        orderItems.add(orderItemD());
+        return orderItems;
     }
 
-    public Menu menu4() {
-        return Menu.builder()
-        .courseType(CourseType.T_EPPETIZER)
-        .menuName("메뉴E")
-        .description("최고급 버터로 4시간 정성스레 카라멜라이징한 양파로 만든 수프")
-        .price(13000)
-        .isDiscounted(true)
-        .availability(Availability.AVAILABLE)
-        .build();
-    }
-        
-
-    public Menu menu5() {
-        return Menu.builder()
-            .courseType(CourseType.T_MAIN)
-            .menuName("메뉴F")
-            .description("고기에 소스 부어서 구우면 됨")
-            .price(30000)
-            .isDiscounted(true)
-            .availability(Availability.AVAILABLE)
-            .build();
+    public List<OrderItem> orderItemsFixture3(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItemB());
+        return orderItems;
     }
 
-    public Menu menu6() {
-        return Menu.builder()
-        .courseType(CourseType.T_DESSERT)
-        .menuName("메뉴G")
-        .description("달지 않아 맛있는 치즈 케이크")
-        .price(15000)
-        .isDiscounted(true)
-        .availability(Availability.AVAILABLE)
-        .build();
+    public List<OrderItem> orderItemsFixture3D(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItemB());
+        orderItems.add(orderItemB());
+        orderItems.add(orderItemF());
+        return orderItems;
     }
+
+    
 }
