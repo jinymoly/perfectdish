@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.domain.repository.MemberRepository;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
@@ -63,13 +64,16 @@ public class MemberService {
     }
 
     public void deleteMember(Long id) {
-        if(id != null){
-            Member member = memberRepository.findById(id);
+        Member member = memberRepository.findById(id);
+        if(member == null){
+            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원을 찾을 수 없습니다.");
+        } 
+        if(member.getStatus().equals(MemberStatus.DELETED)){
+                throw new GlobalException(ErrorCode.ALREADY_DELETED_MEMBER, "이미 삭제된 회원입니다.");
+        }else {
             memberRepository.deleteMember(member);
             Member result = memberRepository.findById(member.getId());
             log.info("deleted complete:{}[{}]", result.getUserName(), result.getStatus());
-        } else {
-            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원을 찾을 수 없습니다.");
         }
     }
 
