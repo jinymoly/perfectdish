@@ -1,6 +1,7 @@
 package com.dish.perfect.member.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,24 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    public List<Member> findMemberWithName(String name){
+        List<Member> names = memberRepository.findByName(name);
+        return names;
+    }
+
+    public Member findMemberWithPhoneNumber(List<Member> members, String phoneNumber){
+        Member findMember = memberRepository.findByPhoneNumberWithList(members, phoneNumber);
+        return findMember;
+    }
+
+    public Optional<Member> findMemberByOnlyPhoneNumber(String phoneNumber){
+        if(phoneNumber != null){
+            return memberRepository.findMemberByPhoneNumber(phoneNumber);
+        } else {
+            throw new GlobalException(ErrorCode.INVALID_INPUT_ERROR, "올바른 휴대폰 번호를 입력하세요.");
+        }  
+    }
+
     public void deleteMember(Long id) {
         if(id != null){
             Member member = memberRepository.findById(id);
@@ -55,8 +74,8 @@ public class MemberService {
     }
 
     public void updateMemberInfo(Long id, MemberUpdateRequest memberRequest){
-            memberRepository.findById(id);
-        if(memberRequest.getId().equals(id)){
+            Member member = memberRepository.findById(id);
+        if(member.getId().equals(id)){
             memberRepository.update(id, memberRequest);
             log.info("update complete:{}/{}", memberRequest.getUserName(), memberRequest.getPhoneNumber());
         } else {
