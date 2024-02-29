@@ -6,6 +6,7 @@ import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class MenuRequest {
     private final String title;
     private final CourseType courseType;
     
+    @Pattern(regexp = "^(?=.*[0-9])\\S+$", message = "숫자만 입력 가능합니다.")
     private final Integer price;
     private final String description;
 
