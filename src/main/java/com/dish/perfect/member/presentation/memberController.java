@@ -3,10 +3,8 @@ package com.dish.perfect.member.presentation;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/user")
-public class memberController {
+public class MemberController {
 
     private final MemberService memberService;
 
     @GetMapping("/save")
-    public String addMemberRequest(@ModelAttribute("memberRequest") MemberRequest memberRequest) {
+    public String addMemberRequest() {
         return "memberRequest 페이지로 이동";
     }
 
