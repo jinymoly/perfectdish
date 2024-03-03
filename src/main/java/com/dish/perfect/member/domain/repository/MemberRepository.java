@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dish.perfect.member.domain.Member;
-import com.dish.perfect.member.dto.request.MemberRequest;
-import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 public interface MemberRepository {
 
-    Member save(MemberRequest memberRequestDto);
-    void update(Long id, MemberUpdateRequest memberRequestDto);
+    Member save(Member member);
+    void update(Long id, Member member);
 
     List<Member> findAll();
     Member findById(Long id);

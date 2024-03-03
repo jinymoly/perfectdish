@@ -1,6 +1,5 @@
 package com.dish.perfect.member.domain.repository;
 
-import java.lang.StackWalker.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,6 @@ import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
-import com.dish.perfect.member.dto.request.MemberRequest;
-import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 @Repository
 public class InMemoryMemberRepository implements MemberRepository {
@@ -26,21 +23,21 @@ public class InMemoryMemberRepository implements MemberRepository {
     private final AtomicLong idSequence = new AtomicLong(0);
 
     @Override
-    public Member save(MemberRequest memberRequestDto) {
-        for (Member member : memberMap.values()) {
-            if (member.getPhoneNumber().equals(memberRequestDto.getPhoneNumber())) {
+    public Member save(Member member) {
+        for (Member mem : memberMap.values()) {
+            if (mem.getPhoneNumber().equals(member.getPhoneNumber())) {
                 throw new GlobalException(ErrorCode.DUPLICATED_MEMBER, "이미 등록된 회원입니다.");
             }
         }
-        Member member = Member.builder()
+        Member newMem = Member.builder()
                                 .id(getNextId())
-                                .userName(memberRequestDto.getUserName())
-                                .phoneNumber(memberRequestDto.getPhoneNumber())
-                                .status(memberRequestDto.getStatus())
+                                .userName(member.getUserName())
+                                .phoneNumber(member.getPhoneNumber())
+                                .status(member.getStatus())
                                 .createAt(LocalDateTime.now())
                                 .build();
-        memberMap.put(member.getId(), member);
-        return member;
+        memberMap.put(member.getId(), newMem);
+        return newMem;
     }
 
     @Override
@@ -126,17 +123,17 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public void update(Long id, MemberUpdateRequest memberRequestDto) {
+    public void update(Long id, Member member) {
         Member findById = findById(id);
         if (memberMap.containsValue(findById)) {
-            Member member = Member.builder()
+            Member newMem = Member.builder()
                                     .id(findById.getId())
-                                    .userName(memberRequestDto.getUserName())
-                                    .phoneNumber(memberRequestDto.getPhoneNumber())
+                                    .userName(member.getUserName())
+                                    .phoneNumber(member.getPhoneNumber())
                                     .createAt(findById.getCreateAt())
                                     .status(MemberStatus.ACTIVE)
                                     .build();
-            memberMap.put(findById.getId(), member);
+            memberMap.put(findById.getId(), newMem);
         } else {
             throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다.");
         }
@@ -159,7 +156,5 @@ public class InMemoryMemberRepository implements MemberRepository {
             throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "삭제할 회원이 존재하지 않습니다.");
         }
     }
-
-    
 
 }
