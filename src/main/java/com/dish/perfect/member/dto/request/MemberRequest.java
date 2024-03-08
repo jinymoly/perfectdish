@@ -1,8 +1,13 @@
 package com.dish.perfect.member.dto.request;
 
+import java.time.LocalDateTime;
+
+import com.dish.perfect.member.domain.Member;
+import com.dish.perfect.member.domain.MemberStatus;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +22,24 @@ public class MemberRequest {
     @NotBlank(message = "이름은 필수입니다.")
     private String userName;
 
+    private MemberStatus status;
+
+    private LocalDateTime createdAt;
+
+    @Builder
+    private MemberRequest(String phoneNumber, String userName, MemberStatus status) {
+        this.phoneNumber = phoneNumber;
+        this.userName = userName;
+        this.status = MemberStatus.ACTIVE;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Member toEntity(){
+        return Member.builder()
+                    .phoneNumber(phoneNumber)
+                    .userName(userName)
+                    .status(status)
+                    .createdAt(createdAt)
+                    .build();
+    }
 }
