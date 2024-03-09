@@ -56,15 +56,14 @@ public class Member {
         this.modifiedAt = modifiedAt;
     }
 
-    // @Override
-    // public String toString() {
-    //     return "id='" + id + '\'' +
-    //             "  userName='" + userName + '\'' +
-    //             ", phoneNumber='" + phoneNumber + '\'' +
-    //             ", status='" + status + '\'' +
-    //             ", createdAt=" + timeFomatter(createdAt) + '\'' +
-    //             ", updatedAt=" + timeFomatter(modifiedAt);
-    // }
+    @Override
+    public String toString() {
+        return '\n' + "id=" + id + '\n' +
+                "userName=" + userName + '\n' +
+                "phoneNumber=" + phoneNumber + '\n' +
+                "status=" + status + '\n' +
+                "createdAt=" + timeFomatter(createdAt);
+    }
 
     public static Member of(String userName, String phoneNumber, MemberStatus status) {
         return Member.builder()
@@ -98,9 +97,6 @@ public class Member {
     }
 
     public boolean isActive(){
-        if(this.getStatus().equals(MemberStatus.ACTIVE)){
-            return true;
-        }
-        return false;
+        return this.getStatus().equals(MemberStatus.ACTIVE);
     }
 }
