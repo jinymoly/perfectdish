@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
+import com.dish.perfect.member.dto.request.MemberChangeStatusRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
-import com.dish.perfect.member.service.MemberService;
+import com.dish.perfect.member.dto.response.MemberResponse;
+import com.dish.perfect.member.service.MemberCoreService;
+import com.dish.perfect.member.service.MemberPresentationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,35 +32,36 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/user")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberCoreService memberCoreService;
+    private final MemberPresentationService memberPresentationService;
 
-    @GetMapping("/save")
+    @GetMapping("/join")
     public String addMemberRequest() {
         return "memberRequest 페이지로 이동";
     }
 
-    @PostMapping("/save")
+    @PostMapping("/join")
     public ResponseEntity<Member> addMember(@RequestBody @Valid MemberRequest memberRequest) {
-        Member save = memberService.save(memberRequest);
-        return ResponseEntity.ok(save);
+        Member newMember = memberCoreService.join(memberRequest);
+        return ResponseEntity.ok(newMember);
     }
 
     @GetMapping("/allmember")
-    public ResponseEntity<List<Member>> getAllMember() {
-        List<Member> findAll = memberService.findAll();
+    public ResponseEntity<List<MemberResponse>> getAllMember() {
+        List<MemberResponse> findAll = memberPresentationService.findAllWithActive();
         return ResponseEntity.ok(findAll);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> findMemberByPhoneNumber(@PathVariable("id") Long id,
-            @RequestParam("phoneNumber") String phoneNumber) {
-        Optional<Member> findMember = memberService.findMemberByOnlyPhoneNumber(phoneNumber);
-        return findMember.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+                                                        @RequestParam("phoneNumber") String phoneNumber) {
+        Member findMember = memberPresentationService.findByphoneNumber(phoneNumber);
+        return ResponseEntity.ok(findMember);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<Member>> findMemberByName(@RequestParam("userName") String userName) {
-        List<Member> members = memberService.findMemberWithName(userName);
+        List<Member> members = memberPresentationService.findMemberByName(userName);
         if (!members.isEmpty()) {
             return ResponseEntity.ok(members);
         } else {
@@ -73,18 +77,15 @@ public class MemberController {
     @PatchMapping("/{id}/edit")
     public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id,
             @RequestBody @Valid MemberUpdateRequest memberUrequest) {
-        Member member = memberService.findById(id);
-        if (member.getId().equals(id)) {
-            memberService.updateMemberInfo(id, memberUrequest);
-            log.info("update member:{}님/{}", memberUrequest.getUserName(), memberUrequest.getPhoneNumber());
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+                Member member = memberPresentationService.findById(id);
+                memberCoreService.updateMemberInfo(member.getId(), memberUrequest);
+        log.info("update member:{}님/{}", memberUrequest.getUserName(), memberUrequest.getPhoneNumber());
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{id}/delete")
-    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id) {
-        Member member = memberService.findById(id);
+    public ResponseEntity<Void> deleteMember(@PathVariable("id") Long id, @RequestBody @Valid MemberChangeStatusRequest memberDrequest) {
+        Member member = memberPresentationService.findById(id);
         if (member == null) {
             return ResponseEntity.noContent().build();
         }
@@ -92,7 +93,7 @@ public class MemberController {
             log.warn("already deleted:{}[{}]", member.getUserName(), member.getStatus());
             return ResponseEntity.noContent().build();
         } else {
-            memberService.deleteMember(id);
+            memberCoreService.deleteMemberByStatus(id, memberDrequest);
         }
         return ResponseEntity.noContent().build();
     }
