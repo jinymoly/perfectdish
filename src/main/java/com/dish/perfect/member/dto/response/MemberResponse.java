@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class MemberResponse {
 
-    private final Long id;
     private final String phoneNumber;
     private final String userName;
     private final MemberStatus status;
@@ -21,11 +20,10 @@ public class MemberResponse {
 
     // TODO : private final List<Menu> orderRecode; // 주문 기록
 
-    public static MemberResponse toResponse(final Member member) {
+    public static MemberResponse fromResponse(final Member member) {
         return MemberResponse.builder()
-                .id(member.getId())
-                .phoneNumber(member.getPhoneNumber())
                 .userName(member.getUserName())
+                .phoneNumber(member.getPhoneNumber())
                 .status(member.getStatus())
                 .build();
     }
