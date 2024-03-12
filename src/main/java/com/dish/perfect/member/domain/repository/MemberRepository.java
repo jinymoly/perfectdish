@@ -11,10 +11,10 @@ import com.dish.perfect.member.domain.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.userName = :userName")
-    List<Member> findByName(@Param("userName") String userName);
+    List<Member> findByUserName(@Param("userName") String userName);
 
     @Query("select m from Member m where m.phoneNumber = :phoneNumber")
-    Member findByNumber(@Param("phoneNumber") String phoneNumber);
+    Member findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
     boolean existsByPhoneNumber(String phoneNumber);
 

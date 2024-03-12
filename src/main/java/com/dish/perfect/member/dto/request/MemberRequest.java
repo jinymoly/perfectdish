@@ -1,7 +1,5 @@
 package com.dish.perfect.member.dto.request;
 
-import java.time.LocalDateTime;
-
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 
@@ -24,14 +22,12 @@ public class MemberRequest {
 
     private MemberStatus status;
 
-    private LocalDateTime createdAt;
 
     @Builder
     private MemberRequest(String phoneNumber, String userName, MemberStatus status) {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
         this.status = MemberStatus.ACTIVE;
-        this.createdAt = LocalDateTime.now();
     }
 
     public Member toEntity(){
@@ -39,7 +35,6 @@ public class MemberRequest {
                     .phoneNumber(phoneNumber)
                     .userName(userName)
                     .status(status)
-                    .createdAt(createdAt)
                     .build();
     }
 }

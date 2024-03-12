@@ -9,6 +9,7 @@ import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
+import com.dish.perfect.member.dto.response.MemberDetailResponse;
 import com.dish.perfect.member.dto.response.MemberResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,10 @@ public class MemberPresentationService {
     
     final MemberRepository memberRepository;
 
-    public MemberResponse getMemberInfo(final Long memberId){
+    public MemberDetailResponse getMemberInfo(final Long memberId){
         Member member = memberRepository.findById(memberId)
                         .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다."));
-        return MemberResponse.fromResponse(member);
+        return MemberDetailResponse.fromResponse(member);
     }
 
     /**
@@ -38,20 +39,29 @@ public class MemberPresentationService {
                                 .toList();
     }
 
-    public List<Member> findMemberByName(String name){
-        List<Member> findByName = memberRepository.findByName(name);
-        if(findByName.isEmpty()){
-            new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 이름의 회원이 존재하지 않습니다.");
+    public List<MemberResponse> findAll(){
+        return memberRepository.findAll().stream().map(MemberResponse::fromResponse).toList();
+    }
+
+    public List<MemberResponse> findByUserName(String userName){
+        List<Member> findMembers = memberRepository.findByUserName(userName);
+        List<MemberResponse> result = findMembers.stream()
+                                                .map(MemberResponse::fromResponse)
+                                                .toList();
+        if(result.isEmpty()){
+            throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 이름의 회원이 존재하지 않습니다.");
+        } else{
+            return result;
         }
-        return findByName;
     }
 
     public Member findById(Long memberId){
         return memberRepository.findById(memberId).get();
     }
 
-    public Member findByphoneNumber(String phoneNumber){
-        return memberRepository.findByNumber(phoneNumber);
+    public MemberDetailResponse findByPhoneNumber(String phoneNumber){
+        Member findMember = memberRepository.findByPhoneNumber(phoneNumber);
+        return MemberDetailResponse.fromResponse(findMember);
     }
 
 }

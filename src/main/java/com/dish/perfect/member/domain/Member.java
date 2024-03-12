@@ -77,6 +77,10 @@ public class Member {
         return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/hh:MM:ss"));
     }
 
+    public void addCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
+    }
+
     public void updateMemberInfo(String userName, String phoneNumber, LocalDateTime modifiedAt) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;

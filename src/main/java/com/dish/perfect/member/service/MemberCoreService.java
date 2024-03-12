@@ -27,6 +27,7 @@ public class MemberCoreService {
     public Member join(MemberRequest memberRequest){
         Member member = memberRequest.toEntity();
         validPhoneNumberDuplicatedByMember(member);
+        member.addCreatedAt(LocalDateTime.now());
         return memberRepository.save(member);
     }
 
@@ -62,7 +63,7 @@ public class MemberCoreService {
     }
 
     private void validPhoneNumberDuplicatedByMember(Member member){
-        Member findByNumber = memberRepository.findByNumber(member.getPhoneNumber());
+        Member findByNumber = memberRepository.findByPhoneNumber(member.getPhoneNumber());
         if(findByNumber != null){
             throw new GlobalException(ErrorCode.DUPLICATED_MEMBER_INFO, "해당 번호의 회원이 이미 존재합니다.");
         }

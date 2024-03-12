@@ -1,5 +1,7 @@
 package com.dish.perfect.member.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 
@@ -10,21 +12,22 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @Builder
-public class MemberResponse {
+public class MemberDetailResponse {
 
     private final String phoneNumber;
     private final String userName;
     private final MemberStatus status;
 
-    // TODO : private final Integer visitCount;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
-    // TODO : private final List<Menu> orderRecode; // 주문 기록
-    
-    public static MemberResponse fromResponse(final Member member) {
-        return MemberResponse.builder()
+    public static MemberDetailResponse fromResponse(final Member member) {
+        return MemberDetailResponse.builder()
                 .userName(member.getUserName())
                 .phoneNumber(member.getPhoneNumber())
                 .status(member.getStatus())
+                .createdAt(member.getCreatedAt())
+                .modifiedAt(member.getModifiedAt())
                 .build();
     }
 }
