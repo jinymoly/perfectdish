@@ -65,14 +65,6 @@ public class Member {
                 "createdAt=" + timeFomatter(createdAt);
     }
 
-    public static Member of(String userName, String phoneNumber, MemberStatus status) {
-        return Member.builder()
-                    .userName(userName)
-                    .phoneNumber(phoneNumber)
-                    .status(status)
-                    .build();
-    }
-
     private String timeFomatter(LocalDateTime time) {
         return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/hh:MM:ss"));
     }
