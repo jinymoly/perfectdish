@@ -5,5 +5,4 @@ public enum CourseType {
     T_EPPETIZER,
     T_MAIN,
     T_DESSERT
-
 }
