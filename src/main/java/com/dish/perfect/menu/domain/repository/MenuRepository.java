@@ -1,26 +1,23 @@
 package com.dish.perfect.menu.domain.repository;
 
-import java.io.IOException;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.menu.dto.request.MenuRequest;
 
-public interface MenuRepository {
-    
-    Menu save(MenuRequest menuRequestDto) throws IOException;
+public interface MenuRepository extends JpaRepository<Menu, String>{
 
-    //Menu modify(MenuRequest menurequestDto);
-
-    Menu findByName(String menuName);
+    @Query("select m from Menu m where m.menuName = :menuName")
+    Menu findByMenuName(@Param("menuName") String menuName);
     
     List<Menu> findByCourseType(CourseType type);
 
-    //TODO 주문 가능한 메뉴만 찾기 
-    List<Menu> findByAvaility(Availability availability);
+    List<Menu> findByAvailability(Availability availability);
 
-    void clear();
-    
+    boolean existsByMenuName(String menuName);
 }
