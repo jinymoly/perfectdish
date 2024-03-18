@@ -20,4 +20,14 @@ public class MemberResponseTest {
 
         Assertions.assertThat(response.getUserName()).isEqualTo(member.getUserName());
     }
+
+    @Test
+    @DisplayName("Member -> memberResponse 생성 플로우")
+    void testDetailFromResponse() {
+        Member member = fixtureM.fixtureMA();
+
+        MemberDetailResponse response = MemberDetailResponse.fromResponse(member);
+
+        Assertions.assertThat(response.getUserName()).isEqualTo(member.getUserName());
+    }
 }
