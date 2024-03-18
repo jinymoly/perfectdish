@@ -20,15 +20,17 @@ public class MenuResponse {
 
     private final String menuImgUrl;
     private final Availability availability;
+    private final boolean isDiscount;
 
-    public static MenuResponse toMenuResponse(final Menu menu){
+    public static MenuResponse fromMenuResponse(final Menu menu){
         return MenuResponse.builder()
                     .menuName(menu.getMenuName())
                     .courseType(menu.getCourseType())
                     .price(menu.getPrice())
                     .description(menu.getDescription())
-                    .menuImgUrl(menu.getMenuImg().getUploadUrl())
+                    .menuImgUrl(menu.getMenuImg().getImgUrl())
                     .availability(menu.getAvailability())
+                    .isDiscount(menu.isDiscounted())
                     .build();
     }
 }
