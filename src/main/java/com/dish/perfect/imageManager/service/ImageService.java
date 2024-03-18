@@ -33,7 +33,6 @@ public class ImageService {
         ImageFile createUploadFile = imgFile.createUploadFile(multipartFile);
         imageUtil.uploadFile(createUploadFile);
         String uploadPath = getUploadPath(createUploadFile);
-        //Image img = new Image(uploadPath);
         return uploadPath;
     }
 

@@ -31,6 +31,7 @@ public class MenuCoreService {
         Menu menu = menuRequest.toEntity();
         validMenunameDuplicated(menu);
         String uploadImgUrl = imageService.uploadImg(menuRequest.getMenuImgFile());
+        menu.addImgUrl(uploadImgUrl);
         Menu saved = menuRepository.save(menu);
         log.info("{}\nuploadImgUrl={}\nmenuSavedurl={}", saved.getMenuName(), uploadImgUrl,saved.getMenuImg().getImgUrl());
         return saved;

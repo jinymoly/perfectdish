@@ -1,13 +1,6 @@
 package com.dish.perfect.menu.domain;
 
-
-import java.io.IOException;
-
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.FlashMap;
-
 import com.dish.perfect.imageManager.domain.Image;
-import com.dish.perfect.imageManager.domain.ImageFile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -84,6 +77,10 @@ public class Menu {
 
     public Image createImage(String imgUrl){
         return new Image(imgUrl);
+    }
+
+    public void addImgUrl(String image){
+        this.menuImg = createImage(image);
     }
 
     public void markMenuAsUnavailable(Availability availability){

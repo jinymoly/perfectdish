@@ -7,15 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 @Embeddable
 public class Image {
     
-    @Column(name = "image_url", nullable = true)
+    @Column(name = "image_url")
     private String imgUrl;
 
     public Image(String imgUrl) {
         this.imgUrl = imgUrl;
     }
-    
+
 }
