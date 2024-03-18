@@ -9,7 +9,7 @@ public class ImgFixture {
     public MultipartFile fixtureMultiA() {
 
         MockMultipartFile iFile = new MockMultipartFile("TestA",
-                "TestMockA.jpeg",
+                "TestMockA.jpg",
                 MediaType.IMAGE_JPEG_VALUE,
                 "TestMockA".getBytes());
         return iFile;
@@ -21,12 +21,6 @@ public class ImgFixture {
                 "TestMockB.jpeg",
                 MediaType.IMAGE_JPEG_VALUE,
                 "TestMockB".getBytes());
-        return iFile;
-    }
-
-    public MultipartFile fixtureMultiC() {
-
-        MockMultipartFile iFile = new MockMultipartFile("TestC", "TestMockC".getBytes());
         return iFile;
     }
 }
