@@ -15,7 +15,7 @@ public class MenuFixture {
                                 "TestMockA".getBytes());
 
                 MenuRequest dtoA = MenuRequest.builder()
-                                .title("이것은 A메뉴다")
+                                .menuName("이것은 A메뉴다")
                                 .description("이것은 메뉴 설명")
                                 .courseType(CourseType.T_MAIN)
                                 .price(500000)
@@ -31,7 +31,7 @@ public class MenuFixture {
                                 "TestMockB".getBytes());
 
                 MenuRequest dtoB = MenuRequest.builder()
-                                .title("이것은 B메뉴다")
+                                .menuName("이것은 B메뉴다")
                                 .description("이것은 메뉴 설명")
                                 .courseType(CourseType.T_DESSERT)
                                 .price(24000)
@@ -46,7 +46,7 @@ public class MenuFixture {
                                 "TestMockC".getBytes());
 
                 MenuRequest dtoC = MenuRequest.builder()
-                                .title("이것은 C메뉴다")
+                                .menuName("이것은 C메뉴다")
                                 .description("이것은 메뉴 설명")
                                 .courseType(CourseType.T_MAIN)
                                 .price(60000)
@@ -61,7 +61,7 @@ public class MenuFixture {
                                 MediaType.IMAGE_PNG_VALUE, "TestMockD".getBytes());
 
                 MenuRequest dtoD = MenuRequest.builder()
-                                .title("아그작사과구름스테이크")
+                                .menuName("아그작사과구름스테이크")
                                 .description("특제 소스에 4시간 졸인 후 48시간 1도에서 숙성")
                                 .courseType(CourseType.T_MAIN)
                                 .price(52000)
@@ -76,7 +76,7 @@ public class MenuFixture {
                                 MediaType.IMAGE_PNG_VALUE, "TestMockE".getBytes());
 
                 MenuRequest dtoE = MenuRequest.builder()
-                                .title("로맨틱 허니 갈릭 쉬림프")
+                                .menuName("로맨틱 허니 갈릭 쉬림프")
                                 .description("신선한 새우에 특제 허니 갈릭 소스가 어우러진 로맨틱한 디너")
                                 .courseType(CourseType.T_MAIN)
                                 .price(45000)

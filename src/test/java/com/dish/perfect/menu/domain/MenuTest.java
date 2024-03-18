@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.dish.perfect.imageManager.ImgFixture;
 import com.dish.perfect.imageManager.domain.Image;
 
 import lombok.extern.slf4j.Slf4j;
