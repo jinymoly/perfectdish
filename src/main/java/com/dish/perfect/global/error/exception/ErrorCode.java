@@ -35,6 +35,7 @@ public enum ErrorCode {
     FAIL_CREATE_MENU("20004", "메뉴 등록 실패하였습니다."),
     // 할인 메뉴 없음
     NOT_FOUND_D_MENU("20005", "할인 메뉴가 존재하지 않습니다."),
+    ALREADY_UNAVAILABLE_MENU("20006", "이미 UNAVAILABLE 메뉴입니다."),
 
     // MenuBoard [30000]
     // 메뉴보드 등록 실패
