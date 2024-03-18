@@ -2,34 +2,43 @@ package com.dish.perfect.imageManager.service;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.dish.perfect.imageManager.ImageUtil;
+import com.dish.perfect.imageManager.domain.ImageFile;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ImageService {
+    
+    @Value("${file.dir}")
+    private String fileFullPath;
+
+    private final ImageUtil imageUtil;
+    private final ImageFile imgFile;
 
     /**
-     * 확장자 제외한 uploadFileName(uuid 적용됨)
+     * 파일을 업로드하고 최종 경로를 반환(uuid + 확장자) 
      * @param multipartFile
      * @return
      * @throws IOException
      */
-    public String getUploadUrl(MultipartFile multipartFile) throws IOException{
-        String extractFilename = extractFilename(multipartFile.getName());
-        return extractFilename;
+    public String uploadImg(MultipartFile multipartFile) throws IOException{
+        ImageFile createUploadFile = imgFile.createUploadFile(multipartFile);
+        imageUtil.uploadFile(createUploadFile);
+        String uploadPath = getUploadPath(createUploadFile);
+        //Image img = new Image(uploadPath);
+        return uploadPath;
     }
 
-    /**
-     * uploadFileName만 추출 (확장자 제외)
-     * @param originalFilename
-     * @return
-     */
-    private String extractFilename(String originalFilename) {
-        int position = originalFilename.indexOf(".");
-        return originalFilename.substring(0, position);
+    public String getUploadPath(ImageFile file){
+        return fileFullPath + file.getName();
     }
-
+   
 }

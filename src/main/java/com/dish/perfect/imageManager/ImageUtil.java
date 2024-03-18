@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.dish.perfect.imageManager.domain.ImageFile;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class ImageUtil {
 
     @Value("${file.dir}")
@@ -26,11 +29,11 @@ public class ImageUtil {
     /**
      * 실제 이미지 파일 업로드
      * @param imageFile
-     * @throws IllegalStateException
      * @throws IOException
      */
-    public void uploadFile(ImageFile imageFile) throws IllegalStateException, IOException {
+    public void uploadFile(ImageFile imageFile) throws IOException {
         String uploadUrl = imageFile.getName();
-        imageFile.transferTo(new File(getFullpath(uploadUrl)));
+        File file = new File(getFullpath(uploadUrl));
+        imageFile.transferTo(file);
     }
 }

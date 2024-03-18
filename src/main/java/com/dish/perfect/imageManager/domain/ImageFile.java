@@ -7,24 +7,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@Component
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class ImageFile implements MultipartFile{
 
-    private final String originalName; 
-    private final String storedName;
+    private String originalName; 
+    private String storedName;
 
-    private final byte[] bytes;
+    private byte[] bytes;
 
     private ImageFile(String originalName, byte[] bytes, String storedName) {
         this.originalName = originalName;
-        this.bytes = bytes;
         this.storedName = storedName;
+        this.bytes = bytes;
     }
 
     /**
-     * uploadFile 생성
+     * uploadFile 생성 (확장자 포함)
      * @param multipartFile
      * @return
      * @throws IOException
@@ -32,18 +38,17 @@ public class ImageFile implements MultipartFile{
     public ImageFile createUploadFile(MultipartFile multipartFile) throws IOException{
         String originName= multipartFile.getOriginalFilename();
         byte[] mulipartbytes = multipartFile.getBytes();
-        String uploadName = createNewFileName(originName);
-
-        return new ImageFile(originName, mulipartbytes, uploadName);
+        String storedName = createNewFileName(originName);
+        return new ImageFile(originName, mulipartbytes, storedName);
     }
     
     /**
-     * uploadFileName 생성
+     * uploadFileName 생성 (uuid + 확장자 포함)
      * @param originalFilename
      * @return
      */
     private String createNewFileName(String originalFilename) {
-        String uuid = UUID.randomUUID().toString() + originalFilename;
+        String uuid = UUID.randomUUID().toString() + extractFilename(originalFilename);
         String ext = extractExtension(originalFilename);
         return uuid + "." + ext;
     }
@@ -56,6 +61,16 @@ public class ImageFile implements MultipartFile{
     private String extractExtension(String originalFilename) {
         int position = originalFilename.lastIndexOf(".");
         return originalFilename.substring(position + 1);
+    }
+
+    /**
+     * uploadFileName만 추출 (확장자 제외)
+     * @param originalFilename
+     * @return
+     */
+    private String extractFilename(String storedFilename) {
+        int position = storedFilename.indexOf(".");
+        return storedFilename.substring(0, position);
     }
 
     @Override
@@ -99,5 +114,4 @@ public class ImageFile implements MultipartFile{
         fos.write(bytes);
         fos.close();
     }
-    
 }

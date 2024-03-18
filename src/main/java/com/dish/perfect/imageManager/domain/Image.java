@@ -11,19 +11,11 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Image {
     
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = true)
     private String imgUrl;
 
-    public Image(String imgUrl){
+    public Image(String imgUrl) {
         this.imgUrl = imgUrl;
     }
-
-    private String uploadUrl(ImageFile imageFile){
-        return imageFile.getName();
-    }
-
-    private void addUrl(String storedImageUrl){
-        this.imgUrl = storedImageUrl;
-    }
-
+    
 }
