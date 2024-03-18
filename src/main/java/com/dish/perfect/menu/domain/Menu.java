@@ -1,15 +1,20 @@
 package com.dish.perfect.menu.domain;
 
-import org.springframework.data.annotation.Id;
 
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.FlashMap;
+
+import com.dish.perfect.imageManager.domain.Image;
 import com.dish.perfect.imageManager.domain.ImageFile;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -35,8 +40,8 @@ public class Menu {
 
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private ImageFile menuImg;
+    @Embedded
+    private Image menuImg;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,31 +52,46 @@ public class Menu {
 
     @Builder
     public Menu(CourseType courseType, String menuName, Integer price, boolean isDiscounted, String description,
-            ImageFile menuImg, Availability availability) {
+            Image menuImg, Availability availability) {
         this.courseType = courseType;
         this.menuName = menuName;
         this.price = price;
         this.isDiscounted = false;
         this.description = description;
-        this.menuImg = menuImg;
-        this.availability = availability;
+        this.menuImg = createImage(menuImg.getImgUrl());
+        this.availability = Availability.AVAILABLE;
     }
+
+    
 
     @Override
     public String toString() {
-        return "[" + typeConverter(courseType) + "] "
-                + menuName + " || " + description + " (" + price + ") " + availability + ", D: " + isDiscounted;
+        String imgUrl = menuImg != null ? menuImg.getImgUrl() : "No image";
+        return "[" + typeConverter(courseType) + "]" + '\n' +
+        "menuName=" + menuName +"/"+ availability + '\n' +
+        "description=" + description + "(" + price + ")" + '\n' +
+        "img=" + imgUrl + '\n' +
+        "isDiscounted=" + isDiscounted;
     }
 
     private String typeConverter(CourseType type) {
         return type.toString().replace("T_", "");
     }
 
-    public void addDiscount(boolean discount) {
+    public void activeDiscount(boolean discount) {
         this.isDiscounted = true;
     }
-    
-    public void addImgFile(ImageFile file){
-        this.menuImg = file;
+
+    public Image createImage(String imgUrl){
+        return new Image(imgUrl);
     }
+
+    public void markMenuAsUnavailable(Availability availability){
+        this.availability = Availability.UNAVAILABLE;
+    }
+
+    public boolean isAvailability(){
+        return this.getAvailability().equals(Availability.AVAILABLE);
+    }
+
 }
