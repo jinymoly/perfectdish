@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class MemberPresentationService {
     
-    final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     public MemberDetailResponse getMemberInfo(final Long memberId){
         Member member = memberRepository.findById(memberId)
