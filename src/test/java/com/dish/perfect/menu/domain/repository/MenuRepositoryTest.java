@@ -11,7 +11,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.dish.perfect.menu.MenuFixture;
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.menu.dto.request.MenuRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,13 +25,13 @@ public class MenuRepositoryTest {
     private MenuFixture menuFixture = new MenuFixture();
 
 
-    // @AfterEach
-    // void clearMenuImgInTestAndRepository(){
-    //     String dirPath = "src/test/resources/img/";
-    //     deleteFileAfterTest(dirPath);
+    @AfterEach
+    void clearMenuImgInTestAndRepository(){
+        String dirPath = "src/test/resources/img/";
+        deleteFileAfterTest(dirPath);
         
-    //     menuRepository.deleteAllInBatch();
-    // }
+        menuRepository.deleteAllInBatch();
+    }
 
     @Test
     @DisplayName("Menu 저장")

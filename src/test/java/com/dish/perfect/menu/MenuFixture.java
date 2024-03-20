@@ -10,51 +10,50 @@ import com.dish.perfect.menu.dto.request.MenuRequest;
 public class MenuFixture {
 
         public MenuRequest fixRequestA() {
-
-                MockMultipartFile mockMFile = new MockMultipartFile("TestA", "TestMockA.jpeg", MediaType.IMAGE_JPEG_VALUE,
-                                "TestMockA".getBytes());
-
+                MockMultipartFile mockMFile = new MockMultipartFile("TestA", "TestMockA.jpeg",
+                                MediaType.IMAGE_JPEG_VALUE, "TestMockA".getBytes());
+            
                 MenuRequest dtoA = MenuRequest.builder()
-                                .menuName("이것은 A메뉴다")
-                                .description("이것은 메뉴 설명")
+                                .menuName("이탈리아식 스파게티")
+                                .description("부드러운 스파게티면과 풍부한 토마토 소스가 어우러진 이탈리아 전통 요리")
                                 .courseType(CourseType.T_MAIN)
                                 .price(500000)
                                 .menuImgFile(mockMFile)
-                                .availability(Availability.UNAVAILABLE)
+                                .availability(Availability.AVAILABLE)
                                 .build();
-
+            
                 return dtoA;
-        }
-
-        public MenuRequest fixRequestB() {
-                MockMultipartFile mockMFile = new MockMultipartFile("TestB", "TestMockB.jpeg", MediaType.IMAGE_JPEG_VALUE,
-                                "TestMockB".getBytes());
-
+            }
+            
+            public MenuRequest fixRequestB() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestB", "TestMockB.jpeg",
+                                MediaType.IMAGE_JPEG_VALUE, "TestMockB".getBytes());
+            
                 MenuRequest dtoB = MenuRequest.builder()
-                                .menuName("이것은 B메뉴다")
-                                .description("이것은 메뉴 설명")
+                                .menuName("크림 브륄레")
+                                .description("달콤한 바닐라 크림과 부드러운 푸딩이 담긴 고급스러운 프렌치 디저트")
                                 .courseType(CourseType.T_DESSERT)
                                 .price(24000)
                                 .menuImgFile(mockMFile)
-                                .availability(Availability.UNAVAILABLE)
+                                .availability(Availability.AVAILABLE)
                                 .build();
                 return dtoB;
-        }
-
-        public MenuRequest fixRequestC() {
-                MockMultipartFile mockMFile = new MockMultipartFile("TestC", "TestMockC.jpeg", MediaType.IMAGE_JPEG_VALUE,
-                                "TestMockC".getBytes());
-
+            }
+            
+            public MenuRequest fixRequestC() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestC", "TestMockC.jpeg",
+                                MediaType.IMAGE_JPEG_VALUE, "TestMockC".getBytes());
+            
                 MenuRequest dtoC = MenuRequest.builder()
-                                .menuName("이것은 C메뉴다")
-                                .description("이것은 메뉴 설명")
-                                .courseType(CourseType.T_MAIN)
-                                .price(60000)
+                                .menuName("허니 레몬 수비드 치킨 샐러드")
+                                .description("상큼한 레몬과 달콤한 꿀이 어우러진 치킨 샐러드")
+                                .courseType(CourseType.T_EPPETIZER)
+                                .price(27000)
                                 .menuImgFile(mockMFile)
                                 .availability(Availability.AVAILABLE)
                                 .build();
                 return dtoC;
-        }
+            }
 
         public MenuRequest fixRequestD() {
                 MockMultipartFile mockMFile = new MockMultipartFile("TestD", "TestMockD.png",
@@ -85,5 +84,64 @@ public class MenuFixture {
                                 .build();
                 return dtoE;
         }
+
+        public MenuRequest fixRequestF() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestF", "TestMockF.png",
+                                MediaType.IMAGE_PNG_VALUE, "TestMockF".getBytes());
+
+                MenuRequest dtoF = MenuRequest.builder()
+                                .menuName("트러플 머쉬룸 스테이크")
+                                .description("진한 트러플 향과 신선한 버섯이 어우러진 고급스러운 스테이크")
+                                .courseType(CourseType.T_MAIN)
+                                .price(55000)
+                                .menuImgFile(mockMFile)
+                                .availability(Availability.AVAILABLE)
+                                .build();
+                return dtoF;
+        }
+
+        public MenuRequest fixRequestG() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestG", "TestMockG.png",
+                                MediaType.IMAGE_PNG_VALUE, "TestMockG".getBytes());
+
+                MenuRequest dtoG = MenuRequest.builder()
+                                .menuName("시그니처 레몬 파스타")
+                                .description("달콤한 레몬 향과 쫄깃한 파스타의 조화로운 맛")
+                                .courseType(CourseType.T_MAIN)
+                                .price(40000)
+                                .menuImgFile(mockMFile)
+                                .availability(Availability.AVAILABLE)
+                                .build();
+                return dtoG;
+        }
+        public MenuRequest fixRequestH() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestH", "TestMockH.jpeg",
+                                MediaType.IMAGE_JPEG_VALUE, "TestMockH".getBytes());
+            
+                MenuRequest dtoH = MenuRequest.builder()
+                                .menuName("가든 샐러드")
+                                .description("신선한 야채와 풍부한 드레싱이 어우러진 건강하고 맛있는 샐러드")
+                                .courseType(CourseType.T_EPPETIZER)
+                                .price(28000)
+                                .menuImgFile(mockMFile)
+                                .availability(Availability.AVAILABLE)
+                                .build();
+                return dtoH;
+            }
+            
+            public MenuRequest fixRequestI() {
+                MockMultipartFile mockMFile = new MockMultipartFile("TestI", "TestMockI.jpeg",
+                                MediaType.IMAGE_JPEG_VALUE, "TestMockI".getBytes());
+            
+                MenuRequest dtoI = MenuRequest.builder()
+                                .menuName("감바스 알 아히요")
+                                .description("스페인 특색 있는 감바스 알 아히요의 풍부한 향과 맛")
+                                .courseType(CourseType.T_EPPETIZER)
+                                .price(35000)
+                                .menuImgFile(mockMFile)
+                                .availability(Availability.AVAILABLE)
+                                .build();
+                return dtoI;
+            }
 
 }
