@@ -15,9 +15,11 @@ public interface MenuRepository extends JpaRepository<Menu, String>{
     @Query("select m from Menu m where m.menuName = :menuName")
     Menu findByMenuName(@Param("menuName") String menuName);
     
-    List<Menu> findByCourseType(CourseType type);
+    @Query("select m from Menu m where m.courseType = :courseType")
+    List<Menu> findByCourseType(@Param("courseType") CourseType type);
 
-    List<Menu> findByAvailability(Availability availability);
+    @Query("select m from Menu m where m.availability = 'AVAILABLE'")
+    List<Menu> findByAvailability(@Param("availability") Availability availability);
 
     boolean existsByMenuName(String menuName);
 }
