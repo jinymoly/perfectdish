@@ -55,16 +55,14 @@ public class Menu {
         this.availability = Availability.AVAILABLE;
     }
 
-    
-
     @Override
     public String toString() {
         String imgUrl = menuImg != null ? menuImg.getImgUrl() : "No image";
         return "[" + typeConverter(courseType) + "]" + '\n' +
-        "menuName=" + menuName +"/"+ availability + '\n' +
-        "description=" + description + "(" + price + ")" + '\n' +
-        "img=" + imgUrl + '\n' +
-        "isDiscounted=" + isDiscounted;
+                "menuName=" + menuName + "/" + availability + '\n' +
+                "description=" + description + "(" + price + ")" + '\n' +
+                "img=" + imgUrl + '\n' +
+                "isDiscounted=" + isDiscounted;
     }
 
     private String typeConverter(CourseType type) {
@@ -75,19 +73,19 @@ public class Menu {
         this.isDiscounted = true;
     }
 
-    public Image createImage(String imgUrl){
+    public Image createImage(String imgUrl) {
         return new Image(imgUrl);
     }
 
-    public void addImgUrl(String image){
+    public void addImgUrl(String image) {
         this.menuImg = createImage(image);
     }
 
-    public void markMenuAsUnavailable(Availability availability){
+    public void markMenuAsUnavailable(Availability availability) {
         this.availability = Availability.UNAVAILABLE;
     }
 
-    public boolean isAvailability(){
+    public boolean isAvailability() {
         return this.getAvailability().equals(Availability.AVAILABLE);
     }
 
