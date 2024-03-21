@@ -1,14 +1,12 @@
 package com.dish.perfect.menu.service;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
-import com.dish.perfect.imageManager.domain.Image;
 import com.dish.perfect.imageManager.service.ImageService;
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.Menu;
