@@ -7,13 +7,14 @@ import com.dish.perfect.order.domain.Order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,37 +24,39 @@ import lombok.NoArgsConstructor;
 @Entity
 public class OrderItem {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "orderitem_id")
     private Long id;
 
+    @Column(nullable = false)
     @OneToMany
     private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "table_no")
+    @JoinColumn(name = "order_id")
     private Order order;
-
+    
+    @Column(nullable = false)
     private int count;
+
+    @Column(nullable = false)
     private Integer price;
-    
+
     private BigDecimal totalPrice;
-    
+
+    @Enumerated(EnumType.STRING)
     private OrderItemStatus itemstatus;
 
     @Builder
-    public OrderItem(Long id,
-                    Order order,
-                    Menu menu, 
-                    int count,
-                    BigDecimal totalPrice, 
-                    OrderItemStatus itemstatus) {
+    public OrderItem(Long id, Order order, Menu menu,
+            int count, BigDecimal totalPrice, OrderItemStatus itemstatus) {
         this.id = id;
-        this.order = applyOrderTableNo(order.getTableNo());
-        this.menu = menu;
+        this.order = applyTableNo(order.getTableNo());
+        this.menu = applyMenuName(menu.getMenuName());
         this.count = count;
         this.price = menu.getPrice();
-        this.totalPrice = applyTotalPrice();
+        this.totalPrice = createTotalPrice();
         this.itemstatus = itemstatus;
     }
 
@@ -63,37 +66,45 @@ public class OrderItem {
                 + "원, [" + itemstatus + "], D: " + menu.isDiscounted();
     }
 
-    public BigDecimal applyTotalPrice(){
-        if(menu.isDiscounted()){
-           price = applyDiscount(price);
+    private Menu applyMenuName(String menuName) {
+        return Menu.builder()
+                .menuName(menuName)
+                .build();
+    }
+
+    private BigDecimal createTotalPrice() {
+        if (menu.isDiscounted()) {
+            price = applyDiscount(price);
         }
         int total = price * count;
         return new BigDecimal(total);
     }
-
-    public Order applyOrderTableNo(String tableNo){
-        return Order.builder()
-                    .tableNo(tableNo)
-                    .build();
-    }
-
-    public int applyDiscount(Integer price){
+    
+    private int applyDiscount(Integer price) {
         return (int) (price * 0.95);
     }
-
-    public void updateStatus(){
+    
+    public Order applyTableNo(String tableNo) {
+        return Order.builder()
+                .tableNo(tableNo)
+                .build();
+    }
+    
+    public void updateStatus() {
         this.itemstatus = OrderItemStatus.COMPLETED;
     }
 
-    public void updateCount(int count){
+    // TO-DO
+    // order-id와 메뉴 이름이 같으면 count 증가 처리
+    public void updateCount(int count) {
         this.count = count;
     }
 
-    public void applyCount(int addCount){
+    public void applyCount(int addCount) {
         this.count += addCount;
     }
 
-    public void applyTotalPrice(BigDecimal addTotalPrice){
+    public void applyTotalPrice(BigDecimal addTotalPrice) {
         this.totalPrice = this.totalPrice.add(addTotalPrice);
     }
 
