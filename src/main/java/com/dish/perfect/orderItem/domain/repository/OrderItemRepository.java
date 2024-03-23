@@ -1,19 +1,20 @@
 package com.dish.perfect.orderItem.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.orderItem.domain.OrderItem;
 import com.dish.perfect.orderItem.domain.OrderItemStatus;
-import com.dish.perfect.orderItem.dto.request.OrderItemRequest;
 
-public interface OrderItemRepository {
+import java.util.List;
 
-    OrderItem createOrder(OrderItemRequest orderDto);
 
-    List<OrderItem> getAllOrders();
-    
-    List<OrderItem> getOrders(int tableNo);
-    List<OrderItem> getOrderByStatus(OrderItemStatus status);
-    
-    void clear();
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+
+    List<OrderItem> findByOrder(Order order);
+
+    @Query("select oi from OrderItem oi where oi.orderItemStatus = :orderItemStatus")
+    List<OrderItem> findByOrderItemStatus(@Param("orderItemStatus")OrderItemStatus status);
 }
