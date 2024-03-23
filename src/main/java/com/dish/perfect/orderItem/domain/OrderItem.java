@@ -94,13 +94,7 @@ public class OrderItem {
         this.itemstatus = OrderItemStatus.COMPLETED;
     }
 
-    // TO-DO
-    // order-id와 메뉴 이름이 같으면 count 증가 처리
-    public void updateCount(int count) {
-        this.count = count;
-    }
-
-    public void applyCount(int addCount) {
+    public void updateCount(int addCount) {
         this.count += addCount;
     }
 
