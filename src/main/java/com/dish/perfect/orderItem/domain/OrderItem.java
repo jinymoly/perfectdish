@@ -1,10 +1,7 @@
 package com.dish.perfect.orderItem.domain;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.dish.perfect.menu.domain.Menu;
@@ -18,6 +15,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -32,7 +30,7 @@ import lombok.NoArgsConstructor;
 public class OrderItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderItem_id")
     private Long id;
 
@@ -47,30 +45,20 @@ public class OrderItem {
     private Order order;
     
     @Enumerated(EnumType.STRING)
-    private OrderItemStatus itemstatus;
+    private OrderItemStatus orderItemStatus;
 
     private LocalDateTime createdAt;
 
     @Builder
-    public OrderItem(Long id, Map<Menu, Integer> orderItem, Order order, OrderItemStatus itemstatus, LocalDateTime createdAt) {
+    public OrderItem(Long id, Map<Menu, Integer> orderItem, Order order, OrderItemStatus orderItemStatus, LocalDateTime createdAt) {
         this.id = id;
         this.orderItemMap = new HashMap<>(orderItem);
-        this.order = createOrder(order.getTableNo());
-        this.itemstatus = itemstatus;
+        this.order = initOrderFrom(order.getTableNo());
+        this.orderItemStatus = orderItemStatus;
         this.createdAt = createdAt;
     }
-
-    public Map<Menu, Integer> applyOrderItem(Menu menu, int count){
-        Map<Menu, Integer> orderItem =  new HashMap<>();
-        orderItem.put(createMenu(menu.getMenuName()), count);
-        return orderItem;
-    }
-
-    private Menu createMenu(String menuName){
-        return new Menu(menuName);
-    }
     
-    private Order createOrder(String tableNo){
+    private Order initOrderFrom(String tableNo){
         return new Order(tableNo);
     }
     
@@ -79,6 +67,6 @@ public class OrderItem {
     }
     
     public void markOrderItemStatusAsCompleted() {
-        this.itemstatus = OrderItemStatus.COMPLETED;
+        this.orderItemStatus = OrderItemStatus.COMPLETED;
     }
 }
