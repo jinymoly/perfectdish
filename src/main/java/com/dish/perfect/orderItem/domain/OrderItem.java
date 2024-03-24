@@ -1,11 +1,18 @@
 package com.dish.perfect.orderItem.domain;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,7 +21,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.MapKeyColumn;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,80 +33,52 @@ public class OrderItem {
 
     @Id
     @GeneratedValue
-    @Column(name = "orderitem_id")
+    @Column(name = "orderItem_id")
     private Long id;
 
-    @Column(nullable = false)
-    @OneToMany
-    private Menu menu;
+    @ElementCollection
+    @CollectionTable(name = "orderItem_map", joinColumns = @JoinColumn(name = "orderItem_id"))
+    @MapKeyColumn(name = "orderItem_menu")
+    @Column(name = "orderItem_count")
+    private Map<Menu, Integer> orderItemMap = new HashMap<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "table_no")
     private Order order;
     
-    @Column(nullable = false)
-    private int count;
-
-    @Column(nullable = false)
-    private Integer price;
-
-    private BigDecimal totalPrice;
-
     @Enumerated(EnumType.STRING)
     private OrderItemStatus itemstatus;
 
+    private LocalDateTime createdAt;
+
     @Builder
-    public OrderItem(Long id, Order order, Menu menu,
-            int count, BigDecimal totalPrice, OrderItemStatus itemstatus) {
+    public OrderItem(Long id, Map<Menu, Integer> orderItem, Order order, OrderItemStatus itemstatus, LocalDateTime createdAt) {
         this.id = id;
-        this.order = applyTableNo(order.getTableNo());
-        this.menu = applyMenuName(menu.getMenuName());
-        this.count = count;
-        this.price = menu.getPrice();
-        this.totalPrice = createTotalPrice();
+        this.orderItemMap = new HashMap<>(orderItem);
+        this.order = createOrder(order.getTableNo());
         this.itemstatus = itemstatus;
+        this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString() {
-        return menu.getMenuName() + ", " + price + "원, " + count + "개, total: " + totalPrice
-                + "원, [" + itemstatus + "], D: " + menu.isDiscounted();
+    public Map<Menu, Integer> applyOrderItem(Menu menu, int count){
+        Map<Menu, Integer> orderItem =  new HashMap<>();
+        orderItem.put(createMenu(menu.getMenuName()), count);
+        return orderItem;
     }
 
-    private Menu applyMenuName(String menuName) {
-        return Menu.builder()
-                .menuName(menuName)
-                .build();
-    }
-
-    private BigDecimal createTotalPrice() {
-        if (menu.isDiscounted()) {
-            price = applyDiscount(price);
-        }
-        int total = price * count;
-        return new BigDecimal(total);
+    private Menu createMenu(String menuName){
+        return new Menu(menuName);
     }
     
-    private int applyDiscount(Integer price) {
-        return (int) (price * 0.95);
+    private Order createOrder(String tableNo){
+        return new Order(tableNo);
     }
     
-    public Order applyTableNo(String tableNo) {
-        return Order.builder()
-                .tableNo(tableNo)
-                .build();
+    public void addCreatedAt(LocalDateTime createdAt){
+        this.createdAt = createdAt;
     }
     
-    public void updateStatus() {
+    public void markOrderItemStatusAsCompleted() {
         this.itemstatus = OrderItemStatus.COMPLETED;
     }
-
-    public void updateCount(int addCount) {
-        this.count += addCount;
-    }
-
-    public void applyTotalPrice(BigDecimal addTotalPrice) {
-        this.totalPrice = this.totalPrice.add(addTotalPrice);
-    }
-
 }
