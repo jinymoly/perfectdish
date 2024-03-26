@@ -83,4 +83,12 @@ public class MenuPresentationService {
                 .map(MenuResponse::fromMenuResponse)
                 .toList();
     }
+
+    /**
+     * 메뉴가 있는지 확인 (OrderItem)
+     */
+    public boolean menuNameExists(String menuName){
+        Menu menu = menuRepository.findByMenuName(menuName);
+        return menu != null;
+    }
 }
