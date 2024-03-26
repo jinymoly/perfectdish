@@ -1,8 +1,5 @@
 package com.dish.perfect.orderItem.dto.request;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.orderItem.domain.OrderItem;
@@ -37,6 +34,7 @@ public class OrderItemRequest {
 
     public OrderItem toEntity(){
         return OrderItem.builder()
+                        .tableNo(tableNo)   
                         .menu(new Menu(menuName))
                         .count(count)
                         .order(new Order(tableNo))

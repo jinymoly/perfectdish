@@ -33,38 +33,43 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
+    
+    @Column(name = "table_no", nullable = false)
+    private String tableNo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_name")
     private Menu menu;
 
     private int count;
-    
+
     @Enumerated(EnumType.STRING)
     private OrderItemStatus orderItemStatus;
 
     private LocalDateTime createdAt;
 
     @Builder
-    public OrderItem(Long id, Menu menu, int count, Order order, OrderItemStatus orderItemStatus, LocalDateTime createdAt) {
+    public OrderItem(Long id, String tableNo, Menu menu, Order order, int count, OrderItemStatus orderItemStatus) {
         this.id = id;
+        this.tableNo = tableNo;
+        this.menu = initMenuFrom(menu.getMenuName());
         this.order = order;
         this.count = count;
-        this.menu = initMenuFrom(menu.getMenuName());
         this.orderItemStatus = orderItemStatus;
-        this.createdAt = createdAt;
     }
 
-    private Menu initMenuFrom(String menuName){
+    public Menu initMenuFrom(String menuName) {
         return new Menu(menuName);
     }
 
-    private Order initOrderFrom(String tableNo){
-        return new Order(tableNo);
+    public void initOrderFrom(Order order) {
+        this.order = order;
     }
-    
-    public void addCreatedAt(LocalDateTime createdAt){
+
+    public void addCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    
+
     public void markOrderItemStatusAsCompleted() {
         this.orderItemStatus = OrderItemStatus.COMPLETED;
     }
