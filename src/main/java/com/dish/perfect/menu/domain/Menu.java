@@ -55,6 +55,10 @@ public class Menu {
         this.availability = Availability.AVAILABLE;
     }
 
+    public Menu(String menuName){
+        this.menuName = menuName;
+    }
+
     @Override
     public String toString() {
         String imgUrl = menuImg != null ? menuImg.getImgUrl() : "No image";
