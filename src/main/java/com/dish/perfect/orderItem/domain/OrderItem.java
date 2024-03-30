@@ -2,9 +2,12 @@ package com.dish.perfect.orderItem.domain;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,7 +32,7 @@ public class OrderItem {
     @Column(name = "orderItem_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -46,24 +49,30 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private OrderItemStatus orderItemStatus;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public OrderItem(Long id, String tableNo, Menu menu, Order order, int count, OrderItemStatus orderItemStatus) {
+    public OrderItem(Long id, String tableNo, Menu menu, Order order, int count, OrderItemStatus orderItemStatus, LocalDateTime createdAt) {
         this.id = id;
         this.tableNo = tableNo;
-        this.menu = initMenuFrom(menu.getMenuName());
+        this.menu = menu;
         this.order = order;
         this.count = count;
         this.orderItemStatus = orderItemStatus;
+        this.createdAt = createdAt;
     }
 
-    public Menu initMenuFrom(String menuName) {
-        return new Menu(menuName);
+    public void initMenuFrom(Menu menu) {
+        this.menu = menu;
     }
 
-    public void initOrderFrom(Order order) {
+    public void initOrder(Order order){
         this.order = order;
+        if(!order.getOrderItems().contains(this)){ //무한루프 필터링
+            order.getOrderItems().add(this);
+        }
     }
 
     public void addCreatedAt(LocalDateTime createdAt) {

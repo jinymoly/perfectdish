@@ -57,27 +57,19 @@ public class Order {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("주문 내역:\n");
-        for (OrderItem orderItem : orderItems) {
-            sb.append(orderItem.getMenu().getMenuName())
-                    .append(" (수량: ").append(orderItem.getCount()).append(")\n");
-        }
-        sb.append("최종 합계: ")
-                .append(totalPrice).append("원 [").append(status).append("]");
-        return sb.toString();
-    }
-
     public Order(String tableNo) {
         this.tableNo = tableNo;
     }
-
-    public void addOrderItems(OrderItem oItem) {
+    /**
+     * tableNo가 같으면 주문서에 담는다.
+     * @param oItem
+     */
+    public void addOrderItem(OrderItem oItem) {
         if(oItem.getTableNo().equals(tableNo)){
-            orderItems.add(oItem);
-            oItem.initOrderFrom(this);
+            this.orderItems.add(oItem);
+            if(oItem.getOrder() != this){ // 무한루프 필터링
+                oItem.initOrder(this);
+            }
         } else {
             throw new GlobalException(ErrorCode.FAIL_CREATE_ORDER, "테이블 번호 오류로 주문을 생성할 수 없습니다.");
         }
