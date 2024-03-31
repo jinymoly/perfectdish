@@ -1,10 +1,6 @@
 package com.dish.perfect.orderItem.domain.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.dish.perfect.global.error.GlobalException;
-import com.dish.perfect.menuBoard.MenuBoardFixture;
-import com.dish.perfect.menuBoard.domain.repository.InMemoryMenuBoardRepository;
+import com.dish.perfect.menu.MenuFixture;
+import com.dish.perfect.menu.domain.repository.MenuRepository;
 import com.dish.perfect.orderItem.OrderItemFixture;
 import com.dish.perfect.orderItem.domain.OrderItem;
 import com.dish.perfect.orderItem.domain.OrderItemStatus;
@@ -24,87 +19,39 @@ import com.dish.perfect.orderItem.domain.OrderItemStatus;
 public class OrderItemRepositoryTest {
 
     @Autowired
-    private InMemoryOrderItemRepository orderItemRepository;
-
+    private OrderItemRepository orderItemRepository;
     @Autowired
-    private InMemoryMenuBoardRepository menuBoardRepository;
+    private MenuRepository menuRepository;
 
     private OrderItemFixture fixtureO = new OrderItemFixture();
-    private MenuBoardFixture fixtureB = new MenuBoardFixture();
+    private MenuFixture fixtureM = new MenuFixture();
 
     @AfterEach
     void clear() {
-        orderItemRepository.clear();
+        orderItemRepository.deleteAllInBatch();
     }
 
     @BeforeEach
-    void allMenu() {
-        menuBoardRepository.addCommonMenu(fixtureB.requestCommonsA());
-        menuBoardRepository.addCommonMenu(fixtureB.requestCommonsB());
-        menuBoardRepository.addDiscountMenu(fixtureB.requestDiscountsA());
-        menuBoardRepository.addDiscountMenu(fixtureB.requestDiscountsB());
-
-        menuBoardRepository.getAllMenus();
-
+    void createMenu() {
+        menuRepository.save(fixtureM.fixRequestA().toEntity());
+        menuRepository.save(fixtureM.fixRequestB().toEntity());
+        menuRepository.save(fixtureM.fixRequestC().toEntity());
+        menuRepository.save(fixtureM.fixRequestD().toEntity());
+        menuRepository.save(fixtureM.fixRequestE().toEntity());
+        menuRepository.save(fixtureM.fixRequestF().toEntity());
+        menuRepository.save(fixtureM.fixRequestG().toEntity());
+        menuRepository.save(fixtureM.fixRequestH().toEntity());
+        menuRepository.save(fixtureM.fixRequestI().toEntity());
     }
 
     @Test
     @DisplayName("주문 생성시 status.CREATED")
     void createOrder() {
-        OrderItem orderA = orderItemRepository.createOrder(fixtureO.orderItemRequestA);
-        OrderItem orderB = orderItemRepository.createOrder(fixtureO.orderItemRequestB);
-
-        assertEquals(orderA.getItemstatus(), OrderItemStatus.CREATED);
-        assertEquals(orderB.getItemstatus(), OrderItemStatus.CREATED);
+        OrderItem orderB = orderItemRepository.save(fixtureO.orderItemRequestB.toEntity());
+        assertTrue(orderB.getOrderItemStatus().equals(OrderItemStatus.CREATED));
 
     }
 
-    @Test
-    @DisplayName("테이블 번호로 주문 목록 반환")
-    void allOrders() {
-        orderItemRepository.createOrder(fixtureO.orderItemRequestB);
-        orderItemRepository.createOrder(fixtureO.orderItemRequestE);
-
-        List<OrderItem> expect = orderItemRepository.getOrders(3);
-
-        for (OrderItem order : expect) {
-            assertEquals(3, order.getTableNo());
-        }
-
-    }
-
-    @Test
-    @DisplayName("status로 조회")
-    void ordersByStatus() {
-        OrderItem orderA = orderItemRepository.createOrder(fixtureO.orderItemRequestB);
-        OrderItem orderB = orderItemRepository.createOrder(fixtureO.orderItemRequestE);
-
-        assertEquals(orderA.getItemstatus(), orderB.getItemstatus());
-
-    }
-
-    @Test
-    @DisplayName("주문 추가 확인")
-    void addOrder() {
-        OrderItem orderA = orderItemRepository.createOrder(fixtureO.orderItemRequestD);
-        List<OrderItem> order1 = orderItemRepository.getOrders(3);
-        OrderItem orderB = orderItemRepository.createOrder(fixtureO.orderItemRequestB);
-        List<OrderItem> order2 = orderItemRepository.getOrders(3);
-
-        assertTrue(order2.stream().allMatch(order -> order.getTableNo() == 3));
-
-    }
-
-    @Test
-    @DisplayName("status로 조회시 해당 목록 없음")
-    void orderByStatusButNull() {
-        OrderItem orderA = orderItemRepository.createOrder(fixtureO.orderItemRequestB);
-        OrderItem orderB = orderItemRepository.createOrder(fixtureO.orderItemRequestE);
-
-        GlobalException exception = assertThrows(GlobalException.class, () -> {
-            orderItemRepository.getOrderByStatus(OrderItemStatus.COMPLETED);
-        });
-        assertEquals("해당 주문 목록이 없습니다.", exception.getMessage());
-    }
+    
 
 }

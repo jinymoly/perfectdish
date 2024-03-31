@@ -1,39 +1,37 @@
 package com.dish.perfect.orderItem.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.dish.perfect.menu.MenuFixture;
+import com.dish.perfect.menu.domain.Menu;
+import com.dish.perfect.order.domain.Order;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class OrderItemTest {
 
+    private MenuFixture menu = new MenuFixture();
+    
     @Test
-    @DisplayName("toString 확인")
-    void testToString(){
-        OrderItem order = OrderItem.builder()
-                            .tableNo(3)
-                            .menuName("시간 파스타")
-                            .price(99000)
-                            .count(2)
-                            .isDiscounted(true)
-                            .itemstatus(OrderItemStatus.CREATED)
-                            .build();
-        order.addTotalPrice();
-        String savedText = order.toString();
+    @DisplayName("orderItem 생성")
+    void createOrderItemMap() {
+        Menu menuFixtureForOrderItem = menu.fixRequestA().toEntity();
 
-        String expected = "시간 파스타, 94050원, 2개, total: 198000원, [CREATED], D: true";
+        OrderItem newOrderItem = OrderItem.builder()
+                .id(1L)
+                .order(new Order("3"))
+                .tableNo("2")
+                .orderItemStatus(OrderItemStatus.CREATED)
+                .menu(menuFixtureForOrderItem)
+                .count(3)
+                .createdAt(LocalDateTime.now())
+                .build();
 
-        assertEquals(savedText, expected);
-    }
-
-    @Test
-    void calculateTotal(){
-        OrderItem order = OrderItem.builder().isDiscounted(true).price(3000).count(2).build();
-
-        BigDecimal totalPrice = order.addTotalPrice();
-
-        assertEquals(totalPrice, new BigDecimal(5700));
+        String orderItemInfo = newOrderItem.toString();
+        log.info("{}", orderItemInfo);
     }
 }
