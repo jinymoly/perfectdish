@@ -64,6 +64,15 @@ public class OrderItem {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString(){
+        return "[" + id + "/tableNo="+ tableNo + "]" + '\n' +
+        "menu=" + menu + "/ quantity=" + count + '\n' +
+        "order=" + order + '\n' +
+        "status=" + orderItemStatus + '\n' +
+        "createdAt=" + createdAt;
+    }
+    
     public void initMenuFrom(Menu menu) {
         this.menu = menu;
     }
@@ -79,7 +88,7 @@ public class OrderItem {
         this.createdAt = createdAt;
     }
 
-    public void markOrderItemStatusAsCompleted() {
+    public void markOrderItemStatusAsCompleted(OrderItemStatus orderItemStatus) {
         this.orderItemStatus = OrderItemStatus.COMPLETED;
     }
 }
