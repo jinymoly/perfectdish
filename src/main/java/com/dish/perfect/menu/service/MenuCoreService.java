@@ -25,6 +25,12 @@ public class MenuCoreService {
     private final MenuRepository menuRepository;
     private final ImageService imageService;
     
+    /**
+     * 메뉴 생성
+     * @param menuRequest
+     * @return
+     * @throws IOException
+     */
     public Menu createMenu(MenuRequest menuRequest) throws IOException{
         Menu menu = menuRequest.toEntity();
         validMenunameDuplicated(menu);
@@ -35,12 +41,20 @@ public class MenuCoreService {
         return saved;
 
     }
+    /**
+     * discount flag 설정
+     * @param menuName
+     */
     public void activeDiscount(final String menuName){
         Menu menu = findMenuByMenuName(menuName);
         menu.activeDiscount(true);
         log.info("{}/{}", menu.getMenuName(), menu.isDiscounted());
     }
 
+    /**
+     * Unavailable한 메뉴로 설정 
+     * @param menuName
+     */
     public void markMenuAsUnavailable(final String menuName){
         Menu menu = findMenuByMenuName(menuName);
         if(!menu.getAvailability().equals(Availability.UNAVAILABLE)){
@@ -50,6 +64,7 @@ public class MenuCoreService {
         log.info("{}/{}", menu.getMenuName(), menu.isAvailability());
     }
 
+    
     private Menu findMenuByMenuName(String menuName) {
         return menuRepository.findByMenuName(menuName);
     }
