@@ -1,19 +1,19 @@
 package com.dish.perfect.order.domain.repository;
 
 import java.util.List;
-import java.util.Map;
 
-import com.dish.perfect.order.dto.request.OrderRequest;
-import com.dish.perfect.orderItem.domain.OrderItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface OrderRepository {
+import com.dish.perfect.order.domain.Order;
+import com.dish.perfect.order.domain.OrderStatus;
 
-    Map<Integer, List<OrderItem>> saveOrderMap(OrderRequest orderRequest);
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    Map<Integer, List<OrderItem>> getOrderByTableNo(int tableNo);
+    List<Order> findByTableNo(String tableNo);
 
-    Map<Integer, List<OrderItem>> getAllOrders();
-
-    void clear();
+    @Query("select o from Order o where o.orderStatus = :orderStatus")
+    List<Order> findByOrderStatus(@Param("orderStatus") OrderStatus orderStatus);
 
 }
