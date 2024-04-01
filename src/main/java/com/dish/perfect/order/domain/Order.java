@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.menu.domain.Menu;
@@ -13,6 +16,8 @@ import com.dish.perfect.orderItem.domain.OrderItem;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,7 +38,8 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @Column(name = "table_no")
+    
+    @Column(name = "table_no", nullable = false)
     private String tableNo;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -41,20 +47,25 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private OrderStatus status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
+    @CreatedDate
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     private LocalDateTime completedAt;
 
     @Builder
     public Order(Long id, String tableNo, List<OrderItem> orderItems,
-            BigDecimal totalPrice, OrderStatus status) {
+            BigDecimal totalPrice, OrderStatus orderStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
         this.id = id;
         this.tableNo = tableNo;
         this.orderItems = orderItems;
         this.totalPrice = applyTotalPrice(orderItems);
-        this.status = status;
+        this.orderStatus = orderStatus;
+        this.createdAt = createdAt;
+        this.completedAt = completedAt;
     }
 
     public Order(String tableNo) {
@@ -76,7 +87,7 @@ public class Order {
     }
 
     public void updateStatus() {
-        this.status = OrderStatus.COMPLETED;
+        this.orderStatus = OrderStatus.COMPLETED;
     }
 
     public void addCreatedAt(LocalDateTime createdAt) {
