@@ -1,7 +1,6 @@
 package com.dish.perfect.orderItem.dto.request;
 
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.orderItem.domain.OrderItem;
 import com.dish.perfect.orderItem.domain.OrderItemStatus;
 
@@ -37,7 +36,8 @@ public class OrderItemRequest {
                         .tableNo(tableNo)   
                         .menu(new Menu(menuName))
                         .count(count)
-                        .order(new Order(tableNo))
+                        .tableNo(tableNo)
+                        // order(new Order(tableNo)) ㅈㅔ거 
                         .orderItemStatus(OrderItemStatus.CREATED)
                         .build();
     }
