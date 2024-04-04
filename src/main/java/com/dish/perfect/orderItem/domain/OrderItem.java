@@ -66,9 +66,8 @@ public class OrderItem {
 
     @Override
     public String toString(){
-        return "[" + id + "/tableNo="+ tableNo + "]" + '\n' +
+        return '\n' + "[id=" + id + "/tableNo."+ tableNo + "]" + '\n' +
         "menu=" + menu + "/ quantity=" + count + '\n' +
-        "order=" + order + '\n' +
         "status=" + orderItemStatus + '\n' +
         "createdAt=" + createdAt;
     }
