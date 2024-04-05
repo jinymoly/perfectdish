@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @Builder
-public class MenuResponse {
+public class MenuDetailResponse {
     
     private final String menuName;
     private final CourseType courseType;
@@ -22,8 +22,8 @@ public class MenuResponse {
     private final Availability availability;
     private final boolean isDiscount;
 
-    public static MenuResponse fromMenuResponse(final Menu menu){
-        return MenuResponse.builder()
+    public static MenuDetailResponse fromMenuResponse(final Menu menu){
+        return MenuDetailResponse.builder()
                     .menuName(menu.getMenuName())
                     .courseType(menu.getCourseType())
                     .price(menu.getPrice())
