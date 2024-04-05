@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @Builder
-public class MemberResponse {
+public class MemberCommonResponse {
 
     private final String phoneNumber;
     private final String userName;
@@ -20,8 +20,8 @@ public class MemberResponse {
 
     // TODO : private final List<Menu> orderRecode; // 주문 기록
     
-    public static MemberResponse fromResponse(final Member member) {
-        return MemberResponse.builder()
+    public static MemberCommonResponse fromResponse(final Member member) {
+        return MemberCommonResponse.builder()
                 .userName(member.getUserName())
                 .phoneNumber(member.getPhoneNumber())
                 .status(member.getStatus())
