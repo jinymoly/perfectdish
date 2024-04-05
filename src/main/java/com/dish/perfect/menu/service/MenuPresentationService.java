@@ -11,7 +11,8 @@ import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.menu.domain.repository.MenuRepository;
-import com.dish.perfect.menu.dto.response.MenuResponse;
+import com.dish.perfect.menu.dto.response.MenuCommonResponse;
+import com.dish.perfect.menu.dto.response.MenuDetailResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,20 +23,20 @@ public class MenuPresentationService {
 
     private final MenuRepository menuRepository;
 
-    public MenuResponse getMenuInfo(final String menuName) {
+    public MenuDetailResponse getMenuInfo(final String menuName) {
         Menu menu = menuRepository.findByMenuName(menuName);
         if (menu != null) {
-            return MenuResponse.fromMenuResponse(menu);
+            return MenuDetailResponse.fromMenuResponse(menu);
         } else {
             throw new GlobalException(ErrorCode.NOT_FOUND_MENU, "해당 메뉴가 존재하지 않습니다.");
         }
     }
 
-    public List<MenuResponse> findAllByAvailability() {
+    public List<MenuDetailResponse> findAllByAvailability() {
         return menuRepository.findAll()
                 .stream()
                 .filter(menu -> menu.getAvailability().equals(Availability.AVAILABLE))
-                .map(MenuResponse::fromMenuResponse)
+                .map(MenuDetailResponse::fromMenuResponse)
                 .toList();
     }
 
@@ -44,22 +45,22 @@ public class MenuPresentationService {
      * 
      * @return
      */
-    public List<MenuResponse> findByAvailability() {
+    public List<MenuDetailResponse> findByAvailability() {
         return menuRepository.findByAvailability(Availability.AVAILABLE)
                 .stream()
-                .map(MenuResponse::fromMenuResponse)
+                .map(MenuDetailResponse::fromMenuResponse)
                 .toList();
     }
 
     /**
      * AVAILABLE -> courseType
      */
-    public List<MenuResponse> findAllByCourseType(CourseType type) {
+    public List<MenuDetailResponse> findAllByCourseType(CourseType type) {
         return menuRepository.findAll()
                 .stream()
                 .filter(Menu::isAvailability)
                 .filter(menu -> menu.getCourseType().equals(type))
-                .map(MenuResponse::fromMenuResponse)
+                .map(MenuDetailResponse::fromMenuResponse)
                 .toList();
     }
 
@@ -69,18 +70,18 @@ public class MenuPresentationService {
      * @param type
      * @return
      */
-    public List<MenuResponse> findByCourseType(CourseType type) {
+    public List<MenuDetailResponse> findByCourseType(CourseType type) {
         return menuRepository.findByCourseType(type)
                 .stream()
                 .filter(Menu::isAvailability)
-                .map(MenuResponse::fromMenuResponse)
+                .map(MenuDetailResponse::fromMenuResponse)
                 .toList();
     }
 
-    public List<MenuResponse> findAll() {
+    public List<MenuCommonResponse> findAll() {
         return menuRepository.findAll()
                 .stream()
-                .map(MenuResponse::fromMenuResponse)
+                .map(MenuCommonResponse::fromMenuResponse)
                 .toList();
     }
 
