@@ -18,7 +18,7 @@ import com.dish.perfect.member.dto.request.MemberChangeStatusRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 import com.dish.perfect.member.dto.response.MemberDetailResponse;
-import com.dish.perfect.member.dto.response.MemberResponse;
+import com.dish.perfect.member.dto.response.MemberCommonResponse;
 import com.dish.perfect.member.service.MemberCoreService;
 import com.dish.perfect.member.service.MemberPresentationService;
 
@@ -47,14 +47,14 @@ public class MemberController {
     }
 
     @GetMapping("/allmember/active")
-    public ResponseEntity<List<MemberResponse>> getActiveMember() {
-        List<MemberResponse> findAll = memberPresentationService.findAllWithActive();
+    public ResponseEntity<List<MemberCommonResponse>> getActiveMember() {
+        List<MemberCommonResponse> findAll = memberPresentationService.findAllWithActive();
         return ResponseEntity.ok(findAll);
     }
 
     @GetMapping("/allmember")
-    public ResponseEntity<List<MemberResponse>> getAllMember() {
-        List<MemberResponse> findAll = memberPresentationService.findAll();
+    public ResponseEntity<List<MemberCommonResponse>> getAllMember() {
+        List<MemberCommonResponse> findAll = memberPresentationService.findAll();
         return ResponseEntity.ok(findAll);
     }
 

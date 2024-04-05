@@ -10,7 +10,7 @@ import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
 import com.dish.perfect.member.dto.response.MemberDetailResponse;
-import com.dish.perfect.member.dto.response.MemberResponse;
+import com.dish.perfect.member.dto.response.MemberCommonResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,22 +31,22 @@ public class MemberPresentationService {
      * 삭제(휴면)회원을 제외한 모든 회원 조회
      * @return
      */
-    public List<MemberResponse> findAllWithActive(){
+    public List<MemberCommonResponse> findAllWithActive(){
         return memberRepository.findAll()
                                 .stream()
                                 .filter(Member::isActive)
-                                .map(MemberResponse::fromResponse)
+                                .map(MemberCommonResponse::fromResponse)
                                 .toList();
     }
 
-    public List<MemberResponse> findAll(){
-        return memberRepository.findAll().stream().map(MemberResponse::fromResponse).toList();
+    public List<MemberCommonResponse> findAll(){
+        return memberRepository.findAll().stream().map(MemberCommonResponse::fromResponse).toList();
     }
 
-    public List<MemberResponse> findByUserName(String userName){
+    public List<MemberCommonResponse> findByUserName(String userName){
         List<Member> findMembers = memberRepository.findByUserName(userName);
-        List<MemberResponse> result = findMembers.stream()
-                                                .map(MemberResponse::fromResponse)
+        List<MemberCommonResponse> result = findMembers.stream()
+                                                .map(MemberCommonResponse::fromResponse)
                                                 .toList();
         if(result.isEmpty()){
             throw new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 이름의 회원이 존재하지 않습니다.");
