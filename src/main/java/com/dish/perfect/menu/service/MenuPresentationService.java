@@ -45,10 +45,10 @@ public class MenuPresentationService {
      * 
      * @return
      */
-    public List<MenuDetailResponse> findByAvailability() {
+    public List<MenuCommonResponse> findByAvailability() {
         return menuRepository.findByAvailability(Availability.AVAILABLE)
                 .stream()
-                .map(MenuDetailResponse::fromMenuResponse)
+                .map(MenuCommonResponse::fromMenuResponse)
                 .toList();
     }
 
@@ -70,11 +70,11 @@ public class MenuPresentationService {
      * @param type
      * @return
      */
-    public List<MenuDetailResponse> findByCourseType(CourseType type) {
+    public List<MenuCommonResponse> findByCourseType(CourseType type) {
         return menuRepository.findByCourseType(type)
                 .stream()
                 .filter(Menu::isAvailability)
-                .map(MenuDetailResponse::fromMenuResponse)
+                .map(MenuCommonResponse::fromMenuResponse)
                 .toList();
     }
 
