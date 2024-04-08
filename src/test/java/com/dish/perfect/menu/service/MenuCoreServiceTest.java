@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import org.springframework.test.context.TestPropertySource;
 import com.dish.perfect.menu.MenuFixture;
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.Menu;
+import com.dish.perfect.menu.domain.repository.MenuRepository;
 import com.dish.perfect.menu.dto.request.MenuRequest;
-import com.dish.perfect.menu.dto.response.MenuResponse;
+import com.dish.perfect.menu.dto.response.MenuCommonResponse;
+import com.dish.perfect.menu.dto.response.MenuDetailResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,10 +33,18 @@ public class MenuCoreServiceTest {
     private MenuCoreService menuCoService;
 
     @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
     private MenuPresentationService menuPrService;
 
     private MenuFixture menuFixture = new MenuFixture();
 
+    @AfterEach
+    void clear(){
+        menuRepository.deleteAllInBatch();
+    }
+     
     @Test
     @DisplayName("메뉴를 생성")
     void createMenu() throws IOException{
@@ -42,10 +53,10 @@ public class MenuCoreServiceTest {
         Menu menuA = menuCoService.createMenu(requestA);
         Menu menuB = menuCoService.createMenu(requestB);
 
-        List<MenuResponse> findAll = menuPrService.findAll();
+        List<MenuCommonResponse> findAll = menuPrService.findAll();
         
-        assertThat(findAll.stream().map(MenuResponse::getMenuName)).contains(menuA.getMenuName());
-        assertThat(findAll.stream().map(MenuResponse::getMenuName)).contains(menuB.getMenuName());
+        assertThat(findAll.stream().map(MenuCommonResponse::getMenuName)).contains(menuA.getMenuName());
+        assertThat(findAll.stream().map(MenuCommonResponse::getMenuName)).contains(menuB.getMenuName());
     }
 
     @Test
@@ -54,7 +65,7 @@ public class MenuCoreServiceTest {
         MenuRequest requestC = menuFixture.fixRequestC();
         menuCoService.createMenu(requestC);
         
-        MenuResponse menuInfo = menuPrService.getMenuInfo(requestC.getMenuName());
+        MenuDetailResponse menuInfo = menuPrService.getMenuInfo(requestC.getMenuName());
         log.info("menuInfo={} menuImgUrl={}", menuInfo.getMenuName(), menuInfo.getMenuImgUrl());
     }
 
@@ -65,7 +76,7 @@ public class MenuCoreServiceTest {
         menuCoService.createMenu(requestD);
 
         menuCoService.activeDiscount(requestD.getMenuName());
-        MenuResponse resultMenu = menuPrService.getMenuInfo(requestD.getMenuName());
+        MenuDetailResponse resultMenu = menuPrService.getMenuInfo(requestD.getMenuName());
         assertTrue(resultMenu.isDiscount());
     }
 
@@ -76,7 +87,7 @@ public class MenuCoreServiceTest {
         menuCoService.createMenu(requestE);
 
         menuCoService.markMenuAsUnavailable(requestE.getMenuName());
-        MenuResponse resultMenu = menuPrService.getMenuInfo(requestE.getMenuName());
+        MenuDetailResponse resultMenu = menuPrService.getMenuInfo(requestE.getMenuName());
 
         assertEquals(resultMenu.getAvailability(), Availability.UNAVAILABLE);
     }
