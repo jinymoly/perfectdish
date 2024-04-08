@@ -21,7 +21,7 @@ import com.dish.perfect.member.dto.request.MemberChangeStatusRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 import com.dish.perfect.member.dto.response.MemberDetailResponse;
-import com.dish.perfect.member.dto.response.MemberResponse;
+import com.dish.perfect.member.dto.response.MemberCommonResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +53,7 @@ public class MemberCoreServiceTest {
         memberCoreService.join(memberA1);
         memberCoreService.join(memberA2);
 
-        List<MemberResponse> findAll = memberPresentationService.findAllWithActive();
+        List<MemberCommonResponse> findAll = memberPresentationService.findAllWithActive();
         assertEquals(findAll.size(), 2);
     }
 
@@ -120,7 +120,7 @@ public class MemberCoreServiceTest {
         MemberRequest memberF = memberFixture.fixtureAD();
         memberCoreService.join(memberE);
         memberCoreService.join(memberF);
-        List<MemberResponse> result = memberPresentationService.findByUserName(memberE.getUserName());
+        List<MemberCommonResponse> result = memberPresentationService.findByUserName(memberE.getUserName());
 
         assertEquals(result.size(), 2);
     }

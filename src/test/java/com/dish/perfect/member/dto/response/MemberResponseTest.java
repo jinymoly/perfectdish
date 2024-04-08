@@ -16,7 +16,7 @@ public class MemberResponseTest {
     void testFromResponse() {
         Member member = fixtureM.fixtureMA();
 
-        MemberResponse response = MemberResponse.fromResponse(member);
+        MemberCommonResponse response = MemberCommonResponse.fromResponse(member);
 
         Assertions.assertThat(response.getUserName()).isEqualTo(member.getUserName());
     }
