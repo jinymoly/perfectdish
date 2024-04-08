@@ -37,10 +37,11 @@ public class OrderItemCoreService {
         }
     }
 
-    public void updateOrderItemStatus(final Long id){
+    public OrderItem updateOrderItemStatus(final Long id){
         OrderItem orderItem = orderItemRepository.findById(id)
                                                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDERITEM, "주문 아이템이 존재하지 않습니다."));
         orderItem.markOrderItemStatusAsCompleted(OrderItemStatus.COMPLETED);
         log.info("{}/{}", orderItem.getId(), orderItem.getOrderItemStatus());
+        return orderItem;
     }
 }

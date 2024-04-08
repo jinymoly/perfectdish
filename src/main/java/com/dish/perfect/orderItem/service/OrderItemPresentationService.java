@@ -21,9 +21,14 @@ public class OrderItemPresentationService {
 
     private final OrderItemRepository orderItemRepository;
 
+    public OrderItem findOrderItemById(final Long id){
+        return orderItemRepository.findById(id)
+                                  .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDERITEM, "해당 orderItem이 존재하지 않습니다."));
+    }
+
     public OrderItemResponse getOrderItemInfo(final Long id) {
         OrderItem orderItem = orderItemRepository.findById(id)
-                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDERITEM, "해당 주문 아이템이 존재하지 않습니다."));
+                                                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDERITEM, "해당 주문 아이템이 존재하지 않습니다."));
         return OrderItemResponse.fromOrderItemResponse(orderItem);
     }
 
@@ -50,9 +55,9 @@ public class OrderItemPresentationService {
         List<OrderItem> orderItemsBytableNo = orderItemRepository.findBytableNo(tableNo);
         if (!orderItemsBytableNo.isEmpty()) {
             return orderItemsBytableNo.stream()
-                    .filter(o -> o.getOrderItemStatus().equals(OrderItemStatus.CREATED))
-                    .map(OrderItemResponse::fromOrderItemResponse)
-                    .toList();
+                                        .filter(o -> o.getOrderItemStatus().equals(OrderItemStatus.CREATED))
+                                        .map(OrderItemResponse::fromOrderItemResponse)
+                                        .toList();
         } else {
             throw new GlobalException(ErrorCode.NOT_FOUND_ORDERITEM, "해당 테이블의 메뉴가 모두 서빙되었습니다.");
         }
