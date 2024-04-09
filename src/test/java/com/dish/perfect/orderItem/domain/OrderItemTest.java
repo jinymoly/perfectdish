@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.dish.perfect.menu.MenuFixture;
 import com.dish.perfect.menu.domain.Menu;
-import com.dish.perfect.order.domain.Order;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +22,7 @@ public class OrderItemTest {
 
         OrderItem newOrderItem = OrderItem.builder()
                 .id(1L)
-                .order(new Order("3"))
+                //.order(new Order("3"))
                 .tableNo("2")
                 .orderItemStatus(OrderItemStatus.CREATED)
                 .menu(menuFixtureForOrderItem)

@@ -20,29 +20,75 @@ public class OrderItemFixture {
     private Menu menuH = menuFixture.fixRequestH().toEntity();
 
     public OrderItemRequest orderItemRequestA = OrderItemRequest.builder()
-                                                                .tableNo("2").menuName(menuA.getMenuName()).count(2)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("2")
+                                                                .menuName(menuA.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestB = OrderItemRequest.builder()
-                                                                .tableNo("3").menuName(menuB.getMenuName()).count(1)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("3")
+                                                                .menuName(menuB.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestC = OrderItemRequest.builder()
-                                                                .tableNo("3").menuName(menuC.getMenuName()).count(3)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("3")
+                                                                .menuName(menuC.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestD = OrderItemRequest.builder()
-                                                                .tableNo("3").menuName(menuD.getMenuName()).count(5)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("3")
+                                                                .menuName(menuD.getMenuName())
+                                                                .count(5)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestE = OrderItemRequest.builder()
-                                                                .tableNo("2").menuName(menuE.getMenuName()).count(2)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("2")
+                                                                .menuName(menuE.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestF = OrderItemRequest.builder()
-                                                                .tableNo("7").menuName(menuF.getMenuName()).count(2)
-                                                                .status(OrderItemStatus.COMPLETED).build();
+                                                                .tableNo("7")
+                                                                .menuName(menuF.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderItemStatus.COMPLETED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestG = OrderItemRequest.builder()
-                                                                .tableNo("7").menuName(menuG.getMenuName()).count(3)
-                                                                .status(OrderItemStatus.CREATED).build();
+                                                                .tableNo("7")
+                                                                .menuName(menuG.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
     public OrderItemRequest orderItemRequestH = OrderItemRequest.builder()
-                                                                .tableNo("7").menuName(menuH.getMenuName()).count(1)
-                                                                .status(OrderItemStatus.COMPLETED).build();
+                                                                .tableNo("7")
+                                                                .menuName(menuH.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderItemStatus.COMPLETED)
+                                                                .build();
+
+    public OrderItemRequest orderItemRequestI = OrderItemRequest.builder()
+                                                                .tableNo("1")
+                                                                .menuName(menuH.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderItemStatus.COMPLETED)
+                                                                .build();
+
+    public OrderItemRequest orderItemRequestJ = OrderItemRequest.builder()
+                                                                .tableNo("1")
+                                                                .menuName(menuB.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderItemStatus.CREATED)
+                                                                .build();
+
 
 
 }
