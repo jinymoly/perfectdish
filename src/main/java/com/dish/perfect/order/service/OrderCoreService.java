@@ -1,6 +1,7 @@
 package com.dish.perfect.order.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.order.domain.repository.OrderRepository;
 import com.dish.perfect.order.dto.request.OrderRequest;
+import com.dish.perfect.orderItem.domain.OrderItem;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,11 @@ public class OrderCoreService {
     private final OrderRepository orderRepository;
 
     public Order createOrder(OrderRequest orderRequest){
-        Order order = orderRequest.toEntity();
+        Order order = orderRequest.toOrder();
+        List<OrderItem> orderItems = order.getOrderItems();
+        for(OrderItem orderItem : orderItems){
+            order.addOrderItem(orderItem);
+        }
         order.addCreatedAt(LocalDateTime.now());
         orderRepository.save(order);
         log.info("created{}", order.getId());
@@ -36,6 +42,6 @@ public class OrderCoreService {
         order.updateStatus();
         order.addCompletedAt(LocalDateTime.now());
         orderRepository.save(order);
-        log.info("{}/{}", order.getId(), order.getStatus());
+        log.info("{}/{}", order.getId(), order.getOrderStatus());
     }
 }
