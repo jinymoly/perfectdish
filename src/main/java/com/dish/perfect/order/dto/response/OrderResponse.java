@@ -22,7 +22,7 @@ public class OrderResponse {
     private final BigDecimal totalPrice;
     private final OrderStatus orderStatus;
 
-    public static OrderResponse toResponse(final Order order){
+    public static OrderResponse fromOrderResponse(final Order order){
         Map<String, Integer> ordersInfo = new HashMap<>();
         for(OrderItem menu : order.getOrderItems()){
              String menuName = menu.getMenu().getMenuName();
@@ -33,7 +33,7 @@ public class OrderResponse {
                             .tableNo(order.getTableNo())
                             .orders(ordersInfo)
                             .totalPrice(order.getTotalPrice())
-                            .orderStatus(order.getStatus())
+                            .orderStatus(order.getOrderStatus())
                             .build();
     }
 }
