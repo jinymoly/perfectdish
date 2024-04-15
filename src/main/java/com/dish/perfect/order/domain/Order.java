@@ -38,7 +38,6 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
@@ -68,9 +67,6 @@ public class Order {
         this.completedAt = completedAt;
     }
 
-    public Order(String tableNo) {
-        this.tableNo = tableNo;
-    }
     /**
      * tableNo가 같으면 주문서에 담는다.
      * @param oItem
