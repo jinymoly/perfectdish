@@ -1,118 +1,94 @@
 package com.dish.perfect.order;
 
-import java.math.BigDecimal;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.dish.perfect.menu.MenuFixture;
+import com.dish.perfect.menu.domain.Menu;
+import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.dto.request.OrderRequest;
-import com.dish.perfect.orderItem.domain.OrderItem;
-import com.dish.perfect.orderItem.domain.OrderItemStatus;
 
 public class OrderFixture {
 
-    public OrderRequest orderRequest1 = OrderRequest.builder().tableNo(1).orderItems(orderItemsFixture1()).build();
-    public OrderRequest orderRequest2 = OrderRequest.builder().tableNo(2).orderItems(orderItemsFixture2()).build();
-    public OrderRequest orderRequest3 = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3()).build();
-    public OrderRequest orderRequest3D = OrderRequest.builder().tableNo(3).orderItems(orderItemsFixture3D()).build();
+    private MenuFixture menuFixture = new MenuFixture();
 
-    public OrderItem orderItemA(){
-        return OrderItem.builder()
-                        .tableNo(1)
-                        .menuName("프랑스식 양 샴꼬")
-                        .count(2)
-                        .price(13000)
-                        .isDiscounted(false)
-                        .totalPrice(new BigDecimal(26000))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
-    public OrderItem orderItemB(){
-        return OrderItem.builder()
-                        .tableNo(3)
-                        .menuName("로스트 치킨")
-                        .count(1)
-                        .price(28000)
-                        .isDiscounted(false)
-                        .totalPrice(new BigDecimal(28000))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
+    private Menu menuA = menuFixture.fixRequestA().toEntity();
+    private Menu menuB = menuFixture.fixRequestB().toEntity();
+    private Menu menuC = menuFixture.fixRequestC().toEntity();
+    private Menu menuD = menuFixture.fixRequestD().toEntity();
+    private Menu menuE = menuFixture.fixRequestE().toEntity();
+    private Menu menuF = menuFixture.fixRequestF().toEntity();
+    private Menu menuG = menuFixture.fixRequestG().toEntity();
+    private Menu menuH = menuFixture.fixRequestH().toEntity();
 
-    public OrderItem orderItemC() {
-        return OrderItem.builder()
-                        .tableNo(2)
-                        .menuName("그라탕")
-                        .count(2)
-                        .price(15000)
-                        .isDiscounted(true)
-                        .totalPrice(new BigDecimal(28500))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
-    
-    public OrderItem orderItemD() {
-        return OrderItem.builder()
-                        .tableNo(2)
-                        .menuName("크림 소스 파스타")
-                        .count(2)
-                        .price(18000)
-                        .isDiscounted(true)
-                        .totalPrice(new BigDecimal(34200))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
+    public OrderRequest orderRequestA = OrderRequest.builder()
+                                                                .tableNo("2")
+                                                                .menuName(menuA.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
 
-    public OrderItem orderItemE() {
-        return OrderItem.builder()
-                        .tableNo(1)
-                        .menuName("스테이크")
-                        .count(1)
-                        .price(35000)
-                        .isDiscounted(true)
-                        .totalPrice(new BigDecimal(33250))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
+    public OrderRequest orderRequestB = OrderRequest.builder()
+                                                                .tableNo("3")
+                                                                .menuName(menuB.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
 
-    public OrderItem orderItemF(){
-        return OrderItem.builder()
-                        .tableNo(3)
-                        .menuName("뵈프 부르기뇽")
-                        .count(2)
-                        .price(37000)
-                        .isDiscounted(true)
-                        .totalPrice(new BigDecimal(64000))
-                        .itemstatus(OrderItemStatus.CREATED)
-                        .build();
-    }
-    public List<OrderItem> orderItemsFixture1(){
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(orderItemA());
-        orderItems.add(orderItemE());
-        return orderItems;
-    }
+    public OrderRequest orderRequestC = OrderRequest.builder()
+                                                                .tableNo("3")
+                                                                .menuName(menuC.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
 
-    public List<OrderItem> orderItemsFixture2(){
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(orderItemC());
-        orderItems.add(orderItemD());
-        return orderItems;
-    }
+    public OrderRequest orderRequestD = OrderRequest.builder()
+                                                                .tableNo("3")
+                                                                .menuName(menuD.getMenuName())
+                                                                .count(5)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
 
-    public List<OrderItem> orderItemsFixture3(){
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(orderItemB());
-        return orderItems;
-    }
+    public OrderRequest orderRequestE = OrderRequest.builder()
+                                                                .tableNo("2")
+                                                                .menuName(menuE.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
 
-    public List<OrderItem> orderItemsFixture3D(){
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(orderItemB());
-        orderItems.add(orderItemB());
-        orderItems.add(orderItemF());
-        return orderItems;
-    }
+    public OrderRequest orderRequestF = OrderRequest.builder()
+                                                                .tableNo("7")
+                                                                .menuName(menuF.getMenuName())
+                                                                .count(2)
+                                                                .status(OrderStatus.COMPLETED)
+                                                                .build();
 
-    
+    public OrderRequest orderRequestG = OrderRequest.builder()
+                                                                .tableNo("7")
+                                                                .menuName(menuG.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
+
+    public OrderRequest orderRequestH = OrderRequest.builder()
+                                                                .tableNo("7")
+                                                                .menuName(menuH.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderStatus.COMPLETED)
+                                                                .build();
+
+    public OrderRequest orderRequestI = OrderRequest.builder()
+                                                                .tableNo("1")
+                                                                .menuName(menuH.getMenuName())
+                                                                .count(1)
+                                                                .status(OrderStatus.COMPLETED)
+                                                                .build();
+
+    public OrderRequest orderRequestJ = OrderRequest.builder()
+                                                                .tableNo("1")
+                                                                .menuName(menuB.getMenuName())
+                                                                .count(3)
+                                                                .status(OrderStatus.CREATED)
+                                                                .build();
+
+
+
 }

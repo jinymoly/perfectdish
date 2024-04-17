@@ -1,32 +1,21 @@
 package com.dish.perfect.member.domain.repository;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dish.perfect.member.domain.Member;
-import com.dish.perfect.member.dto.request.MemberRequest;
-import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
-public interface MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Member save(MemberRequest memberRequestDto);
-    void update(Long id, MemberUpdateRequest memberRequestDto);
+    @Query("select m from Member m where m.userName = :userName")
+    List<Member> findByUserName(@Param("userName") String userName);
 
-    List<Member> findAll();
-    Member findById(Long id);
-    List<Member> findMembersBySameLastFourDigits(String phoneNumber);
+    @Query("select m from Member m where m.phoneNumber = :phoneNumber")
+    Member findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
-    List<Member> findByName(String name);
+    boolean existsByPhoneNumber(String phoneNumber);
 
-    Optional<Member> findByPhoneNumberOp(List<Member> members, String phoneNumber);
-    Member findByPhoneNumberWithList(List<Member> members, String phoneNumber);
-    Optional<Member> findMemberByPhoneNumber(String phoneNumber);
-
-    String extractLastFourDigits(String phoneNumber);
-    Long getNextId();
-
-    // soft delete
-    void deleteMember(Member member);
-    
-    void clear();
 }

@@ -14,18 +14,16 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class ErrorResponse {
-    
-    private  int status;
-    private  String errorCode;
-    private  String errorMessage;
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode){
-        return ResponseEntity.status(errorCode.getStatus())
-                                .body(ErrorResponse.builder()
-                                                    .status(errorCode.getStatus().value())
-                                                    .errorCode(errorCode.getEcode())
-                                                    .errorMessage(errorCode.getEmessage())
-                                                    .build());
-                                                    
+    private String errorCode;
+    private String errorMessage;
+
+    public static ResponseEntity<ErrorResponse> from(ErrorCode errorCode) {
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.builder()
+                        .errorCode(errorCode.getEcode())
+                        .errorMessage(errorCode.getEmessage())
+                        .build());
+
     }
 }

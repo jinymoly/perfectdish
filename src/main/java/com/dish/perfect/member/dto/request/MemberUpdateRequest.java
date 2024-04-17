@@ -1,7 +1,5 @@
 package com.dish.perfect.member.dto.request;
 
-import com.dish.perfect.member.domain.MemberStatus;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
@@ -19,14 +17,11 @@ public class MemberUpdateRequest {
     @NotBlank(message = "이름은 필수입니다.")
     private String userName;
 
-    private MemberStatus status;
-
 
     @Builder
-    private MemberUpdateRequest(String phoneNumber, String userName, MemberStatus status) {
+    private MemberUpdateRequest(String phoneNumber, String userName) {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
-        this.status = status;
     }
 
 }

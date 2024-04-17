@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MemberTest {
+
     @Test
     @DisplayName("Member toString 확인")
     void testToString(){
@@ -17,11 +18,10 @@ public class MemberTest {
                                 .userName("유바바")
                                 .phoneNumber("23453456")
                                 .status(MemberStatus.ACTIVE)
-                                .createAt(LocalDateTime.now())
+                                .createdAt(LocalDateTime.now())
                                 .build();
         String savedText = memberA.toString();
+        log.info(savedText);
 
-        log.info("{}", savedText.toString());
-                                
     }
 }

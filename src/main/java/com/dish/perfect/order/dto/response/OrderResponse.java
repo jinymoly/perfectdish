@@ -1,7 +1,5 @@
 package com.dish.perfect.order.dto.response;
 
-import java.math.BigDecimal;
-
 import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.order.domain.OrderStatus;
 
@@ -14,21 +12,17 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class OrderResponse {
     
-    private final int tableNo;
-    private final String menuName;
-    private final Integer price;
+    private final String tableNo;
+    private final String menuName; 
     private final int count;
-    private final BigDecimal totalPrice;
     private final OrderStatus orderStatus;
 
-    public static OrderResponse toResponse(final Order order){
+    public static OrderResponse fromOrderResponse(final Order order){
         return OrderResponse.builder()
                             .tableNo(order.getTableNo())
-                            .menuName(order.getMenuName())
-                            .price(order.getPrice())
+                            .menuName(order.getMenu().getMenuName())
                             .count(order.getCount())
-                            .totalPrice(order.getTotalPrice())
-                            .orderStatus(order.getStatus())
+                            .orderStatus(order.getOrderStatus())
                             .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.dish.perfect.member.dto.request;
 
+import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 
 import jakarta.validation.constraints.NotBlank;
@@ -21,11 +22,19 @@ public class MemberRequest {
 
     private MemberStatus status;
 
+
     @Builder
     private MemberRequest(String phoneNumber, String userName, MemberStatus status) {
         this.phoneNumber = phoneNumber;
         this.userName = userName;
-        this.status = status;
+        this.status = MemberStatus.ACTIVE;
     }
 
+    public Member toEntity(){
+        return Member.builder()
+                    .phoneNumber(phoneNumber)
+                    .userName(userName)
+                    .status(status)
+                    .build();
+    }
 }
