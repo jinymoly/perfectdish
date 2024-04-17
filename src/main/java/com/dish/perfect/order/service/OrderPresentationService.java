@@ -21,54 +21,71 @@ public class OrderPresentationService {
 
     private final OrderRepository orderRepository;
 
-    /**
-     * 단일 order 정보 반환 
-     * @param id
-     * @return
-     */
-    public OrderResponse getOrderInfo(final Long id){
-        Order order = orderRepository.findById(id).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 주문이 존재하지 않습니다."));
+    public Order findOrderById(final Long id){
+        return orderRepository.findById(id)
+                                  .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 order이 존재하지 않습니다."));
+    }
+
+    public OrderResponse getOrderInfo(final Long id) {
+        Order order = orderRepository.findById(id)
+                                                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 주문 아이템이 존재하지 않습니다."));
         return OrderResponse.fromOrderResponse(order);
     }
 
-    public List<OrderResponse> findAll(){
+    /**
+     * 테이블 별 주문 아이템
+     * 
+     * @param order
+     * @return
+     */
+    public List<OrderResponse> getOrdersByTableNo(String tableNo) {
+        return orderRepository.findBytableNo(tableNo)
+                .stream()
+                .map(OrderResponse::fromOrderResponse)
+                .toList();
+    }
+
+    /**
+     * 테이블 별 주문 내역 중 서빙 되지 않은 주문 아이템
+     * 
+     * @param order
+     * @return
+     */
+    public List<OrderResponse> getAllOrder(String tableNo) {
+        List<Order> ordersBytableNo = orderRepository.findBytableNo(tableNo);
+        if (!ordersBytableNo.isEmpty()) {
+            return ordersBytableNo.stream()
+                                        .filter(o -> o.getOrderStatus().equals(OrderStatus.CREATED))
+                                        .map(OrderResponse::fromOrderResponse)
+                                        .toList();
+        } else {
+            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 테이블의 메뉴가 모두 서빙되었습니다.");
+        }
+    }
+
+    /**
+     * 아직 서빙 되지 않은 모든 주문 아이템 내역
+     * 
+     * @param status
+     * @return
+     */
+    public List<OrderResponse> findbyOrderStatus(OrderStatus status) {
+        List<Order> orders = orderRepository.findByOrderStatus(status);
+        if (!orders.isEmpty()) {
+            return orders.stream()
+                    .filter(order -> order.getOrderStatus().equals(OrderStatus.CREATED))
+                    .map(OrderResponse::fromOrderResponse)
+                    .toList();
+        } else {
+            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "모든 메뉴가 서빙되었습니다.");
+        }
+    }
+
+    public List<OrderResponse> findAllOrder() {
         return orderRepository.findAll()
-                                .stream()
-                                .map(OrderResponse::fromOrderResponse)
-                                .toList();
-                                
+                .stream()
+                .map(OrderResponse::fromOrderResponse)
+                .toList();
     }
 
-    /**
-     * 테이블 별 모든 주문 내역
-     * @param tableNo
-     * @return
-     */
-    public List<OrderResponse> findOrderByTableNo(String tableNo){
-        List<Order> orders = orderRepository.findByTableNo(tableNo);
-        if(!orders.isEmpty()){
-            return orders.stream()
-                        .map(OrderResponse::fromOrderResponse)
-                        .toList();
-        } else {
-            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 테이블에 주문 내역이 존재하지 않습니다.");
-        }
-    }
-
-    /**
-     * 아직 서빙 되지 않은 모든 주문 내역
-     * @param orderStatus
-     * @return
-     */
-    public List<OrderResponse> findOrderByOrderStatus(OrderStatus orderStatus){
-        List<Order> orders = orderRepository.findByOrderStatus(orderStatus);
-        if(!orders.isEmpty()){
-            return orders.stream()
-                        .filter(order -> order.getOrderStatus().equals(OrderStatus.NOTSERVED))
-                        .map(OrderResponse::fromOrderResponse)
-                        .toList();
-        } else {
-            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "모든 음식이 서빙되었습니다.");
-        }
-    }
 }
