@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = "menuName")
+@EqualsAndHashCode(of = "menuName")// request에서 name valid하면 굳이? 
 public class Menu {
 
     @Id
