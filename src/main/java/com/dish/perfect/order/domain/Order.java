@@ -56,9 +56,9 @@ public class Order {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+
     @Builder
-    public Order(Long id, String tableNo, Menu menu, Bill bill, int count, OrderStatus orderStatus, LocalDateTime createdAt) {
-        this.id = id;
+    public Order(String tableNo, Menu menu, Bill bill, int count, OrderStatus orderStatus, LocalDateTime createdAt) {
         this.tableNo = tableNo;
         this.menu = menu;
         this.bill = bill;

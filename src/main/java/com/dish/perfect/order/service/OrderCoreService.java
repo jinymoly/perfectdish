@@ -26,7 +26,7 @@ public class OrderCoreService {
     private final MenuPresentationService menuService;
 
     public Order createOrder(OrderRequest orderRequest) {
-        Order order = orderRequest.toEntity();
+        Order order = orderRequest.toOrder();
         if(menuService.menuNameExists(order.getMenu().getMenuName())){
             order.addCreatedAt(LocalDateTime.now());
             orderRepository.save(order);

@@ -31,13 +31,12 @@ public class OrderRequest {
         this.status = status;
     }
 
-    public Order toEntity(){
+    public Order toOrder(){
         return Order.builder()
                         .tableNo(tableNo)   
                         .menu(new Menu(menuName))
                         .count(count)
                         .tableNo(tableNo)
-                        // order(new Order(tableNo)) ㅈㅔ거 
                         .orderStatus(OrderStatus.CREATED)
                         .build();
     }
