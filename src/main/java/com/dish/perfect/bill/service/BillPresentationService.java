@@ -19,56 +19,63 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BillPresentationService {
 
-    private final BillRepository orderRepository;
+    private final BillRepository billRepository;
 
-    /**
-     * 단일 order 정보 반환 
-     * @param id
-     * @return
-     */
-    public BillResponse getOrderInfo(final Long id){
-        Bill order = orderRepository.findById(id).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 주문이 존재하지 않습니다."));
-        return BillResponse.fromOrderResponse(order);
+    public BillResponse getBillInfo(final Long id){
+        Bill bill = billRepository.findById(id).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
+        return BillResponse.fromBillResponse(bill);
     }
 
     public List<BillResponse> findAll(){
-        return orderRepository.findAll()
+        return billRepository.findAll()
                                 .stream()
-                                .map(BillResponse::fromOrderResponse)
+                                .map(BillResponse::fromBillResponse)
                                 .toList();
                                 
     }
 
     /**
-     * 테이블 별 모든 주문 내역
+     * 테이블 별 모든 주문
      * @param tableNo
      * @return
      */
-    public List<BillResponse> findOrderByTableNo(String tableNo){
-        List<Bill> orders = orderRepository.findByTableNo(tableNo);
+    public List<BillResponse> findBillByTableNo(String tableNo){
+        List<Bill> orders = billRepository.findByTableNo(tableNo);
         if(!orders.isEmpty()){
             return orders.stream()
-                        .map(BillResponse::fromOrderResponse)
+                        .map(BillResponse::fromBillResponse)
                         .toList();
         } else {
-            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 테이블에 주문 내역이 존재하지 않습니다.");
+            throw new GlobalException(ErrorCode.NOT_FOUND_BILL_BY_TABLE, "해당 테이블의 청구서가 존재하지 않습니다.");
         }
     }
 
     /**
-     * 아직 서빙 되지 않은 모든 주문 내역
+     * 아직 서빙 되지 않은 모든 주문
      * @param orderStatus
      * @return
      */
-    public List<BillResponse> findOrderByOrderStatus(BillStatus orderStatus){
-        List<Bill> orders = orderRepository.findByOrderStatus(orderStatus);
+    public List<BillResponse> findBillByOrderStatus(BillStatus billStatus){
+        List<Bill> orders = billRepository.findByOrderStatus(billStatus);
         if(!orders.isEmpty()){
             return orders.stream()
                         .filter(order -> order.getOrderStatus().equals(BillStatus.NOTSERVED))
-                        .map(BillResponse::fromOrderResponse)
+                        .map(BillResponse::fromBillResponse)
                         .toList();
         } else {
-            throw new GlobalException(ErrorCode.NOT_FOUND_ORDER, "모든 음식이 서빙되었습니다.");
+            throw new GlobalException(ErrorCode.ALREADY_COMPLETED_BILL, "모든 음식이 제공되었습니다.");
         }
+    }
+
+    /**
+     * 해당 테이블의 아직 서빙되지 않은 주문
+     * @param tableNo
+     * @return
+     */
+    public List<BillResponse> findBillByOrderStatusWithTableNo(String tableNo){
+        return findBillByOrderStatus(BillStatus.NOTSERVED)
+                    .stream()
+                    .filter(bill -> bill.getTableNo().equals(tableNo))
+                    .toList();
     }
 }

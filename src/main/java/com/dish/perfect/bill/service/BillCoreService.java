@@ -24,7 +24,7 @@ public class BillCoreService {
     
     private final BillRepository billRepository;
 
-    public Bill createOrder(BillRequest billRequest){
+    public Bill createBill(BillRequest billRequest){
         Bill bill = billRequest.toBill();
         List<Order> orders = bill.getOrders();
         for(Order o : orders){
@@ -37,12 +37,12 @@ public class BillCoreService {
         return bill;
     }
 
-    public void completeOrder(Long id){
-        Bill order = billRepository.findById(id)
-                                        .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "해당 주문이 존재하지 않습니다."));
-        order.updateStatus();
-        order.addCompletedAt(LocalDateTime.now());
-        billRepository.save(order);
-        log.info("{}/{}", order.getId(), order.getOrderStatus());
+    public void completeAllOrdersInBill(Long id){
+        Bill bill = billRepository.findById(id)
+                                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
+        bill.updateStatus();
+        bill.addCompletedAt(LocalDateTime.now());
+        billRepository.save(bill);
+        log.info("{}/{}", bill.getId(), bill.getOrderStatus());
     }
 }

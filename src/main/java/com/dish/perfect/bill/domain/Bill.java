@@ -54,9 +54,8 @@ public class Bill {
     private LocalDateTime completedAt;
 
     @Builder
-    public Bill(Long id, String tableNo, List<Order> orders,
+    public Bill(String tableNo, List<Order> orders,
             BigDecimal totalPrice, BillStatus orderStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
-        this.id = id;
         this.tableNo = tableNo;
         this.orders = orders;
         this.totalPrice = totalPrice;
@@ -76,7 +75,7 @@ public class Bill {
                 o.addOrderTo(this);
             }
         } else {
-            throw new GlobalException(ErrorCode.FAIL_CREATE_ORDER, "테이블 번호 오류로 주문을 생성할 수 없습니다.");
+            throw new GlobalException(ErrorCode.FAIL_CREATE_BILL, "테이블 번호 오류로 청구서를 생성할 수 없습니다.");
         }
     }
 
