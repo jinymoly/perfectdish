@@ -24,7 +24,6 @@ public class BillTest {
                         .build();
         
         String savedBill = bill.toString();
-        log.info("{}", savedBill.toString() );
+        log.info("{}", savedBill.toString());
     }
-    
 }
