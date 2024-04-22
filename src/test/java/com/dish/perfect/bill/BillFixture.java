@@ -40,7 +40,7 @@ public class BillFixture {
                                                     .orders(ordersT7())
                                                     .status(BillStatus.NOTSERVED)
                                                     .build();
-    public BillRequest orderRequest3D = BillRequest.builder()
+    public BillRequest orderRequestWithDiffTableNo = BillRequest.builder()
                                                     .tableNo("1")
                                                     .orders(ordersT7andT1())
                                                     .status(BillStatus.NOTSERVED)
