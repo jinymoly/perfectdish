@@ -28,7 +28,7 @@ public class BillCoreService {
         Bill bill = billRequest.toBill();
         List<Order> orders = bill.getOrders();
         for(Order o : orders){
-            bill.initOrderFrom(o);
+            bill.createOrderListWithTableNoFrom(o);
         }
         bill.applyTotalPrice(orders);
         bill.addCreatedAt(LocalDateTime.now());
