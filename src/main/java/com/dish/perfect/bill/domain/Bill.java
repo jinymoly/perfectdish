@@ -64,14 +64,27 @@ public class Bill {
         this.completedAt = completedAt;
     }
 
+    @Override
+    public String toString() {
+        StringBuffer menuBuffer = new StringBuffer();
+        for(Order o : orders){
+                menuBuffer.append(o.getMenu().getMenuName()).append('\n');
+        }
+        return '\n' + "[tableNo." + tableNo + "]" + '\n' +
+                menuBuffer.toString() +
+                "totalPrice=" + totalPrice + '\n' +
+                "createdAt=" + createdAt + '\n' +
+                "completedAt=" + completedAt;
+    }
+
     /**
      * tableNo가 같으면 주문서에 담는다.
-     * @param o
+     * @param o 
      */
-    public void initOrderFrom(Order o) {
+    public void createOrderListWithTableNoFrom(Order o) {
         if(o.getTableNo().equals(tableNo)){
             this.orders.add(o);
-            if(o.getBill() != this){ // 무한루프 필터링
+            if(o.getBill() != this){
                 o.addOrderTo(this);
             }
         } else {
