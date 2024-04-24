@@ -79,9 +79,14 @@ public class Order {
         this.menu = menu;
     }
 
-    public void initOrder(Bill bill){
+    /**
+     * 계산서에 주문을 추가
+     * 무한루프 방지 
+     * @param bill
+     */
+    public void addOrderTo(Bill bill){
         this.bill = bill;
-        if(!bill.getOrders().contains(this)){ //무한루프 필터링
+        if(!bill.getOrders().contains(this)){ 
             bill.getOrders().add(this);
         }
     }
