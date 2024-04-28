@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -40,12 +42,13 @@ public class Bill {
     private String tableNo;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
-
+    private Map<Menu, Integer> orders = new ConcurrentHashMap<>();
+    
+    //private List<Order> orders = new ArrayList<>();
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
-    private BillStatus orderStatus;
+    private BillStatus billStatus;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -54,12 +57,12 @@ public class Bill {
     private LocalDateTime completedAt;
 
     @Builder
-    public Bill(String tableNo, List<Order> orders,
-            BigDecimal totalPrice, BillStatus orderStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
+    public Bill(String tableNo, Map<Menu, Integer> orders,
+            BigDecimal totalPrice, BillStatus billStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
         this.tableNo = tableNo;
         this.orders = orders;
         this.totalPrice = totalPrice;
-        this.orderStatus = orderStatus;
+        this.billStatus = billStatus;
         this.createdAt = createdAt;
         this.completedAt = completedAt;
     }
@@ -67,8 +70,10 @@ public class Bill {
     @Override
     public String toString() {
         StringBuffer menuBuffer = new StringBuffer();
-        for(Order o : orders){
-                menuBuffer.append(o.getMenu().getMenuName()).append('\n');
+        for(Map.Entry<Menu, Integer> menuInfo : orders.entrySet()){
+            String menuName = menuInfo.getKey().getMenuName();
+            Integer count = menuInfo.getValue();
+                menuBuffer.append(menuName +"/ "+ count).append('\n');
         }
         return '\n' + "[tableNo." + tableNo + "]" + '\n' +
                 menuBuffer.toString() +
@@ -81,19 +86,23 @@ public class Bill {
      * tableNo가 같으면 주문서에 담는다.
      * @param o 
      */
-    public void createOrderListWithTableNoFrom(Order o) {
-        if(o.getTableNo().equals(tableNo)){
-            this.orders.add(o);
-            if(o.getBill() != this){
-                o.addOrderTo(this);
-            }
-        } else {
-            throw new GlobalException(ErrorCode.FAIL_CREATE_BILL, "테이블 번호 오류로 청구서를 생성할 수 없습니다.");
-        }
-    }
+    // public void createOrderListWithTableNoFrom(Order o) {
+    //     if(o.getTableNo().equals(tableNo)){
+    //         this.orders.add(o);
+    //         if(o.getBill() != this){
+    //             o.addOrderTo(this);
+    //         }
+    //     } else {
+    //         throw new GlobalException(ErrorCode.FAIL_CREATE_BILL, "테이블 번호 오류로 청구서를 생성할 수 없습니다.");
+    //     }
+    // }
 
     public void updateStatus() {
-        this.orderStatus = BillStatus.COMPLETED;
+        this.billStatus = BillStatus.COMPLETED;
+    }
+
+    public void initTotalPrice(BigDecimal totalPrice){
+        this.totalPrice = totalPrice;
     }
 
     public void addCreatedAt(LocalDateTime createdAt) {
@@ -102,43 +111,6 @@ public class Bill {
 
     public void addCompletedAt(LocalDateTime completedAt){
         this.completedAt = completedAt;
-    }
-
-    /**
-     * Order별 계산 : 단일 메뉴 * count
-     * 
-     * @param price
-     * @return
-     */
-    private BigDecimal calculatePriceByOrder(Order order) {
-        Menu menu = order.getMenu();
-        Integer price = menu.getPrice();
-
-        if (menu.isDiscounted()) {
-            price = applyDiscount(price);
-        }
-        int count = order.getCount();
-        int total = price * count;
-        return BigDecimal.valueOf(total);
-    }
-
-    /**
-     * 테이블 별 합계 : 주문서의 메뉴들 
-     * 
-     * @param orders
-     * @return
-     */
-    public BigDecimal applyTotalPrice(List<Order> orders) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        for(Order order : orders){
-            BigDecimal orderPrice = calculatePriceByOrder(order);
-            totalPrice = totalPrice.add(orderPrice);
-        }
-        return totalPrice;
-    }
-
-    private int applyDiscount(Integer price) {
-        return (int) (price * 0.95);
     }
 
 }
