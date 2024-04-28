@@ -1,7 +1,7 @@
 package com.dish.perfect.bill.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dish.perfect.bill.domain.Bill;
+import com.dish.perfect.bill.domain.BillStatus;
 import com.dish.perfect.bill.domain.repository.BillRepository;
 import com.dish.perfect.bill.dto.request.BillRequest;
 import com.dish.perfect.global.error.GlobalException;
@@ -18,7 +19,6 @@ import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.domain.repository.OrderRepository;
-import com.dish.perfect.order.service.OrderPresentationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +33,12 @@ public class BillCoreService {
     private final OrderRepository orderRepository;
 
     public Bill createBill(BillRequest billRequest){
-        Bill bill = billRequest.toBill();
-        List<Order> orders = bill.getOrders();
-        for(Order o : orders){
-
-            bill.createOrderListWithTableNoFrom(o);
-        }
-        bill.applyTotalPrice(orders);
+        Bill bill = Bill.builder()
+                        .tableNo(billRequest.getTableNo())
+                        .orders(createFinalOrderMapAndcreateFinalList(billRequest.getTableNo()))
+                        .billStatus(BillStatus.NOTSERVED)
+                        .build();
+        bill.initTotalPrice(applyTotalPrice(bill.getOrders()));
         bill.addCreatedAt(LocalDateTime.now());
         billRepository.save(bill);
         log.info("created Bill:{}", bill.getId());
@@ -52,16 +51,15 @@ public class BillCoreService {
         bill.updateStatus();
         bill.addCompletedAt(LocalDateTime.now());
         billRepository.save(bill);
-        log.info("{}/{}", bill.getId(), bill.getOrderStatus());
+        log.info("{}/{}", bill.getId(), bill.getBillStatus());
     }
     
     /**
      * [F] 테이블 별 주문을 합산  
      * @return
      */
-    public List<Map<Menu, Integer>> createFinalOrderMapAndcreateFinalList(String tableNo){
+    public Map<Menu, Integer> createFinalOrderMapAndcreateFinalList(String tableNo){
         Map<Menu, Integer> orderMap = new ConcurrentHashMap<>();
-        List<Map<Menu, Integer>> finalOrderList = new ArrayList<>();
         List<Order> orders = orderRepository.findByCompletedOrderWithSameTableNo(tableNo, OrderStatus.COMPLETED);
         for(Order o : orders){
             if(o.getTableNo().equals(tableNo)){
@@ -69,8 +67,45 @@ public class BillCoreService {
                 orderMap.put(o.getMenu(), newQuantity);
             }
         }
-        finalOrderList.add(orderMap);
-        return finalOrderList;
+        return orderMap;
+    }
+
+    /**
+     * 테이블 별 합계 : 주문서의 메뉴들 
+     * 
+     * @param orders
+     * @return
+     */
+    public BigDecimal applyTotalPrice(Map<Menu, Integer> orders) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+            for(Map.Entry<Menu, Integer> menuWithQuantity : orders.entrySet()){
+                Menu menu = menuWithQuantity.getKey();
+                Integer quantity = menuWithQuantity.getValue();
+                
+                BigDecimal price = calculatePrice(menu);
+                BigDecimal totalPriceByMenu = price.multiply(BigDecimal.valueOf(quantity));
+                totalPrice = totalPrice.add(totalPriceByMenu);
+        }
+        return totalPrice;
+    }
+
+    /**
+     * 단일 메뉴의 isDiscounted flag에 따른 가격
+     * 
+     * @param price
+     * @return
+     */
+    private BigDecimal calculatePrice(Menu menu) {
+        Integer price = menu.getPrice();
+
+        if (menu.isDiscounted()) {
+            price = applyDiscount(price);
+        }
+        return BigDecimal.valueOf(price);
+    }
+
+    private int applyDiscount(Integer price) {
+        return (int) (price * 0.95);
     }
 
 }
