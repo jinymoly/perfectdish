@@ -18,22 +18,26 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByOrderStatus(@Param("orderStatus")OrderStatus status);
 
     /**
-      * 테이블 번호가 같고 메뉴이름이 같은 주문 카운트 
+      * 테이블 번호가 같고 status가 completed 주문 
       * db에서 집계 먼저
       * @param tableNo
       * @return
       */
-    @Query("SELECT COUNT(o.menu) FROM Order o WHERE o.tableNo = :tableNo GROUP BY oi.menu.menuName")
-    int countMenuNameWithSameTableNo(@Param("tableNo") String tableNo);
+    @Query("SELECT COUNT(o.menu) FROM Order o WHERE o.tableNo = :tableNo AND o.orderStatus = :status GROUP BY oi.menu.menuName")
+    int countMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
+
+    @Query("SELECT o.menu.menuName, SUM(o.count) FROM Order o WHERE o.tableNo = :tableNo AND o.orderStatus = :status GROUP BY o.menu.menuName")
+    List<Object[]> countMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
+
 
     /**
-     * 테이블 번호가 같고 메뉴이름이 같은 주문 카운트 
+     * 테이블 번호가 같고 status가 completed 주문
      * 리스트로 반환하여 service에서 카운트
      * @param tableNo
      * @param menuName
      * @return
      */
-    @Query("SELECT o FROM Order o JOIN o.menu m WHERE o.tableNo = :tableNo AND o.orderStatus = :status AND m.menuName = :menuName")
-    List<Order> findByCompletedOrderAndSameMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status, @Param("menuName") String menuName);
+    @Query("SELECT o FROM Order o JOIN o.menu m WHERE o.tableNo = :tableNo AND o.orderStatus = :status")
+    List<Order> findByCompletedOrderWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
 
 }
