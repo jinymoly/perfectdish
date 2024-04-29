@@ -26,8 +26,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT COUNT(o.menu) FROM Order o WHERE o.tableNo = :tableNo AND o.orderStatus = :status GROUP BY oi.menu.menuName")
     int countMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
 
-    @Query("SELECT o.menu.menuName, SUM(o.count) FROM Order o WHERE o.tableNo = :tableNo AND o.orderStatus = :status GROUP BY o.menu.menuName")
-    List<Object[]> countMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
+    // @Query("SELECT o.menu.menuName, SUM(o.count) FROM Order o WHERE o.tableNo = :tableNo AND o.orderStatus = :status GROUP BY o.menu.menuName")
+    // List<Object[]> countMenuNameWithSameTableNo(@Param("tableNo") String tableNo, @Param("status") OrderStatus status);
 
 
     /**
