@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -43,11 +44,8 @@ public class Order {
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_name")
-    private Menu menu;
-
-    private int count;
+    @Embedded
+    private OrderInfo orderInfo;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -56,39 +54,32 @@ public class Order {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-
     @Builder
-    public Order(String tableNo, Menu menu, Bill bill, int count, OrderStatus orderStatus, LocalDateTime createdAt) {
+    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus, LocalDateTime createdAt) {
         this.tableNo = tableNo;
-        this.menu = menu;
         this.bill = bill;
-        this.count = count;
+        this.orderInfo = orderInfo;
         this.orderStatus = orderStatus;
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString(){
-        return '\n' + "[id=" + id + "/tableNo."+ tableNo + "]" + '\n' +
-        "menu=" + menu + "/ quantity=" + count + '\n' +
-        "status=" + orderStatus + '\n' +
-        "createdAt=" + createdAt;
-    }
-    
-    public void initMenuFrom(Menu menu) {
-        this.menu = menu;
+    public static Order createOrderWithOrderInfo(String tableNo, Bill bill, OrderInfo orderInfo, Menu menu,Integer quantity) {
+        Order order = Order.builder()
+                .tableNo(tableNo)
+                .orderInfo(OrderInfo.of(menu, quantity))
+                .orderStatus(OrderStatus.CREATED)
+                .build();
+
+        bill.addOrder(order);
+        return order;
     }
 
-    /**
-     * 계산서에 주문을 추가
-     * 무한루프 방지 
-     * @param bill
-     */
-    public void addOrderTo(Bill bill){
-        this.bill = bill;
-        if(!bill.getOrders().contains(this)){ 
-            bill.getOrders().add(this);
-        }
+    @Override
+    public String toString() {
+        return '\n' + "[id=" + id + "/tableNo." + tableNo + "]" + '\n' +
+                "menu=" + orderInfo.getMenu().getMenuName() + "/ quantity=" + orderInfo.getQuantity() + '\n' +
+                "status=" + orderStatus + '\n' +
+                "createdAt=" + createdAt;
     }
 
     public void addCreatedAt(LocalDateTime createdAt) {
