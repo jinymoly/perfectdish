@@ -3,6 +3,7 @@ package com.dish.perfect.order.domain;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import com.dish.perfect.bill.domain.Bill;
 import com.dish.perfect.menu.domain.Menu;
@@ -54,22 +55,25 @@ public class Order {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedBy
+    private LocalDateTime modifiedAt;
+
     @Builder
-    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus, LocalDateTime createdAt) {
+    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.tableNo = tableNo;
         this.bill = bill;
         this.orderInfo = orderInfo;
         this.orderStatus = orderStatus;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
-    public static Order createOrderWithOrderInfo(String tableNo, Bill bill, OrderInfo orderInfo, Menu menu,Integer quantity) {
+    public static Order createOrderWithOrderInfo(String tableNo, Bill bill, Menu menu, Integer quantity) {
         Order order = Order.builder()
                 .tableNo(tableNo)
                 .orderInfo(OrderInfo.of(menu, quantity))
                 .orderStatus(OrderStatus.CREATED)
                 .build();
-
         bill.addOrder(order);
         return order;
     }
@@ -84,6 +88,10 @@ public class Order {
 
     public void addCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void addModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 
     public void markOrderStatusAsCompleted(OrderStatus orderStatus) {
