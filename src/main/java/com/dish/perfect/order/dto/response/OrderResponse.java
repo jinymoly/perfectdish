@@ -20,8 +20,8 @@ public class OrderResponse {
     public static OrderResponse fromOrderResponse(final Order order){
         return OrderResponse.builder()
                             .tableNo(order.getTableNo())
-                            .menuName(order.getMenu().getMenuName())
-                            .count(order.getCount())
+                            .menuName(order.getOrderInfo().getMenu().getMenuName())
+                            .count(order.getOrderInfo().getQuantity())
                             .orderStatus(order.getOrderStatus())
                             .build();
     }
