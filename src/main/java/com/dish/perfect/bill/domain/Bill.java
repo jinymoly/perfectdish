@@ -4,15 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.dish.perfect.global.error.GlobalException;
-import com.dish.perfect.global.error.exception.ErrorCode;
-import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 
 import jakarta.persistence.CascadeType;
@@ -41,10 +36,9 @@ public class Bill {
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    private Map<Menu, Integer> orders = new ConcurrentHashMap<>();
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.PERSIST)
+    private List<Order> orders = new ArrayList<>();
     
-    //private List<Order> orders = new ArrayList<>();
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
@@ -57,7 +51,7 @@ public class Bill {
     private LocalDateTime completedAt;
 
     @Builder
-    public Bill(String tableNo, Map<Menu, Integer> orders,
+    public Bill(String tableNo, List<Order> orders,
             BigDecimal totalPrice, BillStatus billStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
         this.tableNo = tableNo;
         this.orders = orders;
@@ -70,10 +64,9 @@ public class Bill {
     @Override
     public String toString() {
         StringBuffer menuBuffer = new StringBuffer();
-        for(Map.Entry<Menu, Integer> menuInfo : orders.entrySet()){
-            String menuName = menuInfo.getKey().getMenuName();
-            Integer count = menuInfo.getValue();
-                menuBuffer.append(menuName +"/ "+ count).append('\n');
+        for(Order order : orders){
+            String menuName = order.getOrderInfo().getMenu().getMenuName();
+                menuBuffer.append(menuName).append('\n');
         }
         return '\n' + "[tableNo." + tableNo + "]" + '\n' +
                 menuBuffer.toString() +
@@ -97,8 +90,42 @@ public class Bill {
     //     }
     // }
 
+    public static Bill toBill(String tableNo, List<Order> orders, BillStatus status){
+        return Bill.builder()
+            .tableNo(tableNo)
+            .orders(orders)
+            .billStatus(status)
+            .build();
+    }
+
+    public void initBill(){
+        
+    }
+
     public void updateStatus() {
         this.billStatus = BillStatus.COMPLETED;
+    }
+
+    /**
+     * 테이블 번호가 같으면 bill의 orders에 추가 됨
+     * @param order
+     */
+    public void addOrderToList(Order order){
+        if(isSameTableNo(order.getTableNo())){
+            orders.add(order);
+            if(order.getBill() != this){
+                order.addBill(this);
+            }
+        }
+    }
+
+    /**
+     * bill의 tableNo와 input가 일치
+     * @param inputTableNo
+     * @return
+     */
+    boolean isSameTableNo(String inputTableNo){
+        return tableNo.equals(inputTableNo);
     }
 
     public void initTotalPrice(BigDecimal totalPrice){

@@ -3,8 +3,6 @@ package com.dish.perfect.bill.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +15,7 @@ import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
+import com.dish.perfect.order.domain.OrderInfo;
 import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.domain.repository.OrderRepository;
 
@@ -28,16 +27,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class BillCoreService {
-    
+
     private final BillRepository billRepository;
     private final OrderRepository orderRepository;
 
-    public Bill createBill(BillRequest billRequest){
-        Bill bill = Bill.builder()
-                        .tableNo(billRequest.getTableNo())
-                        .orders(createFinalOrderMapAndcreateFinalList(billRequest.getTableNo()))
-                        .billStatus(BillStatus.NOTSERVED)
-                        .build();
+    // TO-DO
+    // tableNo가 같아야 orders에 add 할 것
+    // order의 status가 COMPLETED일 때만 Bill생성
+    // validation
+    // 1. orderStatus 가 completed
+    // 2. order의 tableNo 일치
+    public Bill createBill(BillRequest billRequest) {
+        Bill bill = Bill.toBill(billRequest.getTableNo(), billRequest.getOrders(), BillStatus.NOTSERVED);
+        areAllOrderStatusCompleted(bill.getOrders());
         bill.initTotalPrice(applyTotalPrice(bill.getOrders()));
         bill.addCreatedAt(LocalDateTime.now());
         billRepository.save(bill);
@@ -45,46 +47,50 @@ public class BillCoreService {
         return bill;
     }
 
-    public void completeAllOrdersInBill(Long id){
+    /**
+     * createOrder시 사용할 Bill
+     * @param tableNo
+     * @return
+     */
+    public Bill createBillByTableNo(String tableNo){
+        Bill findByTableNo = billRepository.findByTableNo(tableNo);
+        List<Order> orderListByTableNo = orderRepository.findBytableNo(tableNo);
+        if(findByTableNo == null){
+            Bill newBill = Bill.builder()
+                                .tableNo(tableNo)
+                                .orders(orderListByTableNo)
+                                .build();
+            return billRepository.save(newBill);
+        } else {
+            return findByTableNo;
+        }
+    }
+
+    public void completeAllOrdersInBill(Long id) {
         Bill bill = billRepository.findById(id)
-                                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
         bill.updateStatus();
         bill.addCompletedAt(LocalDateTime.now());
         billRepository.save(bill);
         log.info("{}/{}", bill.getId(), bill.getBillStatus());
     }
-    
-    /**
-     * [F] 테이블 별 주문을 합산  
-     * @return
-     */
-    public Map<Menu, Integer> createFinalOrderMapAndcreateFinalList(String tableNo){
-        Map<Menu, Integer> orderMap = new ConcurrentHashMap<>();
-        List<Order> orders = orderRepository.findByCompletedOrderWithSameTableNo(tableNo, OrderStatus.COMPLETED);
-        for(Order o : orders){
-            if(o.getTableNo().equals(tableNo)){
-                int newQuantity = orderMap.getOrDefault(o.getMenu(), 0) + o.getCount();
-                orderMap.put(o.getMenu(), newQuantity);
-            }
-        }
-        return orderMap;
-    }
 
     /**
-     * 테이블 별 합계 : 주문서의 메뉴들 
+     * 테이블 별 합계 : 주문서의 메뉴들
      * 
      * @param orders
      * @return
      */
-    public BigDecimal applyTotalPrice(Map<Menu, Integer> orders) {
+    public BigDecimal applyTotalPrice(List<Order> orders) {
         BigDecimal totalPrice = BigDecimal.ZERO;
-            for(Map.Entry<Menu, Integer> menuWithQuantity : orders.entrySet()){
-                Menu menu = menuWithQuantity.getKey();
-                Integer quantity = menuWithQuantity.getValue();
-                
-                BigDecimal price = calculatePrice(menu);
-                BigDecimal totalPriceByMenu = price.multiply(BigDecimal.valueOf(quantity));
-                totalPrice = totalPrice.add(totalPriceByMenu);
+        for (Order o : orders) {
+            OrderInfo orderInfo = o.getOrderInfo();
+            Menu menu = orderInfo.getMenu();
+            Integer quantity = orderInfo.getQuantity();
+
+            BigDecimal price = calculatePrice(menu);
+            BigDecimal totalPriceByMenu = price.multiply(BigDecimal.valueOf(quantity));
+            totalPrice = totalPrice.add(totalPriceByMenu);
         }
         return totalPrice;
     }
@@ -106,6 +112,20 @@ public class BillCoreService {
 
     private int applyDiscount(Integer price) {
         return (int) (price * 0.95);
+    }
+
+    /**
+     * orders의 모든 주문이 completed되었는지
+     * 
+     * @param orders
+     * @throws GlobalException
+     */
+    private void areAllOrderStatusCompleted(List<Order> orders) throws GlobalException {
+        for (Order o : orders) {
+            if (!o.getOrderStatus().equals(OrderStatus.COMPLETED)) {
+                throw new GlobalException(ErrorCode.ORDER_NOT_COMPLETED, "모든 음식이 서빙되지 않았습니다.");
+            }
+        }
     }
 
 }

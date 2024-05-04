@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dish.perfect.bill.domain.Bill;
 import com.dish.perfect.bill.domain.repository.BillRepository;
+import com.dish.perfect.bill.service.BillCoreService;
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.menu.domain.Menu;
@@ -31,12 +32,15 @@ public class OrderCoreService {
     private final MenuPresentationService menuService;
     private final MenuRepository menuRepository;
     private final BillRepository billRepository;
+    private final BillCoreService billCoreService;
 
     public Order createOrder(OrderRequest orderRequest) {
         if (menuService.menuNameExists(orderRequest.getMenuName())) {
             Menu menu = menuRepository.findByMenuName(orderRequest.getMenuName());
-            Bill bill = billRepository.findByTableNo(orderRequest.getTableNo());
-            Order newOrder = Order.createOrderWithOrderInfo(orderRequest.getTableNo(), bill, menu, orderRequest.getQuantity());
+            Order newOrder = Order.createOrderWithOrderInfo(orderRequest.getTableNo(), menu, orderRequest.getQuantity());
+            Bill bill = billCoreService.createBillByTableNo(orderRequest.getTableNo());
+            //bill.addOrderToList(newOrder);
+            newOrder.addBill(bill);
             newOrder.addCreatedAt(LocalDateTime.now());
             orderRepository.save(newOrder);
             log.info("{}/주문 완료 🥗", newOrder.getOrderInfo().getMenu().getMenuName());
@@ -58,8 +62,6 @@ public class OrderCoreService {
             if (order.getOrderInfo().getMenu().getMenuName().equals(orderRequest.getMenuName())) {
                 incrementMenuQuantity(order, orderRequest.getMenuName(), orderRequest.getQuantity());
                 order.addModifiedAt(LocalDateTime.now());
-            } else {
-                createOrder(orderRequest);
             }
         }
     }

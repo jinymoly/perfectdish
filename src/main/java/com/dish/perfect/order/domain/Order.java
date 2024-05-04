@@ -68,13 +68,12 @@ public class Order {
         this.modifiedAt = modifiedAt;
     }
 
-    public static Order createOrderWithOrderInfo(String tableNo, Bill bill, Menu menu, Integer quantity) {
+    public static Order createOrderWithOrderInfo(String tableNo, Menu menu, Integer quantity) {
         Order order = Order.builder()
                 .tableNo(tableNo)
                 .orderInfo(OrderInfo.of(menu, quantity))
                 .orderStatus(OrderStatus.CREATED)
                 .build();
-        bill.addOrder(order);
         return order;
     }
 
@@ -97,4 +96,10 @@ public class Order {
     public void markOrderStatusAsCompleted(OrderStatus orderStatus) {
         this.orderStatus = OrderStatus.COMPLETED;
     }
+
+    public void addBill(Bill newBill) {
+        this.bill = newBill;
+    }
+    
 }
+    
