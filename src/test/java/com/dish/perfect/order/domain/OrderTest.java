@@ -23,8 +23,7 @@ public class OrderTest {
         Order newOrder = Order.builder()
                 .tableNo("2")
                 .orderStatus(OrderStatus.CREATED)
-                .menu(menuFixtureForOrder)
-                .count(3)
+                .orderInfo(OrderInfo.of(menuFixtureForOrder, 3))
                 .createdAt(LocalDateTime.now())
                 .build();
 
