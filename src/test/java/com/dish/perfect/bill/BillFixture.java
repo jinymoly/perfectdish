@@ -25,18 +25,23 @@ public class BillFixture {
                     .orders(orderFixture.ordersForBillT7())
                     .build();
     
-    public BillRequest orderRequest1 = BillRequest.builder()
+    public BillRequest orderRequestTableNo2 = BillRequest.builder()
                                                     .tableNo("2")
                                                     .orders(orderFixture.ordersForBillT2())
                                                     .billStatus(BillStatus.NOTSERVED)
                                                     .build();
-
-    public BillRequest orderRequest2 = BillRequest.builder()
+    
+    public BillRequest orderRequestTableNo2A = BillRequest.builder()
+                                                    .tableNo("2")
+                                                    .orders(orderFixture.ordersForBillT2A())
+                                                    .billStatus(BillStatus.NOTSERVED)
+                                                    .build();
+    public BillRequest orderRequestTableNo3 = BillRequest.builder()
                                                     .tableNo("3")
                                                     .orders(orderFixture.ordersForBillT3())
                                                     .billStatus(BillStatus.NOTSERVED)
                                                     .build();
-    public BillRequest orderRequest3 = BillRequest.builder()
+    public BillRequest orderRequestTableNo7 = BillRequest.builder()
                                                     .tableNo("7")
                                                     .orders(orderFixture.ordersForBillT7())
                                                     .billStatus(BillStatus.NOTSERVED)
