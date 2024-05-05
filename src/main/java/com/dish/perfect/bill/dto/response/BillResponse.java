@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.dish.perfect.bill.domain.Bill;
 import com.dish.perfect.bill.domain.BillStatus;
+import com.dish.perfect.menu.domain.Menu;
 import com.dish.perfect.order.domain.Order;
 
 import lombok.Builder;
@@ -22,23 +23,24 @@ public class BillResponse {
     private final String tableNo;
     private final List<Map<String, Integer>> orders;
     private final BigDecimal totalPrice;
-    private final BillStatus orderStatus;
+    private final BillStatus billStatus;
 
-    public static BillResponse fromBillResponse(final Bill order){
+    public static BillResponse fromBillResponse(final Bill bill){
         List<Map<String, Integer>> ordersWithCount = new ArrayList<>();
         
-        for(Order menu : order.getOrders()){
+        for(Order order : bill.getOrders()){
         Map<String, Integer> ordersInfo = new HashMap<>();
-             String menuName = menu.getMenu().getMenuName();
-             int count = menu.getCount();
+             Menu menu = order.getOrderInfo().getMenu();
+             String menuName = menu.getMenuName();
+             int count = order.getOrderInfo().getQuantity();
              ordersInfo.put(menuName, count);
              ordersWithCount.add(ordersInfo);
         }
         return BillResponse.builder()
-                            .tableNo(order.getTableNo())
+                            .tableNo(bill.getTableNo())
                             .orders(ordersWithCount)
-                            .totalPrice(order.getTotalPrice())
-                            .orderStatus(order.getOrderStatus())
+                            .totalPrice(bill.getTotalPrice())
+                            .billStatus(bill.getBillStatus())
                             .build();
     }
 }

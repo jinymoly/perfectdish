@@ -75,21 +75,6 @@ public class Bill {
                 "completedAt=" + completedAt;
     }
 
-    /**
-     * tableNo가 같으면 주문서에 담는다.
-     * @param o 
-     */
-    // public void createOrderListWithTableNoFrom(Order o) {
-    //     if(o.getTableNo().equals(tableNo)){
-    //         this.orders.add(o);
-    //         if(o.getBill() != this){
-    //             o.addOrderTo(this);
-    //         }
-    //     } else {
-    //         throw new GlobalException(ErrorCode.FAIL_CREATE_BILL, "테이블 번호 오류로 청구서를 생성할 수 없습니다.");
-    //     }
-    // }
-
     public static Bill toBill(String tableNo, List<Order> orders, BillStatus status){
         return Bill.builder()
             .tableNo(tableNo)
@@ -98,8 +83,8 @@ public class Bill {
             .build();
     }
 
-    public void initBill(){
-        
+    public void initStatus(){
+        this.billStatus = BillStatus.NOTSERVED;
     }
 
     public void updateStatus() {

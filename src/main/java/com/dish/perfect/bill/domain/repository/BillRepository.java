@@ -11,9 +11,9 @@ import com.dish.perfect.bill.domain.BillStatus;
 
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
-    List<Bill> findByTableNo(String tableNo);
+    Bill findByTableNo(String tableNo);
 
-    @Query("select o from Order o where o.orderStatus = :orderStatus")
-    List<Bill> findByOrderStatus(@Param("orderStatus") BillStatus orderStatus);
+    @Query("select b from Bill b where b.billStatus = :billStatus")
+    List<Bill> findByBillStatus(@Param("billStatus") BillStatus billStatus);
 
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dish.perfect.bill.domain.Bill;
-import com.dish.perfect.bill.domain.BillStatus;
 import com.dish.perfect.bill.domain.repository.BillRepository;
 import com.dish.perfect.bill.dto.request.BillRequest;
 import com.dish.perfect.global.error.GlobalException;
@@ -38,13 +37,14 @@ public class BillCoreService {
     // 1. orderStatus 가 completed
     // 2. order의 tableNo 일치
     public Bill createBill(BillRequest billRequest) {
-        Bill bill = Bill.toBill(billRequest.getTableNo(), billRequest.getOrders(), BillStatus.NOTSERVED);
-        areAllOrderStatusCompleted(bill.getOrders());
-        bill.initTotalPrice(applyTotalPrice(bill.getOrders()));
-        bill.addCreatedAt(LocalDateTime.now());
-        billRepository.save(bill);
-        log.info("created Bill:{}", bill.getId());
-        return bill;
+        Bill findByTableNo = billRepository.findByTableNo(billRequest.getTableNo());
+        findByTableNo.initStatus();
+        //areAllOrderStatusCompleted(findByTableNo.getOrders());
+        findByTableNo.initTotalPrice(applyTotalPrice(findByTableNo.getOrders()));
+        findByTableNo.addCreatedAt(LocalDateTime.now());
+        billRepository.save(findByTableNo);
+        log.info("created Bill:{}", findByTableNo.getId());
+        return findByTableNo;
     }
 
     /**
@@ -66,13 +66,14 @@ public class BillCoreService {
         }
     }
 
-    public void completeAllOrdersInBill(Long id) {
+    public Bill completeAllOrdersInBill(Long id) {
         Bill bill = billRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
         bill.updateStatus();
         bill.addCompletedAt(LocalDateTime.now());
-        billRepository.save(bill);
-        log.info("{}/{}", bill.getId(), bill.getBillStatus());
+        Bill updatedBill = billRepository.save(bill);
+        log.info("{}/{}", updatedBill.getId(), updatedBill.getBillStatus());
+        return updatedBill;
     }
 
     /**
