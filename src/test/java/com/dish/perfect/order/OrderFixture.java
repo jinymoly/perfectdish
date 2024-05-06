@@ -179,6 +179,15 @@ public class OrderFixture {
         return orders;
     }
 
+    public List<Order> ordersForBillT2A(){
+        List<Order> orders = new ArrayList<>();
+        orders.add(orderForBillA);
+        orders.add(orderForBillE);
+        orders.add(orderForBillE);
+        orders.add(orderForBillE);
+        return orders;
+    }
+
     public List<Order> ordersForBillT3(){
         List<Order> orders = new ArrayList<>();
         orders.add(orderForBillB);
