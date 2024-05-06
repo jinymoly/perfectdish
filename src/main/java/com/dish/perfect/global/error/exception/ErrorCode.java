@@ -30,12 +30,14 @@ public enum ErrorCode {
     NOT_FOUND_ORDER("30001", "해당 주문이 존재하지 않습니다."),
     FAIL_CREATE_ORDER("30001", "주문 생성 실패하였습니다."),
     ALREADY_COMPLETED_ORDER("30003", "이미 모든 주문이 처리되었습니다."),
+    ORDER_NOT_COMPLETED("30004", "모든 주문이 처리되지 않았습니다."),
     
     // Bill [40000]
     NOT_FOUND_BILL("40001", "해당 청구서가 존재하지 않습니다."), 
     NOT_FOUND_BILL_BY_TABLE("40002", "해당 테이블의 청구서가 존재하지 않습니다."), 
     FAIL_CREATE_BILL("40003", "청구서 생성 실패하였습니다."),
-    ALREADY_COMPLETED_BILL("40004", "이미 모든 음식이 제공되었습니다."),
+    ALREADY_COMPLETED_BILL("40004", "이미 모든 음식이 제공되었습니다."), 
+    
 
     ;
 
