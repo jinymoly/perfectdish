@@ -38,7 +38,7 @@ public class OrderCoreService {
         if (menuService.menuNameExists(orderRequest.getMenuName())) {
             Menu menu = menuRepository.findByMenuName(orderRequest.getMenuName());
             Order newOrder = Order.createOrderWithOrderInfo(orderRequest.getTableNo(), menu, orderRequest.getQuantity());
-            Bill bill = billCoreService.createBillByTableNo(orderRequest.getTableNo());
+            Bill bill = billCoreService.mergeOrdersAndCreateBillByTableNo(orderRequest.getTableNo());
             //bill.addOrderToList(newOrder);
             newOrder.addBill(bill);
             newOrder.addCreatedAt(LocalDateTime.now());

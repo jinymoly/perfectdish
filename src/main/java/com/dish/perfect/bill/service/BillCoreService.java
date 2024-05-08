@@ -52,7 +52,7 @@ public class BillCoreService {
      * @param tableNo
      * @return
      */
-    public Bill createBillByTableNo(String tableNo){
+    public Bill mergeOrdersAndCreateBillByTableNo(String tableNo){
         Bill findByTableNo = billRepository.findByTableNo(tableNo);
         List<Order> orderListByTableNo = orderRepository.findBytableNo(tableNo);
         if(findByTableNo == null){
