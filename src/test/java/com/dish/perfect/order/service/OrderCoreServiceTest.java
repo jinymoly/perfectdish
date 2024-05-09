@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.dish.perfect.bill.BillFixture;
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.menu.MenuFixture;
 import com.dish.perfect.menu.domain.repository.MenuRepository;
@@ -23,7 +23,10 @@ import com.dish.perfect.order.domain.OrderStatus;
 import com.dish.perfect.order.domain.repository.OrderRepository;
 import com.dish.perfect.order.dto.response.OrderResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
+@Slf4j
 public class OrderCoreServiceTest {
 
     @Autowired
@@ -33,14 +36,18 @@ public class OrderCoreServiceTest {
     private OrderRepository orderRepository;
     @Autowired
     private OrderCoreService orderCoreService;
+
     @Autowired
     private OrderPresentationService orderPresentationService;;
 
     private OrderFixture fixtureO = new OrderFixture();
     private MenuFixture fixtureM = new MenuFixture();
+    private BillFixture fixtureB = new BillFixture();
 
     @BeforeEach
     void createMenu() {
+        orderRepository.deleteAllInBatch();
+
         menuRepository.save(fixtureM.fixRequestA().toEntity());
         menuRepository.save(fixtureM.fixRequestB().toEntity());
         menuRepository.save(fixtureM.fixRequestC().toEntity());
@@ -52,9 +59,17 @@ public class OrderCoreServiceTest {
         menuRepository.save(fixtureM.fixRequestI().toEntity());
     }
 
-    @AfterEach
-    void clear() {
-        orderRepository.deleteAllInBatch();
+    @Test
+    @DisplayName("주문 생성시 status.CREATED")
+    void createOrder() {
+        Order newOrderA = orderCoreService.createOrder(fixtureO.orderRequestA);
+        Order newOrderI = orderCoreService.createOrder(fixtureO.orderRequestI);
+        Order newOrderE = orderCoreService.createOrder(fixtureO.orderRequestE);
+
+        assertTrue(newOrderA.getOrderStatus().equals(OrderStatus.CREATED));
+        assertTrue(newOrderI.getOrderStatus().equals(OrderStatus.CREATED));
+        assertEquals(newOrderA.getOrderStatus(), newOrderE.getOrderStatus());
+
     }
 
     @Test
@@ -93,6 +108,29 @@ public class OrderCoreServiceTest {
         OrderResponse result = orderPresentationService.getOrderInfo(orderF.getId());
 
         assertTrue(result.getOrderStatus().equals(OrderStatus.COMPLETED));
+    }
+
+    @Test
+    @DisplayName("추가 주문시 수량 증가")
+    void incrementMenuQuantity(){
+        orderCoreService.createOrder(fixtureO.orderRequestI);
+        orderCoreService.createOrder(fixtureO.orderRequestJ);
+        List<OrderResponse> ordersByTableNo1Before = orderPresentationService.getOrdersByTableNo("1");
+        int beforeCount = 0;
+        for(OrderResponse orderResponse : ordersByTableNo1Before){
+            log.info("🐠Before🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getQuantity());
+            beforeCount += orderResponse.getQuantity();
+        }
+        assertEquals(beforeCount, 4);
+        orderCoreService.addOrder(fixtureO.orderRequestJ);
+        List<OrderResponse> ordersByTableNo1After = orderPresentationService.getOrdersByTableNo("1");
+        int afterCount = 0;
+        for(OrderResponse orderResponse : ordersByTableNo1After){
+            log.info("🐠After🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getQuantity());
+            afterCount += orderResponse.getQuantity();
+        }
+        assertEquals(afterCount, 7);
+
     }
 
     @Test

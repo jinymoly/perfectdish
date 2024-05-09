@@ -3,6 +3,7 @@ package com.dish.perfect.order.domain;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import com.dish.perfect.bill.domain.Bill;
 import com.dish.perfect.menu.domain.Menu;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -43,11 +45,8 @@ public class Order {
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_name")
-    private Menu menu;
-
-    private int count;
+    @Embedded
+    private OrderInfo orderInfo;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -56,41 +55,51 @@ public class Order {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedBy
+    private LocalDateTime modifiedAt;
+
     @Builder
-    public Order(Long id, String tableNo, Menu menu, Bill bill, int count, OrderStatus orderStatus, LocalDateTime createdAt) {
-        this.id = id;
+    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.tableNo = tableNo;
-        this.menu = menu;
         this.bill = bill;
-        this.count = count;
+        this.orderInfo = orderInfo;
         this.orderStatus = orderStatus;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
+    public static Order createOrderWithOrderInfo(String tableNo, Menu menu, Integer quantity) {
+        Order order = Order.builder()
+                .tableNo(tableNo)
+                .orderInfo(OrderInfo.of(menu, quantity))
+                .orderStatus(OrderStatus.CREATED)
+                .build();
+        return order;
     }
 
     @Override
-    public String toString(){
-        return '\n' + "[id=" + id + "/tableNo."+ tableNo + "]" + '\n' +
-        "menu=" + menu + "/ quantity=" + count + '\n' +
-        "status=" + orderStatus + '\n' +
-        "createdAt=" + createdAt;
-    }
-    
-    public void initMenuFrom(Menu menu) {
-        this.menu = menu;
-    }
-
-    public void initOrder(Bill bill){
-        this.bill = bill;
-        if(!bill.getOrders().contains(this)){ //무한루프 필터링
-            bill.getOrders().add(this);
-        }
+    public String toString() {
+        return '\n' + "[id=" + id + "/tableNo." + tableNo + "]" + '\n' +
+                "menu=" + orderInfo.getMenu().getMenuName() + "/ quantity=" + orderInfo.getQuantity() + '\n' +
+                "status=" + orderStatus + '\n' +
+                "createdAt=" + createdAt;
     }
 
     public void addCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
+    public void addModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
     public void markOrderStatusAsCompleted(OrderStatus orderStatus) {
         this.orderStatus = OrderStatus.COMPLETED;
     }
+
+    public void addBill(Bill newBill) {
+        this.bill = newBill;
+    }
+    
 }
+    

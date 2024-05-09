@@ -16,16 +16,14 @@ public class OrderTest {
     private MenuFixture menu = new MenuFixture();
     
     @Test
-    @DisplayName("order 생성")
+    @DisplayName("order 생성 toString 확인")
     void createOrderMap() {
         Menu menuFixtureForOrder = menu.fixRequestA().toEntity();
 
         Order newOrder = Order.builder()
-                .id(1L)
                 .tableNo("2")
                 .orderStatus(OrderStatus.CREATED)
-                .menu(menuFixtureForOrder)
-                .count(3)
+                .orderInfo(OrderInfo.of(menuFixtureForOrder, 3))
                 .createdAt(LocalDateTime.now())
                 .build();
 

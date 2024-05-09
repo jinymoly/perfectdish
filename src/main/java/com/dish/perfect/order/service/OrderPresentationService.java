@@ -46,6 +46,18 @@ public class OrderPresentationService {
     }
 
     /**
+     * 테이블 별 주문 아이템 to Bill
+     * 
+     * @param order
+     * @return
+     */
+    public List<Order> getOrdersToBillByTableNo(String tableNo) {
+        return orderRepository.findBytableNo(tableNo)
+                .stream()
+                .toList();
+    }
+
+    /**
      * 테이블 별 주문 내역 중 서빙 되지 않은 주문 아이템
      * 
      * @param order

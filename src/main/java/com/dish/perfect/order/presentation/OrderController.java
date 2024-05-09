@@ -69,7 +69,7 @@ public class OrderController {
     public ResponseEntity<Void> switchOrderStatus(@PathVariable("id") Long id){
         Order order = orderPresentationService.findOrderById(id);
         Order updated = orderCoreService.updateOrderStatus(order.getId());
-        log.info(":{} / {}", updated.getMenu().getMenuName(), updated.getOrderStatus());
+        log.info(":{} / {}", updated.getOrderInfo().getMenu().getMenuName(), updated.getOrderStatus());
         return ResponseEntity.ok().build();
     }
 }

@@ -3,7 +3,6 @@ package com.dish.perfect.menu.dto.request;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dish.perfect.imageManager.domain.Image;
-import com.dish.perfect.imageManager.domain.ImageFile;
 import com.dish.perfect.menu.domain.Availability;
 import com.dish.perfect.menu.domain.CourseType;
 import com.dish.perfect.menu.domain.Menu;

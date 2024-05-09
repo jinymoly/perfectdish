@@ -40,6 +40,8 @@ public class MenuPresentationServiceTest {
 
     @BeforeEach
     void setData() throws IOException{
+        menuRepository.deleteAllInBatch();
+
         MenuRequest menuE = menuFixture.fixRequestE();
         MenuRequest menuB = menuFixture.fixRequestB();
         MenuRequest menuF = menuFixture.fixRequestF();
@@ -107,9 +109,7 @@ public class MenuPresentationServiceTest {
         for(MenuCommonResponse menu : epListB){
             log.info("MENU_LIST_B={}/{}", menu.getMenuName(), menu.getAvailability());
         }
-        log.info("availabilityFirst={}ms / courseTypeFirst={}ms", availabilityFirst, courseTypeFirst);
-        
-        //assertThat(availabilityFirst > courseTypeFirst).isTrue();
+        log.info("🤡 availabilityFirst={}ms / courseTypeFirst={}ms", availabilityFirst, courseTypeFirst);
 
     }
 }

@@ -95,4 +95,5 @@ public class Member {
     public boolean isActive(){
         return this.getStatus().equals(MemberStatus.ACTIVE);
     }
+
 }

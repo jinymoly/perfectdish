@@ -92,4 +92,14 @@ public class MenuPresentationService {
         Menu menu = menuRepository.findByMenuName(menuName);
         return menu != null;
     }
+
+    /**
+     * 메뉴 이름으로 메뉴 정보 불러오기
+     * @param menuName
+     * @return
+     */
+    public Menu getMenuFrom(String menuName){
+        Menu menu = menuRepository.findByMenuName(menuName);
+        return menu;
+    }
 }
