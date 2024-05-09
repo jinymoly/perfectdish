@@ -118,16 +118,16 @@ public class OrderCoreServiceTest {
         List<OrderResponse> ordersByTableNo1Before = orderPresentationService.getOrdersByTableNo("1");
         int beforeCount = 0;
         for(OrderResponse orderResponse : ordersByTableNo1Before){
-            log.info("🐠Before🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getCount());
-            beforeCount += orderResponse.getCount();
+            log.info("🐠Before🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getQuantity());
+            beforeCount += orderResponse.getQuantity();
         }
         assertEquals(beforeCount, 4);
         orderCoreService.addOrder(fixtureO.orderRequestJ);
         List<OrderResponse> ordersByTableNo1After = orderPresentationService.getOrdersByTableNo("1");
         int afterCount = 0;
         for(OrderResponse orderResponse : ordersByTableNo1After){
-            log.info("🐠After🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getCount());
-            afterCount += orderResponse.getCount();
+            log.info("🐠After🐠 {}/{}", orderResponse.getMenuName(), orderResponse.getQuantity());
+            afterCount += orderResponse.getQuantity();
         }
         assertEquals(afterCount, 7);
 

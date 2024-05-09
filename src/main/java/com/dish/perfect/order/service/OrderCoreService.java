@@ -65,7 +65,7 @@ public class OrderCoreService {
             }
         }
     }
-
+    
     /**
      * orderstatus 완료 
      * @param id
@@ -87,7 +87,7 @@ public class OrderCoreService {
      * @param newQuantity
      * @return
      */
-    public void incrementMenuQuantity(Order order, String menuName, int newQuantity) {
+    private void incrementMenuQuantity(Order order, String menuName, int newQuantity) {
         Integer quantity = order.getOrderInfo().getQuantity();
         quantity += newQuantity;
         order.getOrderInfo().updateOrderInfoQuantity(quantity);
