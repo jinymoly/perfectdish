@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,11 +41,27 @@ public class BillController {
         return ResponseEntity.ok(newOrder);
     }
 
+    /**
+     * 해당 테이블 최종 영수증 
+     * @param tableNo
+     * @return
+     */
     @GetMapping("/{tableNo}")
     public ResponseEntity<BillResponse> getBillByTableNo(@PathVariable("tableNo") String tableNo) {
         BillResponse bill = billPresentationService.findBillByTableNo(tableNo);
         return ResponseEntity.ok(bill);
     }
-    
-    
+
+    /**
+     * 해당 테이블 상태 -> 서빙 완료
+     * @param id
+     * @return
+     */
+    @PatchMapping("/{id}/editStatus")
+    public ResponseEntity<Void> completeBillStatus(@PathVariable("id") Long id){
+        Bill bill = billPresentationService.findBillById(id);
+        Bill completeAllOrdersInBill = billCoreService.completeAllOrdersInBill(bill.getId());
+        log.info("Bill {} status updated to: {}", completeAllOrdersInBill.getTableNo(), completeAllOrdersInBill.getBillStatus());
+        return ResponseEntity.ok().build();
+    }
 }

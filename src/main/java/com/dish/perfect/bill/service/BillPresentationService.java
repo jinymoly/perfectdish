@@ -21,6 +21,10 @@ public class BillPresentationService {
 
     private final BillRepository billRepository;
 
+    public Bill findBillById(final Long id){
+        return billRepository.findById(id).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 Bill이 존재하지 않습니다."));
+    }
+    
     public BillResponse getBillInfo(final Long id){
         Bill bill = billRepository.findById(id).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
         return BillResponse.fromBillResponse(bill);

@@ -49,6 +49,7 @@ public class BillCoreService {
 
     /**
      * createOrder시 사용할 Bill
+     * 주문서 병합
      * @param tableNo
      * @return
      */
