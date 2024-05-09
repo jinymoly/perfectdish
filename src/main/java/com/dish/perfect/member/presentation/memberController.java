@@ -64,7 +64,7 @@ public class MemberController {
         return ResponseEntity.ok(member);
     }
 
-    @GetMapping("/findByNumber")
+    @GetMapping("/findMemberInfoByNumber")
     public ResponseEntity<MemberDetailResponse> findMemberByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber) {
         MemberDetailResponse findByphoneNumber = memberPresentationService.findByPhoneNumber(phoneNumber);
         return ResponseEntity.ok(findByphoneNumber);

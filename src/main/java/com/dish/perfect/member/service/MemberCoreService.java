@@ -25,7 +25,7 @@ public class MemberCoreService {
     private final MemberRepository memberRepository;
 
     public Member join(MemberRequest memberRequest){
-        Member member = memberRequest.toEntity();
+        Member member = memberRequest.toMemberEntity();
         validPhoneNumberDuplicatedByMember(member);
         member.addCreatedAt(LocalDateTime.now());
         return memberRepository.save(member);

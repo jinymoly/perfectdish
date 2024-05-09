@@ -30,7 +30,7 @@ public class MemberRequest {
         this.status = MemberStatus.ACTIVE;
     }
 
-    public Member toEntity(){
+    public Member toMemberEntity(){
         return Member.builder()
                     .phoneNumber(phoneNumber)
                     .userName(userName)
