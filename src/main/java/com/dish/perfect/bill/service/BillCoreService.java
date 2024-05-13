@@ -70,6 +70,11 @@ public class BillCoreService {
     public Bill completeAllOrdersInBill(Long id) {
         Bill bill = billRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_BILL, "해당 청구서가 존재하지 않습니다."));
+        for(Order order : bill.getOrders()){
+            if(!order.getOrderStatus().equals(OrderStatus.COMPLETED)){
+                throw new GlobalException(ErrorCode.ORDER_NOT_COMPLETED, "아직 서빙되지 않은 메뉴가 있습니다.");
+            }
+        }
         bill.updateStatus();
         bill.addCompletedAt(LocalDateTime.now());
         Bill updatedBill = billRepository.save(bill);

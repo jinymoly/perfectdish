@@ -1,6 +1,7 @@
 package com.dish.perfect.bill.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.dish.perfect.bill.BillFixture;
 import com.dish.perfect.bill.domain.Bill;
 import com.dish.perfect.bill.domain.BillStatus;
+import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.menu.MenuFixture;
 import com.dish.perfect.menu.domain.repository.MenuRepository;
 import com.dish.perfect.order.OrderFixture;
@@ -61,7 +63,7 @@ public class BillCoreServiceTest {
     }
 
     @Test
-    @DisplayName("최종 주문서 생성")
+    @DisplayName("최종 주문서 생성과 동시에 최종 가격을 계산한다")
     void createBillWithSameTableNo(){
         Bill billByTableNo7 = billCoreService.createBill(billFixture.orderRequestTableNo7);
         for(Order order : billByTableNo7.getOrders()){
@@ -77,13 +79,31 @@ public class BillCoreServiceTest {
         assertEquals(billByTableNo7.getTableNo(), "7");
         
     }
+    @Test
+    @DisplayName("bill의 status가 하나라도 completed가 아니면 최종 주문서 업데이트 불가")
+    void cannotUpdateFinalBillWithIncompleteOrders(){
+        Bill billTableNo3 = billCoreService.createBill(billFixture.orderRequestTableNo3);
+        log.info("💡 [BEFORE] billstatus is {}", billTableNo3.getBillStatus());
+        
+        GlobalException exception = assertThrows(GlobalException.class, 
+                                                 () -> { 
+                                                    billCoreService.completeAllOrdersInBill(billTableNo3.getId());
+                                                });
+        assertEquals("아직 서빙되지 않은 메뉴가 있습니다.", exception.getMessage());
+    }
 
     @Test
     @DisplayName("모든 주문 서빙 완료시 최종 주문서 업데이트")
     void updateBill(){
         Bill billTableNo3 = billCoreService.createBill(billFixture.orderRequestTableNo3);
-        Bill completeAllOrdersInBill = billCoreService.completeAllOrdersInBill(billTableNo3.getId());
+        log.info("💡 [BEFORE] billstatus is {}", billTableNo3.getBillStatus());
 
+        for(Order order : billTableNo3.getOrders()){
+            orderCoreService.updateOrderStatus(order.getId());
+        }
+        Bill completeAllOrdersInBill = billCoreService.completeAllOrdersInBill(billTableNo3.getId());
+        
+        log.info("💡 [AFTER] billstatus is {}", completeAllOrdersInBill.getBillStatus());
         assertEquals(completeAllOrdersInBill.getBillStatus(), BillStatus.COMPLETED);
 
     }
