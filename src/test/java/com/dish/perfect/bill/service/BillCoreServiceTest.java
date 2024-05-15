@@ -39,15 +39,15 @@ public class BillCoreServiceTest {
 
     @BeforeEach
     void clear(){
-        menuRepository.save(menuFixture.fixRequestA().toEntity());
-        menuRepository.save(menuFixture.fixRequestB().toEntity());
-        menuRepository.save(menuFixture.fixRequestC().toEntity());
-        menuRepository.save(menuFixture.fixRequestD().toEntity());
-        menuRepository.save(menuFixture.fixRequestE().toEntity());
-        menuRepository.save(menuFixture.fixRequestF().toEntity());
-        menuRepository.save(menuFixture.fixRequestG().toEntity());
-        menuRepository.save(menuFixture.fixRequestH().toEntity());
-        menuRepository.save(menuFixture.fixRequestI().toEntity());
+        menuRepository.save(menuFixture.fixRequestA().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestB().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestC().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestD().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestE().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestF().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestG().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestH().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestI().toMenuEntity());
 
         orderCoreService.createOrder(orderFixture.orderRequestA);
         orderCoreService.createOrder(orderFixture.orderRequestB);

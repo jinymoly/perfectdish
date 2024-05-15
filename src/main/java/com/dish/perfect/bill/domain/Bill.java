@@ -1,13 +1,10 @@
 package com.dish.perfect.bill.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import com.dish.perfect.global.base.BaseTimeEntity;
 import com.dish.perfect.order.domain.Order;
 
 import jakarta.persistence.CascadeType;
@@ -26,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Bill {
+public class Bill extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,21 +41,13 @@ public class Bill {
     @Enumerated(EnumType.STRING)
     private BillStatus billStatus;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime completedAt;
-
     @Builder
     public Bill(String tableNo, List<Order> orders,
-            BigDecimal totalPrice, BillStatus billStatus, LocalDateTime createdAt, LocalDateTime completedAt) {
+            BigDecimal totalPrice, BillStatus billStatus) {
         this.tableNo = tableNo;
         this.orders = orders;
         this.totalPrice = totalPrice;
         this.billStatus = billStatus;
-        this.createdAt = createdAt;
-        this.completedAt = completedAt;
     }
 
     @Override
@@ -71,8 +60,8 @@ public class Bill {
         return '\n' + "[tableNo." + tableNo + "]" + '\n' +
                 menuBuffer.toString() +
                 "totalPrice=" + totalPrice + '\n' +
-                "createdAt=" + createdAt + '\n' +
-                "completedAt=" + completedAt;
+                "createdAt=" + getCreatedAt() + '\n' +
+                "completedAt=" + getLastModifiedAt();
     }
 
     public static Bill toBill(String tableNo, List<Order> orders, BillStatus status){
@@ -89,6 +78,11 @@ public class Bill {
 
     public void updateStatus() {
         this.billStatus = BillStatus.COMPLETED;
+        updateLastModifiedAt();
+    }
+
+    public void addModifiedAt() {
+        updateLastModifiedAt();
     }
 
     /**
@@ -115,14 +109,6 @@ public class Bill {
 
     public void initTotalPrice(BigDecimal totalPrice){
         this.totalPrice = totalPrice;
-    }
-
-    public void addCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void addCompletedAt(LocalDateTime completedAt){
-        this.completedAt = completedAt;
     }
 
 }

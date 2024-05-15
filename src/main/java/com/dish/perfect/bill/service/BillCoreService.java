@@ -1,7 +1,6 @@
 package com.dish.perfect.bill.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class BillCoreService {
         findByTableNo.initStatus();
         //areAllOrderStatusCompleted(findByTableNo.getOrders());
         findByTableNo.initTotalPrice(applyTotalPrice(findByTableNo.getOrders()));
-        findByTableNo.addCreatedAt(LocalDateTime.now());
         billRepository.save(findByTableNo);
         log.info("created Bill:{}", findByTableNo.getId());
         return findByTableNo;
@@ -76,7 +74,7 @@ public class BillCoreService {
             }
         }
         bill.updateStatus();
-        bill.addCompletedAt(LocalDateTime.now());
+        bill.updateLastModifiedAt();
         Bill updatedBill = billRepository.save(bill);
         log.info("{}/{}", updatedBill.getId(), updatedBill.getBillStatus());
         return updatedBill;
