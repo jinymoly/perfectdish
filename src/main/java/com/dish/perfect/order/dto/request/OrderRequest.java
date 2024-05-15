@@ -10,9 +10,7 @@ public class OrderRequest {
 
     private final String menuName;
     private final int quantity;
-
     private final String tableNo;
-
     private final OrderStatus status;
 
     @Builder

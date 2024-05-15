@@ -1,13 +1,11 @@
 package com.dish.perfect.order.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dish.perfect.bill.domain.Bill;
-import com.dish.perfect.bill.domain.repository.BillRepository;
 import com.dish.perfect.bill.service.BillCoreService;
 import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
@@ -31,7 +29,6 @@ public class OrderCoreService {
     private final OrderRepository orderRepository;
     private final MenuPresentationService menuService;
     private final MenuRepository menuRepository;
-    private final BillRepository billRepository;
     private final BillCoreService billCoreService;
 
     public Order createOrder(OrderRequest orderRequest) {
@@ -41,7 +38,6 @@ public class OrderCoreService {
             Bill bill = billCoreService.mergeOrdersAndCreateBillByTableNo(orderRequest.getTableNo());
             //bill.addOrderToList(newOrder);
             newOrder.addBill(bill);
-            newOrder.addCreatedAt(LocalDateTime.now());
             orderRepository.save(newOrder);
             log.info("{}/주문 완료 🥗", newOrder.getOrderInfo().getMenu().getMenuName());
             return newOrder;
@@ -61,7 +57,7 @@ public class OrderCoreService {
         for (Order order : findBytableNo) {
             if (order.getOrderInfo().getMenu().getMenuName().equals(orderRequest.getMenuName())) {
                 incrementMenuQuantity(order, orderRequest.getMenuName(), orderRequest.getQuantity());
-                order.addModifiedAt(LocalDateTime.now());
+                order.addModifiedAt();
             }
         }
     }
@@ -75,6 +71,7 @@ public class OrderCoreService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_ORDER, "주문 아이템이 존재하지 않습니다."));
         order.markOrderStatusAsCompleted(OrderStatus.COMPLETED);
+        order.addModifiedAt();
         log.info("{}/{}", order.getId(), order.getOrderStatus());
         return order;
     }

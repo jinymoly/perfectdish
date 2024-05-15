@@ -1,11 +1,7 @@
 package com.dish.perfect.order.domain;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-
 import com.dish.perfect.bill.domain.Bill;
+import com.dish.perfect.global.base.BaseTimeEntity;
 import com.dish.perfect.menu.domain.Menu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,21 +47,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedBy
-    private LocalDateTime modifiedAt;
-
     @Builder
-    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus) {
         this.tableNo = tableNo;
         this.bill = bill;
         this.orderInfo = orderInfo;
         this.orderStatus = orderStatus;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
 
     public static Order createOrderWithOrderInfo(String tableNo, Menu menu, Integer quantity) {
@@ -82,15 +69,12 @@ public class Order {
         return '\n' + "[id=" + id + "/tableNo." + tableNo + "]" + '\n' +
                 "menu=" + orderInfo.getMenu().getMenuName() + "/ quantity=" + orderInfo.getQuantity() + '\n' +
                 "status=" + orderStatus + '\n' +
-                "createdAt=" + createdAt;
+                "createdAt=" + getCreatedAt() +
+                "modifiedAt=" + getLastModifiedAt();
     }
 
-    public void addCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void addModifiedAt(LocalDateTime modifiedAt) {
-        this.modifiedAt = modifiedAt;
+    public void addModifiedAt() {
+        updateLastModifiedAt();
     }
 
     public void markOrderStatusAsCompleted(OrderStatus orderStatus) {
