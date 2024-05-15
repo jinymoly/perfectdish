@@ -32,7 +32,7 @@ public class MenuCoreService {
      * @throws IOException
      */
     public Menu createMenu(MenuRequest menuRequest) throws IOException{
-        Menu menu = menuRequest.toEntity();
+        Menu menu = menuRequest.toMenuEntity();
         validMenunameDuplicated(menu);
         String uploadImgUrl = imageService.uploadImg(menuRequest.getMenuImgFile());
         menu.addImgUrl(uploadImgUrl);

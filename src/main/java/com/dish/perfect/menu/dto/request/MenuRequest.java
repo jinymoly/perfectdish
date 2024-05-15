@@ -37,7 +37,7 @@ public class MenuRequest {
         this.availability = availability;
     }
     
-    public Menu toEntity(){
+    public Menu toMenuEntity(){
         return Menu.builder()
                     .menuName(menuName)
                     .courseType(courseType)
