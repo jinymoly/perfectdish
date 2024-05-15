@@ -27,7 +27,7 @@ public class MemberDetailResponse {
                 .phoneNumber(member.getPhoneNumber())
                 .status(member.getStatus())
                 .createdAt(member.getCreatedAt())
-                .modifiedAt(member.getModifiedAt())
+                .modifiedAt(member.getLastModifiedAt())
                 .build();
     }
 }

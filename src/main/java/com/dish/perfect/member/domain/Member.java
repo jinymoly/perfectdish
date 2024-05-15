@@ -3,8 +3,7 @@ package com.dish.perfect.member.domain;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import com.dish.perfect.global.base.BaseTimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,26 +33,16 @@ public class Member {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberStatus status;
 
     @Builder
-    private Member(Long id, String userName, String phoneNumber, LocalDateTime createdAt, LocalDateTime modifiedAt,
-            MemberStatus status) {
+    private Member(Long id, String userName, String phoneNumber, MemberStatus status) {
         this.id = id;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.status = status;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
 
     @Override
@@ -62,21 +51,17 @@ public class Member {
                 "userName=" + userName + '\n' +
                 "phoneNumber=" + phoneNumber + '\n' +
                 "status=" + status + '\n' +
-                "createdAt=" + timeFomatter(createdAt);
+                "createdAt=" + timeFomatter(getCreatedAt());
     }
 
     private String timeFomatter(LocalDateTime time) {
-        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/hh:MM:ss"));
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss"));
     }
 
-    public void addCreatedAt(LocalDateTime createdAt){
-        this.createdAt = createdAt;
-    }
-
-    public void updateMemberInfo(String userName, String phoneNumber, LocalDateTime modifiedAt) {
+    public void updateMemberInfo(String userName, String phoneNumber) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
-        this.modifiedAt = modifiedAt;
+        updateLastModifiedAt();
     }
 
     public boolean isNewUserName(final String inputName) {
@@ -87,9 +72,9 @@ public class Member {
         return !(phoneNumber.equals(inputNumber));
     }
 
-    public void updateMemberStatus(MemberStatus status, LocalDateTime modifiedAt) {
+    public void updateMemberStatus(MemberStatus status) {
         this.status = status;
-        this.modifiedAt = modifiedAt;
+        updateLastModifiedAt();
     }
 
     public boolean isActive(){

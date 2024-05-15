@@ -24,21 +24,18 @@ public class MenuRepositoryTest {
 
     private MenuFixture menuFixture = new MenuFixture();
 
-
     @AfterEach
     void clearMenuImgInTestAndRepository(){
         String dirPath = "src/test/resources/img/";
         deleteFileAfterTest(dirPath);
-        
-        menuRepository.deleteAllInBatch();
     }
 
     @Test
     @DisplayName("Menu 저장")
     void createMenu(){
-        menuRepository.save(menuFixture.fixRequestA().toEntity());
-        menuRepository.save(menuFixture.fixRequestB().toEntity());
-        menuRepository.save(menuFixture.fixRequestC().toEntity());
+        menuRepository.save(menuFixture.fixRequestA().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestB().toMenuEntity());
+        menuRepository.save(menuFixture.fixRequestC().toMenuEntity());
         Menu findByMenuName = menuRepository.findByMenuName(menuFixture.fixRequestA().getMenuName());
         log.info("{}", findByMenuName);
     }

@@ -1,7 +1,5 @@
 package com.dish.perfect.order.domain;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +16,12 @@ public class OrderTest {
     @Test
     @DisplayName("order 생성 toString 확인")
     void createOrderMap() {
-        Menu menuFixtureForOrder = menu.fixRequestA().toEntity();
+        Menu menuFixtureForOrder = menu.fixRequestA().toMenuEntity();
 
         Order newOrder = Order.builder()
                 .tableNo("2")
                 .orderStatus(OrderStatus.CREATED)
                 .orderInfo(OrderInfo.of(menuFixtureForOrder, 3))
-                .createdAt(LocalDateTime.now())
                 .build();
 
         String orderInfo = newOrder.toString();

@@ -1,7 +1,5 @@
 package com.dish.perfect.order;
 
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +14,14 @@ public class OrderFixture {
 
     private MenuFixture menuFixture = new MenuFixture();
 
-    private Menu menuA = menuFixture.fixRequestA().toEntity();
-    private Menu menuB = menuFixture.fixRequestB().toEntity();
-    private Menu menuC = menuFixture.fixRequestC().toEntity();
-    private Menu menuD = menuFixture.fixRequestD().toEntity();
-    private Menu menuE = menuFixture.fixRequestE().toEntity();
-    private Menu menuF = menuFixture.fixRequestF().toEntity();
-    private Menu menuG = menuFixture.fixRequestG().toEntity();
-    private Menu menuH = menuFixture.fixRequestH().toEntity();
+    private Menu menuA = menuFixture.fixRequestA().toMenuEntity();
+    private Menu menuB = menuFixture.fixRequestB().toMenuEntity();
+    private Menu menuC = menuFixture.fixRequestC().toMenuEntity();
+    private Menu menuD = menuFixture.fixRequestD().toMenuEntity();
+    private Menu menuE = menuFixture.fixRequestE().toMenuEntity();
+    private Menu menuF = menuFixture.fixRequestF().toMenuEntity();
+    private Menu menuG = menuFixture.fixRequestG().toMenuEntity();
+    private Menu menuH = menuFixture.fixRequestH().toMenuEntity();
 
     public OrderRequest orderRequestA = OrderRequest.builder()
                                                     .tableNo("2")
@@ -100,76 +98,56 @@ public class OrderFixture {
                                         .tableNo("2")
                                         .orderInfo(OrderInfo.of(menuA, 2))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     
     public Order orderForBillB = Order.builder()
                                         .tableNo("3")
                                         .orderInfo(OrderInfo.of(menuB, 1))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     public Order orderForBillC = Order.builder()
                                         .tableNo("3")
                                         .orderInfo(OrderInfo.of(menuC, 3))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     
     public Order orderForBillD = Order.builder()
                                         .tableNo("3")
                                         .orderInfo(OrderInfo.of(menuD, 5))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     public Order orderForBillE = Order.builder()
                                         .tableNo("2")
                                         .orderInfo(OrderInfo.of(menuE, 2))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     public Order orderForBillF = Order.builder()
                                         .tableNo("7")
                                         .orderInfo(OrderInfo.of(menuF, 2))
                                         .orderStatus(OrderStatus.COMPLETED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     
     public Order orderForBillG = Order.builder()
                                         .tableNo("7")
                                         .orderInfo(OrderInfo.of(menuG, 3))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     
     public Order orderForBillH = Order.builder()
                                         .tableNo("7")
                                         .orderInfo(OrderInfo.of(menuH, 1))
                                         .orderStatus(OrderStatus.COMPLETED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     public Order orderForBillI = Order.builder()
                                         .tableNo("1")
                                         .orderInfo(OrderInfo.of(menuA, 1))
                                         .orderStatus(OrderStatus.COMPLETED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
     
     public Order orderForBillJ = Order.builder()
                                         .tableNo("1")
                                         .orderInfo(OrderInfo.of(menuB, 3))
                                         .orderStatus(OrderStatus.CREATED)
-                                        .createdAt(LocalDateTime.now())
-                                        .modifiedAt(LocalDateTime.now())
                                         .build();
 
     public List<Order> ordersForBillT2(){

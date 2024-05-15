@@ -48,15 +48,15 @@ public class OrderCoreServiceTest {
     void createMenu() {
         orderRepository.deleteAllInBatch();
 
-        menuRepository.save(fixtureM.fixRequestA().toEntity());
-        menuRepository.save(fixtureM.fixRequestB().toEntity());
-        menuRepository.save(fixtureM.fixRequestC().toEntity());
-        menuRepository.save(fixtureM.fixRequestD().toEntity());
-        menuRepository.save(fixtureM.fixRequestE().toEntity());
-        menuRepository.save(fixtureM.fixRequestF().toEntity());
-        menuRepository.save(fixtureM.fixRequestG().toEntity());
-        menuRepository.save(fixtureM.fixRequestH().toEntity());
-        menuRepository.save(fixtureM.fixRequestI().toEntity());
+        menuRepository.save(fixtureM.fixRequestA().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestB().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestC().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestD().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestE().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestF().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestG().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestH().toMenuEntity());
+        menuRepository.save(fixtureM.fixRequestI().toMenuEntity());
     }
 
     @Test

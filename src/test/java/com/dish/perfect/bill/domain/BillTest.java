@@ -1,7 +1,5 @@
 package com.dish.perfect.bill.domain;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +20,6 @@ public class BillTest {
         Bill bill = Bill.builder()
                         .tableNo("2")
                         .orders(orderFixture.ordersForBillT2())
-                        .createdAt(LocalDateTime.now())
                         .build();
         
         String savedBill = bill.toString();
