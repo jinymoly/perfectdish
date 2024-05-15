@@ -43,7 +43,7 @@ public class MemberCoreServiceTest {
 
     // TO-DO
     // springBoot Test
-    // testContainer -> serviceTest
+    // testContainer -> serviceTest ?
 
     @Test
     @DisplayName("Member 객체 생성")
@@ -94,7 +94,10 @@ public class MemberCoreServiceTest {
         Member fMember = memberRepository.findByPhoneNumber(memberD.getPhoneNumber());
         Long update = memberCoreService.updateMemberInfo(fMember.getId(), updateInfo);
 
+        Member resultMember = memberPresentationService.findById(update);
+
         assertTrue(joinD.getId().equals(update));
+        assertTrue(joinD.getUserName().equals(resultMember.getUserName()));
         assertTrue(joinD.getPhoneNumber().equals("95959595"));
 
     }

@@ -1,7 +1,5 @@
 package com.dish.perfect.member.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,6 @@ public class MemberCoreService {
     public Member join(MemberRequest memberRequest){
         Member member = memberRequest.toMemberEntity();
         validPhoneNumberDuplicatedByMember(member);
-        member.addCreatedAt(LocalDateTime.now());
         return memberRepository.save(member);
     }
 
@@ -37,15 +34,14 @@ public class MemberCoreService {
             validPhoneNumberDuplicated(updateRequest.getPhoneNumber());
         }
         member.updateMemberInfo(updateRequest.getUserName(),
-                                updateRequest.getPhoneNumber(),
-                                LocalDateTime.now());
+                                updateRequest.getPhoneNumber());
         return member.getId();
     }
 
     public Long deleteMemberByStatus(final Long memberId, MemberChangeStatusRequest statusRequest) {
         Member member = findMemberById(memberId);
         if (!member.getStatus().equals(MemberStatus.DELETED)) {
-            member.updateMemberStatus(statusRequest.getStatus(), LocalDateTime.now());
+            member.updateMemberStatus(statusRequest.getStatus());
         }
         new GlobalException(ErrorCode.ALREADY_DELETED_MEMBER, "이미 탈퇴한 사용자입니다.");
         return member.getId();
