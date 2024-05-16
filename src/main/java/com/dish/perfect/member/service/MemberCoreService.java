@@ -14,7 +14,9 @@ import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,7 +27,9 @@ public class MemberCoreService {
     public Member join(MemberRequest memberRequest){
         Member member = memberRequest.toMemberEntity();
         validPhoneNumberDuplicatedByMember(member);
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+        log.info("saved member :{}/{} {}", savedMember.getId(), savedMember.getUserName(), savedMember.getPhoneNumber());
+        return savedMember;
     }
 
     public Long updateMemberInfo(final Long memberId, @Valid MemberUpdateRequest updateRequest) {

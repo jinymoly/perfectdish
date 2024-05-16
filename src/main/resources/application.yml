@@ -1,7 +1,0 @@
-file:
-  dir: /Users/jhon/Documents/Work/perfect/
-management:
-    endpoints:
-        web:
-            exposure:
-                include: "*"
