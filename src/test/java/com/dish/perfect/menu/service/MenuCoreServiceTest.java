@@ -66,7 +66,9 @@ public class MenuCoreServiceTest {
         menuCoService.createMenu(requestC);
         
         MenuDetailResponse menuInfo = menuPrService.getMenuInfo(requestC.getMenuName());
-        log.info("menuInfo={} menuImgUrl={}", menuInfo.getMenuName(), menuInfo.getMenuImgUrl());
+        //log.info("menuInfo={} menuImgUrl={}", menuInfo.getMenuName(), menuInfo.getMenuImgUrl());
+
+        assertThat(menuInfo.getMenuImgUrl().contains(requestC.getMenuImgFile().getOriginalFilename()));
     }
 
     @Test
