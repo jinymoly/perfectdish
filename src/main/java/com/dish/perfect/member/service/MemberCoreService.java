@@ -1,5 +1,6 @@
 package com.dish.perfect.member.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,7 @@ import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.domain.repository.MemberRepository;
 import com.dish.perfect.member.dto.request.MemberChangeStatusRequest;
+import com.dish.perfect.member.dto.request.MemberLoginRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
@@ -23,15 +25,25 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberCoreService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Member join(MemberRequest memberRequest){
         Member member = memberRequest.toMemberEntity();
+        member.changePassword(passwordEncoder.encode(member.getPassword()));
         validPhoneNumberDuplicatedByMember(member);
         Member savedMember = memberRepository.save(member);
         log.info("saved member :{}/{} {}", savedMember.getId(), savedMember.getUserName(), savedMember.getPhoneNumber());
         return savedMember;
     }
 
+    public Member login(MemberLoginRequest memberLoginRequest){
+        Member member = memberRepository.findByPhoneNumber(memberLoginRequest.getPhoneNumber()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다."));
+        if(!passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword())){
+            throw new GlobalException(ErrorCode.FAIL_LOGIN_MEMBER);
+        }
+        return member;
+    }
+    
     public Long updateMemberInfo(final Long memberId, @Valid MemberUpdateRequest updateRequest) {
         Member member = findMemberById(memberId);
         if (member.isNewUserName(updateRequest.getUserName())) {
@@ -63,11 +75,9 @@ public class MemberCoreService {
     }
 
     private void validPhoneNumberDuplicatedByMember(Member member){
-        Member findByNumber = memberRepository.findByPhoneNumber(member.getPhoneNumber());
-        if(findByNumber != null){
+        if(memberRepository.findByPhoneNumber(member.getPhoneNumber()).isPresent()){
             throw new GlobalException(ErrorCode.DUPLICATED_MEMBER_INFO, "해당 번호의 회원이 이미 존재합니다.");
         }
     }
-    
 
 }

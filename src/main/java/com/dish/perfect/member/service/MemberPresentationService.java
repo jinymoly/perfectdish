@@ -9,8 +9,8 @@ import com.dish.perfect.global.error.GlobalException;
 import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.repository.MemberRepository;
-import com.dish.perfect.member.dto.response.MemberDetailResponse;
 import com.dish.perfect.member.dto.response.MemberCommonResponse;
+import com.dish.perfect.member.dto.response.MemberDetailResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,7 +60,7 @@ public class MemberPresentationService {
     }
 
     public MemberDetailResponse findByPhoneNumber(String phoneNumber){
-        Member findMember = memberRepository.findByPhoneNumber(phoneNumber);
+        Member findMember = memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 번호의 회원이 존재하지 않습니다."));
         return MemberDetailResponse.fromResponse(findMember);
     }
 

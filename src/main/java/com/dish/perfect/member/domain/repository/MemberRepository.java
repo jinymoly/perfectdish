@@ -1,6 +1,7 @@
 package com.dish.perfect.member.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByUserName(@Param("userName") String userName);
 
     @Query("select m from Member m where m.phoneNumber = :phoneNumber")
-    Member findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+    Optional<Member> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
     boolean existsByPhoneNumber(String phoneNumber);
 

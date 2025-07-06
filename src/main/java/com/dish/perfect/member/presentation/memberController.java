@@ -1,7 +1,10 @@
 package com.dish.perfect.member.presentation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dish.perfect.global.auth.JwtTokenProvider;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.dto.request.MemberChangeStatusRequest;
+import com.dish.perfect.member.dto.request.MemberLoginRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
-import com.dish.perfect.member.dto.response.MemberDetailResponse;
 import com.dish.perfect.member.dto.response.MemberCommonResponse;
+import com.dish.perfect.member.dto.response.MemberDetailResponse;
 import com.dish.perfect.member.service.MemberCoreService;
 import com.dish.perfect.member.service.MemberPresentationService;
 
@@ -34,6 +39,7 @@ public class MemberController {
 
     private final MemberCoreService memberCoreService;
     private final MemberPresentationService memberPresentationService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/join")
     public String addMemberRequest() {
@@ -43,8 +49,20 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<Member> addMember(@RequestBody @Valid MemberRequest memberRequest) {
         Member newMember = memberCoreService.join(memberRequest);
-        return ResponseEntity.ok(newMember);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequest memberLoginRequest) {
+        Member member = memberCoreService.login(memberLoginRequest);
+
+        String jwtToken = jwtTokenProvider.createToken(member.getPhoneNumber(), member.getRole().toString());
+        Map<String, Object> loginInfo = new HashMap<>();
+        loginInfo.put("phoneNumber", member.getPhoneNumber()); 
+        loginInfo.put("token", jwtToken);
+        return new ResponseEntity<>(loginInfo, HttpStatus.OK);
+    }
+    
 
     @GetMapping("/allmember/active")
     public ResponseEntity<List<MemberCommonResponse>> getActiveMember() {

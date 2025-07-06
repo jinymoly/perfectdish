@@ -33,16 +33,26 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private String password;
+
+    // private  <<< 생일 쿠폰 정책 
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     @Builder
-    private Member(Long id, String userName, String phoneNumber, MemberStatus status) {
+    private Member(Long id, String userName, String password, String phoneNumber, MemberStatus status, Role role) {
         this.id = id;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
+        this.password = password;
         this.status = status;
+        this.role = role;
     }
 
     @Override
@@ -79,6 +89,10 @@ public class Member extends BaseTimeEntity{
 
     public boolean isActive(){
         return this.getStatus().equals(MemberStatus.ACTIVE);
+    }
+
+    public void changePassword(String encodedPassword){
+        this.password = encodedPassword;
     }
 
 }
