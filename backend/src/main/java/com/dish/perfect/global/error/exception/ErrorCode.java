@@ -9,6 +9,13 @@ public enum ErrorCode {
 
     // Global [00000]
     INVALID_INPUT_ERROR("00000", "잘못된 입력값입니다."),
+    INVALID_AUTH_HEADER("00001", "Authorization 헤더가 올바른 Bearer 형식이 아닙니다."),
+    UNAUTHORIZED("00002", "인증이 필요합니다."),
+    TOKEN_EXPIRED("00003", "토큰이 만료되었습니다."),
+    INVALID_TOKEN("00004", "유효하지 않은 토큰입니다."),
+    REFRESH_TOKEN_NOT_FOUND("00005", "리프레시 토큰을 찾을 수 없습니다."),
+    REFRESH_TOKEN_MISMATCH("00006", "리프레시 토큰이 일치하지 않습니다."),
+    REFRESH_TOKEN_REUSE_DETECTED("00007", "리프레시 토큰 재사용이 감지되었습니다. 보안을 위해 모든 토큰이 무효화되었습니다."),
 
     // Member [10000]
     DUPLICATED_MEMBER("10000", "이미 존재하는 회원입니다."),
@@ -16,6 +23,7 @@ public enum ErrorCode {
     NOT_FOUND_MEMBER("10002", "회원 목록이 존재하지 않습니다."),
     ALREADY_DELETED_MEMBER("10003", "이미 삭제된 회원입니다."),
     FAIL_CREATE_MEMBER("10004", "회원 가입 실패하였습니다."),
+    FAIL_LOGIN_MEMBER("10005", "로그인 실패하였습니다."),
 
     // Menu [20000]
     DUPLICATED_MENU("20000", "이미 존재하는 메뉴입니다."),
@@ -31,13 +39,13 @@ public enum ErrorCode {
     FAIL_CREATE_ORDER("30001", "주문 생성 실패하였습니다."),
     ALREADY_COMPLETED_ORDER("30003", "이미 모든 주문이 처리되었습니다."),
     ORDER_NOT_COMPLETED("30004", "모든 주문이 처리되지 않았습니다."),
-    
+
     // Bill [40000]
-    NOT_FOUND_BILL("40001", "해당 청구서가 존재하지 않습니다."), 
-    NOT_FOUND_BILL_BY_TABLE("40002", "해당 테이블의 청구서가 존재하지 않습니다."), 
+    NOT_FOUND_BILL("40001", "해당 청구서가 존재하지 않습니다."),
+    NOT_FOUND_BILL_BY_TABLE("40002", "해당 테이블의 청구서가 존재하지 않습니다."),
     FAIL_CREATE_BILL("40003", "청구서 생성 실패하였습니다."),
-    ALREADY_COMPLETED_BILL("40004", "이미 모든 음식이 제공되었습니다."), 
-    
+    ALREADY_COMPLETED_BILL("40004", "이미 모든 음식이 제공되었습니다."),
+    FAIL_DELETED_BILL("40005", "해당 청구서를 삭제할 수 없습니다.")
 
     ;
 
