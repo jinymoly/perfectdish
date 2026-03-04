@@ -19,6 +19,7 @@ public class MenuCommonResponse {
 
     private final Availability availability;
     private final boolean isDiscount;
+    private final Integer stock;
 
     public static MenuCommonResponse fromMenuResponse(final Menu menu){
         return MenuCommonResponse.builder()
@@ -27,6 +28,7 @@ public class MenuCommonResponse {
                     .price(menu.getPrice())
                     .availability(menu.getAvailability())
                     .isDiscount(menu.isDiscounted())
+                    .stock(menu.getStock())
                     .build();
     }
 }
