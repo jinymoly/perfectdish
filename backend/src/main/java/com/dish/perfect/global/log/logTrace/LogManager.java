@@ -8,6 +8,8 @@ public interface LogManager {
 
     void end(TraceStatus status);
 
+    void end(TraceStatus status, Object result);
+
     void exception(TraceStatus status, Exception exception);
-    
+
 }

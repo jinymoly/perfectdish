@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import com.dish.perfect.global.log.domain.TraceStatus;
 
+
 public class LogManagerImplTest {
 
-    private LogManagerImpl logManager = new LogManagerImpl();
+    private LogManager logManager = new LogManagerImpl();
     private TraceStatus status = logManager.begin("Test message");
     
     @Test
@@ -25,13 +26,11 @@ public class LogManagerImplTest {
     @Test
     @DisplayName("exception 생성")
     void exception(){
-        TraceStatus statusA = logManager.begin("TestA message");
-        TraceStatus statusB = logManager.begin("TestB message");
+        TraceStatus statusA = logManager.begin("exTestA message");
+        TraceStatus statusB = logManager.begin("exTestB message");
 
         logManager.exception(statusA, new IllegalArgumentException());
         logManager.exception(statusB, new RuntimeException());
 
     }
-
-    
 }
