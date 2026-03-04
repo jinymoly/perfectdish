@@ -9,6 +9,7 @@ import com.dish.perfect.global.error.exception.ErrorCode;
 import com.dish.perfect.member.domain.Member;
 import com.dish.perfect.member.domain.MemberStatus;
 import com.dish.perfect.member.domain.repository.MemberRepository;
+import com.dish.perfect.member.dto.request.MemberLoginRequest;
 import com.dish.perfect.member.dto.request.MemberRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,15 @@ public class MemberCoreService {
         log.info("saved member :{}/{} {}", savedMember.getId(), savedMember.getUserName(),
                 savedMember.getPhoneNumber());
         return savedMember;
+    }
+
+    public Member login(MemberLoginRequest memberLoginRequest) {
+        Member member = memberRepository.findByPhoneNumber(memberLoginRequest.getPhoneNumber())
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다."));
+        if (!passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {
+            throw new GlobalException(ErrorCode.FAIL_LOGIN_MEMBER);
+        }
+        return member;
     }
 
     private void validPhoneNumberDuplicatedByMember(Member member) {
