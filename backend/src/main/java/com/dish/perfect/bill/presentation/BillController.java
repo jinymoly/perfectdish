@@ -64,4 +64,10 @@ public class BillController {
         log.info("Bill {} status updated to: {}", completeAllOrdersInBill.getTableNo(), completeAllOrdersInBill.getBillStatus());
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<java.util.List<BillResponse>> getAllBills() {
+        java.util.List<BillResponse> all = billPresentationService.findAll();
+        return ResponseEntity.ok(all);
+    }
 }

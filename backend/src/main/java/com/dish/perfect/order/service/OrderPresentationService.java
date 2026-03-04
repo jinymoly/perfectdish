@@ -45,6 +45,13 @@ public class OrderPresentationService {
                 .toList();
     }
 
+    public List<OrderResponse> getOrdersByPhoneNumber(String phoneNumber) {
+        return orderRepository.findByPhoneNumber(phoneNumber)
+                .stream()
+                .map(OrderResponse::fromOrderResponse)
+                .toList();
+    }
+
     /**
      * 테이블 별 주문 아이템 to Bill
      * 

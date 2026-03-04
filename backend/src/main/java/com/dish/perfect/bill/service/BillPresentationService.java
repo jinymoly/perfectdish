@@ -41,12 +41,12 @@ public class BillPresentationService {
     /**
      * 테이블 별 영수증
      * @param tableNo
-     * @return
+     * @return BillResponse
      */
     public BillResponse findBillByTableNo(String tableNo){
-        Bill bill = billRepository.findByTableNo(tableNo);
-        if(bill != null){
-            return BillResponse.fromBillResponse(bill);
+        List<Bill> bills = billRepository.findByTableNo(tableNo);
+        if(!bills.isEmpty()){
+            return BillResponse.fromBillResponse(bills.get(bills.size() - 1));
         }
         throw new GlobalException(ErrorCode.NOT_FOUND_BILL_BY_TABLE, "해당 테이블의 영수증이 존재하지 않습니다.");
     }
@@ -60,12 +60,24 @@ public class BillPresentationService {
         List<Bill> orders = billRepository.findByBillStatus(billStatus);
         if(!orders.isEmpty()){
             return orders.stream()
-                        .filter(order -> order.getBillStatus().equals(BillStatus.NOTSERVED))
+                        .filter(order -> order.getBillStatus() != null && order.getBillStatus().equals(BillStatus.NOTSERVED))
                         .map(BillResponse::fromBillResponse)
                         .toList();
         } else {
             throw new GlobalException(ErrorCode.ALREADY_COMPLETED_BILL, "모든 음식이 제공되었습니다.");
         }
+    }
+    /**
+     * 테이블 별 영수증
+     * @param tableNo
+     * @return Bill
+     */
+    public Bill findBillByTableNoAndReturnTypeIsBill(String tableNo){
+        List<Bill> bills = billRepository.findByTableNo(tableNo);
+        if(!bills.isEmpty()){
+            return bills.get(bills.size() - 1);
+        }
+        throw new GlobalException(ErrorCode.NOT_FOUND_BILL_BY_TABLE, "해당 테이블의 영수증이 존재하지 않습니다.");
     }
 
 }
