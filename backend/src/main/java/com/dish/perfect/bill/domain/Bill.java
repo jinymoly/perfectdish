@@ -1,6 +1,7 @@
 package com.dish.perfect.bill.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,21 +35,37 @@ public class Bill extends BaseTimeEntity{
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
     
     private BigDecimal totalPrice;
 
+    @Column(nullable = false)
+    private LocalDateTime lastOrderUpdatedAt;
+
     @Enumerated(EnumType.STRING)
     private BillStatus billStatus;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
+    @Column(nullable = false)
+    private boolean isPaid;
+
+    @PrePersist
+    protected void prePersist(){
+        lastOrderUpdatedAt = LocalDateTime.now();
+    }
+
     @Builder
     public Bill(String tableNo, List<Order> orders,
-            BigDecimal totalPrice, BillStatus billStatus) {
+            BigDecimal totalPrice, BillStatus billStatus, boolean isDeleted, boolean isPaid) {
         this.tableNo = tableNo;
-        this.orders = orders;
-        this.totalPrice = totalPrice;
-        this.billStatus = billStatus;
+        this.orders = orders != null ? orders : new ArrayList<>();
+        this.totalPrice = totalPrice != null ? totalPrice : BigDecimal.ZERO;
+        this.billStatus = billStatus != null ? billStatus : BillStatus.NOTSERVED;
+        this.isDeleted = isDeleted;
+        this.isPaid = isPaid;
     }
 
     @Override
@@ -61,7 +79,8 @@ public class Bill extends BaseTimeEntity{
                 menuBuffer.toString() +
                 "totalPrice=" + totalPrice + '\n' +
                 "createdAt=" + getCreatedAt() + '\n' +
-                "completedAt=" + getLastModifiedAt();
+                "completedAt=" + getLastModifiedAt() +
+                "isDeleted=" + isDeleted;
     }
 
     public static Bill toBill(String tableNo, List<Order> orders, BillStatus status){
@@ -77,7 +96,16 @@ public class Bill extends BaseTimeEntity{
     }
 
     public void updateStatus() {
-        this.billStatus = BillStatus.COMPLETED;
+        this.billStatus = BillStatus.SERVED;
+        updateLastModifiedAt();
+    }
+
+    public void updateLastOrderUpdatedAt(LocalDateTime lastOrderUpdateAt){
+        this.lastOrderUpdatedAt = lastOrderUpdateAt;
+    }
+
+    public void markAsPaid(){
+        this.isPaid = true;
         updateLastModifiedAt();
     }
 

@@ -20,27 +20,31 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class BillResponse {
     
+    private final Long id;
     private final String tableNo;
-    private final List<Map<String, Integer>> orders;
+    private final List<Map<String, Object>> orders;
     private final BigDecimal totalPrice;
     private final BillStatus billStatus;
+    private final java.time.LocalDateTime createdAt;
 
     public static BillResponse fromBillResponse(final Bill bill){
-        List<Map<String, Integer>> ordersWithCount = new ArrayList<>();
+        List<Map<String, Object>> ordersWithCount = new ArrayList<>();
         
         for(Order order : bill.getOrders()){
-        Map<String, Integer> ordersInfo = new HashMap<>();
+             Map<String, Object> ordersInfo = new HashMap<>();
              Menu menu = order.getOrderInfo().getMenu();
-             String menuName = menu.getMenuName();
-             int count = order.getOrderInfo().getQuantity();
-             ordersInfo.put(menuName, count);
+             ordersInfo.put("menuName", menu.getMenuName());
+             ordersInfo.put("quantity", order.getOrderInfo().getQuantity());
+             ordersInfo.put("price", menu.getPrice());
              ordersWithCount.add(ordersInfo);
         }
         return BillResponse.builder()
+                            .id(bill.getId())
                             .tableNo(bill.getTableNo())
                             .orders(ordersWithCount)
                             .totalPrice(bill.getTotalPrice())
                             .billStatus(bill.getBillStatus())
+                            .createdAt(bill.getCreatedAt())
                             .build();
     }
 }
