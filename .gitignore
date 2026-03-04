@@ -3,8 +3,8 @@
 .idea/
 *.swp
 *.swo
-.DS_Store
 node_modules/
+frontend/public/menu_images/
 
 # Global Config
 config/.env
