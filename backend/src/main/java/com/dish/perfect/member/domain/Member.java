@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseTimeEntity{
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String password;
 
-    // private  <<< 생일 쿠폰 정책 
+    // private <<< 생일 쿠폰 정책
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,10 +61,13 @@ public class Member extends BaseTimeEntity{
                 "userName=" + userName + '\n' +
                 "phoneNumber=" + phoneNumber + '\n' +
                 "status=" + status + '\n' +
-                "createdAt=" + timeFomatter(getCreatedAt());
+                "createdAt=" + timeFormatter(getCreatedAt());
     }
 
-    private String timeFomatter(LocalDateTime time) {
+    private String timeFormatter(LocalDateTime time) {
+        if (time == null) {
+            return "null";
+        }
         return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm:ss"));
     }
 
@@ -78,7 +81,7 @@ public class Member extends BaseTimeEntity{
         return !(userName.equals(inputName));
     }
 
-    public boolean isNewPhoneNumber(final String inputNumber){
+    public boolean isNewPhoneNumber(final String inputNumber) {
         return !(phoneNumber.equals(inputNumber));
     }
 
@@ -87,11 +90,11 @@ public class Member extends BaseTimeEntity{
         updateLastModifiedAt();
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return this.getStatus().equals(MemberStatus.ACTIVE);
     }
 
-    public void changePassword(String encodedPassword){
+    public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
     }
 
