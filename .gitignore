@@ -1,45 +1,46 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+node_modules/
 
-### Ignore .DS_Store ###
-**/.DS_Store
+# Global Config
+config/.env
 
-### application*.properties ###
-src/main/resources/*.properties
+# Worklogs
+worklog/
 
-src/main/resources/config/
+# Backend
+backend/.gradle/
+backend/build/
+backend/bin/
+backend/out/
+backend/.settings/
+backend/.classpath
+backend/.project
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.vscode/
+
+# Logs
+backend/src/main/resources/logs/
+*.log
+
+# Root Build Artifacts
+.gradle/
+build/
+bin/
+out/
+.settings/
+.classpath
+.project
+package-lock.json
+node_modules/
