@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = "menuName")// request에서 name valid하면 굳이? 
+@EqualsAndHashCode(of = "menuName") // request에서 name valid하면 굳이?
 public class Menu {
 
     @Id
@@ -43,9 +43,12 @@ public class Menu {
     @Column(nullable = false)
     private boolean isDiscounted;
 
+    @Column(nullable = false)
+    private Integer stock;
+
     @Builder
     public Menu(CourseType courseType, String menuName, Integer price, boolean isDiscounted, String description,
-            Image menuImg, Availability availability) {
+            Image menuImg, Availability availability, Integer stock) {
         this.courseType = courseType;
         this.menuName = menuName;
         this.price = price;
@@ -53,9 +56,10 @@ public class Menu {
         this.description = description;
         this.menuImg = createImage(menuImg.getImgUrl());
         this.availability = Availability.AVAILABLE;
+        this.stock = stock != null ? stock : 100; // Default stock
     }
 
-    public Menu(String menuName){
+    public Menu(String menuName) {
         this.menuName = menuName;
     }
 
@@ -91,6 +95,25 @@ public class Menu {
 
     public boolean isAvailability() {
         return this.getAvailability().equals(Availability.AVAILABLE);
+    }
+
+    public void updateStock(Integer newStock) {
+        this.stock = newStock;
+        updateAvailability();
+    }
+
+    public void decrementStock(int quantity) {
+        this.stock -= quantity;
+        if (this.stock < 0) this.stock = 0;
+        updateAvailability();
+    }
+
+    private void updateAvailability() {
+        if (this.stock <= 0) {
+            this.availability = Availability.UNAVAILABLE;
+        } else {
+            this.availability = Availability.AVAILABLE;
+        }
     }
 
 }
