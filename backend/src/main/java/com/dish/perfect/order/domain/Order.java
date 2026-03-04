@@ -17,6 +17,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order extends BaseTimeEntity{
+public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,23 +43,44 @@ public class Order extends BaseTimeEntity{
     @Column(name = "table_no", nullable = false)
     private String tableNo;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Embedded
     private OrderInfo orderInfo;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @PrePersist
+    protected void prePersist() {
+        if (bill != null) {
+            java.time.LocalDateTime updatedAt = getLastModifiedAt() != null ? getLastModifiedAt() : java.time.LocalDateTime.now();
+            bill.updateLastOrderUpdatedAt(updatedAt);
+        }
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        if (bill != null) {
+            java.time.LocalDateTime updatedAt = getLastModifiedAt() != null ? getLastModifiedAt() : java.time.LocalDateTime.now();
+            bill.updateLastOrderUpdatedAt(updatedAt);
+        }
+    }
+
     @Builder
-    private Order(String tableNo, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus) {
+    private Order(String tableNo, String phoneNumber, Bill bill, OrderInfo orderInfo, OrderStatus orderStatus) {
         this.tableNo = tableNo;
+        this.phoneNumber = phoneNumber;
         this.bill = bill;
         this.orderInfo = orderInfo;
         this.orderStatus = orderStatus;
     }
 
-    public static Order createOrderWithOrderInfo(String tableNo, Menu menu, Integer quantity) {
+    public static Order createOrderWithOrderInfo(String tableNo, String phoneNumber, Menu menu, Integer quantity) {
         Order order = Order.builder()
                 .tableNo(tableNo)
+                .phoneNumber(phoneNumber)
                 .orderInfo(OrderInfo.of(menu, quantity))
                 .orderStatus(OrderStatus.CREATED)
                 .build();
@@ -73,17 +96,19 @@ public class Order extends BaseTimeEntity{
                 "modifiedAt=" + getLastModifiedAt();
     }
 
+    /**
+     * 같은 메뉴가 추가될 때 주문 일시 수정
+     */
     public void addModifiedAt() {
         updateLastModifiedAt();
     }
 
     public void markOrderStatusAsCompleted(OrderStatus orderStatus) {
-        this.orderStatus = OrderStatus.COMPLETED;
+        this.orderStatus = orderStatus;
     }
 
     public void addBill(Bill newBill) {
         this.bill = newBill;
     }
-    
+
 }
-    
