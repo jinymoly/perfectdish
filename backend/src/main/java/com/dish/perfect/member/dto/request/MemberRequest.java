@@ -24,8 +24,7 @@ public class MemberRequest {
     @NotBlank(message = "이름은 필수입니다.")
     private String userName;
 
-    private MemberStatus status;
-
+    private MemberStatus status = MemberStatus.ACTIVE;
 
     @Builder
     private MemberRequest(String phoneNumber, String password, String userName, MemberStatus status) {
@@ -35,13 +34,13 @@ public class MemberRequest {
         this.status = MemberStatus.ACTIVE;
     }
 
-    public Member toMemberEntity(){
+    public Member toMemberEntity() {
         return Member.builder()
-                    .phoneNumber(phoneNumber)
-                    .password(password)
-                    .userName(userName)
-                    .status(status)
-                    .role(Role.USER)
-                    .build();
+                .phoneNumber(phoneNumber)
+                .password(password)
+                .userName(userName)
+                .status(status)
+                .role(Role.USER)
+                .build();
     }
 }

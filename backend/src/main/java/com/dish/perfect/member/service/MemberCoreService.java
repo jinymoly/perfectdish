@@ -15,6 +15,7 @@ import com.dish.perfect.member.dto.request.MemberRequest;
 import com.dish.perfect.member.dto.request.MemberUpdateRequest;
 
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,30 +28,32 @@ public class MemberCoreService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member join(MemberRequest memberRequest){
+    public Member join(MemberRequest memberRequest) {
         Member member = memberRequest.toMemberEntity();
         member.changePassword(passwordEncoder.encode(member.getPassword()));
         validPhoneNumberDuplicatedByMember(member);
         Member savedMember = memberRepository.save(member);
-        log.info("saved member :{}/{} {}", savedMember.getId(), savedMember.getUserName(), savedMember.getPhoneNumber());
+        log.info("saved member :{}/{} {}", savedMember.getId(), savedMember.getUserName(),
+                savedMember.getPhoneNumber());
         return savedMember;
     }
 
-    public Member login(MemberLoginRequest memberLoginRequest){
-        Member member = memberRepository.findByPhoneNumber(memberLoginRequest.getPhoneNumber()).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다."));
-        if(!passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword())){
+    public Member login(MemberLoginRequest memberLoginRequest) {
+        Member member = memberRepository.findByPhoneNumber(memberLoginRequest.getPhoneNumber())
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_MEMBER, "해당 회원이 존재하지 않습니다."));
+        if (!passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {
             throw new GlobalException(ErrorCode.FAIL_LOGIN_MEMBER);
         }
         return member;
     }
-    
+
     public Long updateMemberInfo(final Long memberId, @Valid MemberUpdateRequest updateRequest) {
         Member member = findMemberById(memberId);
         if (member.isNewUserName(updateRequest.getUserName())) {
             validPhoneNumberDuplicated(updateRequest.getPhoneNumber());
         }
         member.updateMemberInfo(updateRequest.getUserName(),
-                                updateRequest.getPhoneNumber());
+                updateRequest.getPhoneNumber());
         return member.getId();
     }
 
@@ -74,8 +77,8 @@ public class MemberCoreService {
         }
     }
 
-    private void validPhoneNumberDuplicatedByMember(Member member){
-        if(memberRepository.findByPhoneNumber(member.getPhoneNumber()).isPresent()){
+    private void validPhoneNumberDuplicatedByMember(Member member) {
+        if (memberRepository.findByPhoneNumber(member.getPhoneNumber()).isPresent()) {
             throw new GlobalException(ErrorCode.DUPLICATED_MEMBER_INFO, "해당 번호의 회원이 이미 존재합니다.");
         }
     }
