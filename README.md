@@ -1,85 +1,86 @@
-# 🍽 Perfect Dish
+# 🍽️ Perfect Dish 
 
-
-
-<br />
-
-
-## 💡 목표
-
-그동안 학습한 기술을 적용해 보자<br>
-***메뉴를 등록하고 주문하여 청구서까지✨*** 여러 요구 조건에 맞는 주문 시스템<br>
-
-<br />
-<br />
-
-## 🛠 기술 스택
-
-- Java 17
-- Spring Boot
-- Spring Data JPA
-- H2
-- JUnit5
-
-<br />
-<br />
-
-## ✔️ 기능 목록
-
-
-### 🥗 Member
-
-1. id를 가지고 있으나 실질적인 pk는 phone number 8자리이다.<br>
-회원 조회를 할 때 처음에는 번호(8)에서 뒷번호(4)로 리스트를 만들어 마지막으로 이름으로 필터링하는 방식으로 하였으나<br>
-폰번호 8자리가 id와 같은 역할을 하므로 로직의 복잡함을 줄이고자 이름 → 번호 조회로 변경하였다. 
-2. soft delete 적용 
-회원 정보를 완전히 삭제하지 않고 status flag를 사용하여 회원 정보를 업데이트시켰다. 
-(status → DELETED)
+**Perfect Dish**는 효율적인 매장 운영과 편리한 주문 경험을 제공하는 키오스크 및 관리 시스템입니다. 
+기존 단일 구조에서 **Backend(Spring Boot)**와 **Frontend(React/Vite)**로 분리하여 더욱 전문적이고 확장성 있는 구조로 리빌딩되었습니다.
 
 <br />
 
-### 🥗 Menu
+## 🛠️ Tech Stack
 
-1. 중복메뉴가 있는지 먼저 확인 후 이미지 객체를 함께 생성한다
-2. 이미지는 따로 지정된 경로에 uuid가 더해진(중복 방지) 새로운 이름으로 저장된다. 
-3. 메뉴 이미지는 필수가 아니지만 존재한다면 메뉴에도 이미지 주소가 함께 저장된다.
-4. discount flag를 통해 bill에서 최종 가격 반환 시 적용된다.
-5. 또한 주문 가능 / 불가능을 enum 클래스로 관리하며 order시 적용된다. 
-6. 코스 타입별 / 지금 주문 가능한 메뉴별 확인이 가능하다.
-7. response(dto)에서는 필요한 정보에 따라 detail한 정보 또는 기본 정보로 데이터가 가공되어 화면에 전달된다.
+### Backend
+- **Framework**: Spring Boot 3.x
+- **Language**: Java 17
+- **ORM**: Spring Data JPA
+- **Security**: Spring Security, JWT (JSON Web Token)
+- **Database**: H2 (Local/Test), MySQL (Production)
+- **Monitoring**: P6Spy (SQL Formatting & Logging)
+- **Build Tool**: Gradle
 
-<br />
-
-### 🥗 Order
-
-1. 메뉴가 존재하는지 확인한다.
-2. 사용자로부터 받은 메뉴 이름, 수량을 임베디드 클래스인 orderInfo를 넣어 Order엔티티에 포함했다.
-3. 테이블에 따라 추가 주문을 계속 받을 수 있다. 추가 주문이 들어오면 <br>
-**자동으로 해당 테이블의 주문을 찾아 같은 메뉴의 이름에 추가된 수량을 적용**한다.<br>
-→ 이는 bill에 테이블 번호별 병합된다.
-4. 테이블별 모든 주문 / 테이블별 주문 내역 중 서빙되지 않은 주문 / 서빙되지 않은 모든 주문 내역을 각각 확인할 수 있다. 
+### Frontend
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Language**: TypeScript
+- **Styling**: Vanilla CSS (Custom Design)
+- **State Management**: React Hooks (useState, useEffect)
 
 <br />
 
-### 🥗 Bill
+## 📂 Project Structure
 
-1. 테이블 번호에 따라 각각 쌓인 주문들은 discount 여부에 따라 합계가 도출된다.  
-2. order의 주문 상태가 서빙 완료인지 확인 후 bill의 상태를 완료로 적용할 수 있다.
-3. 테이블 별 영수증과 을 확인할 수 있다. 
-4. response에서는 hashMap에 메뉴 이름과 수량으로 담은 뒤 리스트 화 시켜 더욱 쉽게 확인 할 수 있게 했다. 
-
-<br />
-
-### 🥗 Global
-
-1. service계층을 비즈니스 로직인 ***coreService***와 데이터 조회용 로직인 ***presentationService***로 나누어 확장에 용이하다.
-2. **이미지 처리 모듈을 분리해** 둠으로 현재는 menu에서만 활용하지만 추후 다른 파트에서도 사용 가능하도록 했다. 
-3. **커스텀 에러 코드**를 적용하여 구체적인 오류 정보를 제공하고 빠르게 파악 가능하다.
-4. p6spy를 사용한 **커스텀 쿼리 포맷팅**으로 가독성을 향상했다. 
-5. 추상 클래스인 BaseTimeEntity로 createdAt / modifiedAt 관리 - **JPA Auditing**
-6. JUnit을 활용한 ***40여 개의 구체적인 테스트 시나리오*** 진행
+```text
+perfect/
+├── backend/           # Spring Boot 기반 API 서버
+│   ├── src/main/java  # 백엔드 소스 코드 (Layered Architecture)
+│   └── build.gradle   # 백엔드 의존성 관리
+├── frontend/          # React 기반 클라이언트 앱
+│   ├── src/           # 프론트엔드 소스 코드 (Component-based)
+│   └── package.json   # 프론트엔드 의존성 관리
+└── config/            # 공통 설정 파일 (.env 등)
+```
 
 <br />
 
+## ✨ Key Features & Technical Highlights
 
+### 🏗️ Architecture & Global
+1. **Service Layer Separation**: 비즈니스 로직을 담당하는 `CoreService`와 데이터 조회 및 가공을 담당하는 `PresentationService`로 분리하여 유지보수성과 확장성을 극대화했습니다.
+2. **Global Exception Handling**: `@RestControllerAdvice`와 **커스텀 에러 코드(ErrorCode)**를 적용하여 구체적인 오류 정보를 제공하고 예외 상황을 체계적으로 관리합니다.
+3. **Image Processing Module**: 이미지 처리 로직을 별도 모듈로 분리하여 메뉴 외에도 다양한 도메인에서 재사용 가능하도록 설계했습니다.
+4. **JPA Auditing**: 추상 클래스인 `BaseTimeEntity`를 통해 모든 엔티티의 생성/수정 시간을 자동으로 관리합니다.
+5. **SQL Logging**: **P6Spy**를 활용하여 실행되는 쿼리를 포맷팅하고 로깅함으로써 개발 편의성을 높였습니다.
+6. **Comprehensive Testing**: JUnit5와 AssertJ를 활용하여 **40여 개의 구체적인 테스트 시나리오**를 작성하고 안정성을 검증했습니다.
 
+### 👤 Member (회원 관리)
+- **JWT Authentication**: Access Token과 Refresh Token을 활용한 보안 인증.
+- **Role-based Access Control**: `USER`(손님)와 `ADMIN`(관리자) 권한에 따른 접근 제어.
+- **Session Persistence**: `localStorage`를 활용하여 새로고침 시에도 로그인 상태 유지.
+
+### 🍔 Menu (메뉴 관리)
+- **Category Filtering**: 카테고리별 메뉴 필터링 및 실시간 검색.
+- **Availability Control**: 메뉴의 품절 상태 및 노출 여부를 관리자 페이지에서 실시간 제어.
+
+### 🛒 Order & Bill (주문 및 결제)
+- **Batch Ordering**: 여러 메뉴를 장바구니에 담아 한 번에 주문하는 기능.
+- **Bill Aggregation**: 주문 내역을 HashMap 기반으로 가공하여 메뉴 이름과 수량을 리스트화함으로써 가독성 높은 영수증 데이터를 제공합니다.
+- **Table Persistence**: `localStorage`를 통해 새로고침 시에도 선택한 테이블 번호가 유지됩니다.
+
+### 📊 Admin Dashboard (관리자 모드)
+- **Real-time Order Tracking**: 들어온 주문을 실시간으로 확인하고 '준비 중' -> '완료' 상태로 변경.
+- **Served Status**: 전체 주문 완료 시 영수증(Bill) 상태를 `SERVED`로 업데이트하여 매출 관리.
+
+<br />
+
+## 🚀 How to Run
+
+### Backend
+```bash
+cd backend
+./gradlew bootRun
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
