@@ -76,7 +76,7 @@ public class MemberController {
 
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("phoneNumber", member.getPhoneNumber());
-        // loginInfo.put("name", member.getUserName()); // Omitted for Commit 7
+        loginInfo.put("name", member.getUserName());
         loginInfo.put("role", member.getRole().toString());
         loginInfo.put("accessToken", accessToken);
         loginInfo.put("refreshToken", refreshToken);

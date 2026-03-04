@@ -28,7 +28,7 @@ function App() {
   const [user, setUser] = useState<any>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [pendingItem, setPendingItem] = useState<MenuItem | null>(null);
-  const [tableNo, setTableNo] = useState<string>(() => localStorage.getItem('tableNo') || 'T1');
+  const [tableNo, setTableNo] = useState<string>('T1');
   const [lastOrder, setLastOrder] = useState<{ items: OrderItem[], total: number } | null>(null);
 
   useEffect(() => {
@@ -44,9 +44,6 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('tableNo', tableNo);
-  }, [tableNo]);
 
   const handleLoginSuccess = (userData: any) => {
     console.log('Login Success Data:', userData);
